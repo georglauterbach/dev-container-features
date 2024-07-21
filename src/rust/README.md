@@ -48,23 +48,22 @@ This feature should work on recent versions of Debian- and Ubuntu-based distribu
 
 ### Environment Variables Set by This Feature
 
-| Name                    | Description                                                                         | Value                                                 |
-| :---------------------- | :---------------------------------------------------------------------------------- | :---------------------------------------------------- |
-| `RUSTUP_HOME`           | Directory path that `rustup` uses as its "home" directory                           | `/usr/local/.dev_container_features/rust/rustup_home` |
-| `CARGO_HOME`            | Directory path that `Cargo` uses as its "home" directory                            | `/usr/local/.dev_container_features/rust/cargo_home`  |
-| `CARGO_TARGET_DIR`      | Changes the `target/` directory that Cargo uses to place binaries & build artifacts | `/usr/local/.dev_container_features/rust/target`      |
-| `__RUSTUP_HOME_INSTALL` | Directory path that `rustup` uses as its "home" directory during installation       | `/usr/local/bin/rustup`                               |
-| `__CARGO_HOME_INSTALL`  | Directory path that `Cargo` uses as its "home" directory during installation        | `/usr/local/bin/rustup`                               |
-
 > [!TIP]
 >
-> You should use a volume or a bind-mount for `/usr/local/dev_container_features/rust` to cache the contained files.
+> The following variables can be overwritten in the `containerEnv` section in your `devcontainer.json` file.
+>
+> You should use a volume or a bind-mount to cache the files contained in the directories denoted by the environment variables.
+
+| Name                    | Description                                                                         | Value                                                 |
+| :---------------------- | :---------------------------------------------------------------------------------- | :---------------------------------------------------- |
+| `RUSTUP_HOME`           | Directory path that `rustup` uses as its "home" directory                           | `${containerWorkspaceFolder}/target/rustup_home` |
+| `CARGO_HOME`            | Directory path that `Cargo` uses as its "home" directory                            | `${containerWorkspaceFolder}/target/cargo_home`  |
+| `CARGO_TARGET_DIR`      | Changes the `target/` directory that Cargo uses to place binaries & build artifacts | `${containerWorkspaceFolder}/target/cargo_target`      |
 
 ### Additional Adjustments
 
 1. Inside the container, `securityOpt` is set to `seccomp=unconfined`.
 2. A new capability is added: `SYS_PTRACE` for proper debugging.
-3. A `postCreateCommand` runs to update permissions to make paths in variables like `RUSTUP_HOME` usable.
 
 
 ---
