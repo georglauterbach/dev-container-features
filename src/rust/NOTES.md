@@ -21,11 +21,11 @@ This feature should work on recent versions of Debian- and Ubuntu-based distribu
 >
 > You should use a volume or a bind-mount to cache the files contained in the directories denoted by the environment variables.
 
-| Name                    | Description                                                                         | Value                                                 |
-| :---------------------- | :---------------------------------------------------------------------------------- | :---------------------------------------------------- |
-| `RUSTUP_HOME`           | Directory path that `rustup` uses as its "home" directory                           | `${containerWorkspaceFolder}/target/rustup_home` |
-| `CARGO_HOME`            | Directory path that `Cargo` uses as its "home" directory                            | `${containerWorkspaceFolder}/target/cargo_home`  |
-| `CARGO_TARGET_DIR`      | Changes the `target/` directory that Cargo uses to place binaries & build artifacts | `${containerWorkspaceFolder}/target/cargo_target`      |
+| Name                    | Description                                                                         | Value                                             |
+| :---------------------- | :---------------------------------------------------------------------------------- | :------------------------------------------------ |
+| `RUSTUP_HOME`           | Directory path that `rustup` uses as its "home" directory                           | `${containerWorkspaceFolder}/target/rustup_home`  |
+| `CARGO_HOME`            | Directory path that `Cargo` uses as its "home" directory                            | `${containerWorkspaceFolder}/target/cargo_home`   |
+| `CARGO_TARGET_DIR`      | Changes the `target/` directory that Cargo uses to place binaries & build artifacts | `${containerWorkspaceFolder}/target/cargo_target` |
 
 ### Additional Adjustments
 
