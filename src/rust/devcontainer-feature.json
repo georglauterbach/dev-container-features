@@ -1,6 +1,6 @@
 {
   "id": "rust",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "name": "Development Container Feature - Rust",
   "documentationURL": "https://github.com/georglauterbach/dev-container-feature-rust",
   "description": "A Development Container Feature to work efficiently and effortlessly with the Rust programming language",
