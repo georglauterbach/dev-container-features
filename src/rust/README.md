@@ -26,7 +26,7 @@ A Development Container Feature to work efficiently and effortlessly with the Ru
 ### VS Code Extensions
 
 - `rust-lang.rust-analyzer`
-- `serayuzgur.crates`
+- `fill-labs.dependi`
 - `tamasfe.even-better-toml`
 - `vadimcn.vscode-lldb`
 
