@@ -1,6 +1,6 @@
 {
   "id": "rust",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "name": "Development Container Feature - Rust",
   "documentationURL": "https://github.com/georglauterbach/dev-container-feature-rust",
   "description": "A Development Container Feature to work efficiently and effortlessly with the Rust programming language",
@@ -69,9 +69,9 @@
   "containerEnv": {
     "__RUSTUP_HOME_INSTALL": "/usr/local/bin/rustup",
     "__CARGO_HOME_INSTALL": "/usr/local/bin/rustup",
-    "CARGO_HOME": "/usr/local/.dev_container_feature_rust/cargo_home",
-    "CARGO_TARGET_DIR": "/usr/local/.dev_container_feature_rust/target",
-    "RUSTUP_HOME": "/usr/local/.dev_container_feature_rust/rustup_home",
+    "CARGO_HOME": "/usr/local/dev_container_features/rust/cargo_home",
+    "CARGO_TARGET_DIR": "/usr/local/dev_container_features/rust/target",
+    "RUSTUP_HOME": "/usr/local/dev_container_features/rust/rustup_home",
     "PATH": "/usr/local/bin/rustup/bin:${PATH}"
   },
   "capAdd": [
