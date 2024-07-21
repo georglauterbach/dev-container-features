@@ -23,6 +23,7 @@ This feature should work on recent versions of Debian- and Ubuntu-based distribu
 | `__CARGO_HOME_INSTALL`  | Directory path that `Cargo` uses as its "home" directory during installation        | `/usr/local/bin/rustup`                              |
 
 > [!TIP]
+>
 > You should use a volume or a bind-mount for `/usr/local/.dev_container_feature_rust` to cache the contained files.
 
 ### Additional Adjustments
