@@ -11,17 +11,17 @@ This Development Container Feature installs [Rust](https://www.rust-lang.org/) v
 
 ### Supported Base / OS
 
-This feature should work on recent versions of Debian- and Ubuntu-based distributions. This feature depends on the APT package manager. Bash is required.
+This feature should work on recent versions of Debian- and Ubuntu-based distributions. This feature depends on the APT package manager. Bash is required. The package `build-essential` has to be installable.
 
 ### Environment Variables Set by This Feature
 
-| Name                    | Description                                                                         | Value                                                |
-| :---------------------- | :---------------------------------------------------------------------------------- | :--------------------------------------------------- |
-| `RUSTUP_HOME`           | Directory path that `rustup` uses as its "home" directory                           | `/usr/local/.dev_container_feature_rust/rustup_home` |
-| `CARGO_HOME`            | Directory path that `Cargo` uses as its "home" directory                            | `/usr/local/.dev_container_feature_rust/cargo_home`  |
-| `CARGO_TARGET_DIR`      | Changes the `target/` directory that Cargo uses to place binaries & build artifacts | `/usr/local/.dev_container_feature_rust/target`      |
-| `__RUSTUP_HOME_INSTALL` | Directory path that `rustup` uses as its "home" directory during installation       | `/usr/local/bin/rustup`                              |
-| `__CARGO_HOME_INSTALL`  | Directory path that `Cargo` uses as its "home" directory during installation        | `/usr/local/bin/rustup`                              |
+| Name                    | Description                                                                         | Value                                                 |
+| :---------------------- | :---------------------------------------------------------------------------------- | :---------------------------------------------------- |
+| `RUSTUP_HOME`           | Directory path that `rustup` uses as its "home" directory                           | `/usr/local/.dev_container_features/rust/rustup_home` |
+| `CARGO_HOME`            | Directory path that `Cargo` uses as its "home" directory                            | `/usr/local/.dev_container_features/rust/cargo_home`  |
+| `CARGO_TARGET_DIR`      | Changes the `target/` directory that Cargo uses to place binaries & build artifacts | `/usr/local/.dev_container_features/rust/target`      |
+| `__RUSTUP_HOME_INSTALL` | Directory path that `rustup` uses as its "home" directory during installation       | `/usr/local/bin/rustup`                               |
+| `__CARGO_HOME_INSTALL`  | Directory path that `Cargo` uses as its "home" directory during installation        | `/usr/local/bin/rustup`                               |
 
 > [!TIP]
 >
@@ -29,5 +29,6 @@ This feature should work on recent versions of Debian- and Ubuntu-based distribu
 
 ### Additional Adjustments
 
-1. Inside the container, `securityOpt` is set to `seccomp=unconfined`
-2. A new capability is added: `SYS_PTRACE` for proper debugging
+1. Inside the container, `securityOpt` is set to `seccomp=unconfined`.
+2. A new capability is added: `SYS_PTRACE` for proper debugging.
+3. A `postCreateCommand` runs to update permissions to make paths in variables like `RUSTUP_HOME` usable.
