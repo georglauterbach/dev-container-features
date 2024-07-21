@@ -92,5 +92,5 @@
   "installsAfter": [
     "ghcr.io/devcontainers/features/common-utils"
   ],
-  "postCreateCommand": "chown ${USER}:${USER} /usr/local/dev_container_features/rust"
+  "postCreateCommand": "chown \"${USER}:${USER}\" /usr/local/dev_container_features/rust && chmod 755 /usr/local/dev_container_features/rust"
 }

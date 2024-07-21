@@ -73,7 +73,7 @@ function install_rust() {
   export PATH="/usr/local/bin/rustup/bin:${PATH}"
 
   mkdir -p /usr/local/dev_container_features/rust
-  chmod -R 777 /usr/local/dev_container_features
+  chmod -R 777 /usr/local/dev_container_features/rust
 
   if [[ -n ${ADDITIONAL_TARGETS} ]]; then
     local TARGETS
