@@ -25,7 +25,7 @@ This feature should work on recent versions of Debian- and Ubuntu-based distribu
 
 > [!TIP]
 >
-> You should use a volume or a bind-mount for `/usr/local/.dev_container_feature_rust` to cache the contained files.
+> You should use a volume or a bind-mount for `/usr/local/dev_container_features/rust` to cache the contained files.
 
 ### Additional Adjustments
 

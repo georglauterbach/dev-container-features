@@ -82,5 +82,6 @@
   ],
   "installsAfter": [
     "ghcr.io/devcontainers/features/common-utils"
-  ]
+  ],
+  "postCreateCommand": "chown ${USER}:${USER} /usr/local/dev_container_features/rust"
 }
