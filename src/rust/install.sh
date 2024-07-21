@@ -16,6 +16,7 @@ function parse_dev_container_options() {
   RUSTUP_PROFILE="${RUSTUP_PROFILE:-minimal}"
   ADDITIONAL_TARGETS="${ADDITIONAL_TARGETS:-}"
   ADDITIONAL_COMPONENTS=${ADDITIONAL_COMPONENTS:-}
+  ADDITIONAL_PACKAGES=${ADDITIONAL_PACKAGES:-}
   INSTALL_MOLD="${INSTALL_MOLD:-false}"
 }
 
@@ -87,6 +88,12 @@ function install_rust() {
     local COMPONENTS
     IFS=',' read -r -a COMPONENTS <<< "${ADDITIONAL_COMPONENTS// /}"
     rustup component add "${COMPONENTS[@]}"
+  fi
+
+  if [[ -n ${ADDITIONAL_PACKAGES} ]]; then
+    local PACKAGES
+    IFS=',' read -r -a PACKAGES <<< "${ADDITIONAL_PACKAGES// /}"
+    apt-get --yes install --no-install-recommends "${PACKAGES[@]}"
   fi
 }
 

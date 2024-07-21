@@ -46,6 +46,15 @@
       ],
       "default": ""
     },
+    "additional-packages": {
+      "description": "List of additional packages to install via APT",
+      "type": "string",
+      "proposals": [
+        "gdb-multiarch",
+        "jq,qemu-system-riscv64"
+      ],
+      "default": ""
+    },
     "install-mold": {
       "description": "Whether to install the mold linker",
       "type": "string",
