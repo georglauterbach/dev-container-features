@@ -78,8 +78,8 @@ function install_rust() {
     local TARGETS
     IFS=',' read -r -a TARGETS <<< "${ADDITIONAL_TARGETS// /}"
     for TARGET in "${TARGETS[@]}"; do
-        log 'debug' "Installing additional target ${TARGET}"
-        rustup target add "${TARGET}"
+      log 'debug' "Installing additional target ${TARGET}"
+      rustup target add "${TARGET}"
     done
   fi
 
