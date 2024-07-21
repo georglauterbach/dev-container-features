@@ -1,0 +1,86 @@
+{
+  "id": "rust",
+  "version": "0.1.1",
+  "name": "Development Container Feature - Rust",
+  "documentationURL": "https://github.com/georglauterbach/dev-container-feature-rust",
+  "description": "A Development Container Feature to work efficiently and effortlessly with the Rust programming language",
+  "options": {
+    "rustup-default-toolchain": {
+      "description": "The default toolchain to install",
+      "type": "string",
+      "proposals": [
+        "none",
+        "stable",
+        "beta",
+        "nightly",
+        "1.79",
+        "1.78"
+      ],
+      "default": "none"
+    },
+    "rustup-update-default-toolchain": {
+      "description": "Whether to update the default toolchain",
+      "type": "string",
+      "proposals": [
+        "false",
+        "true"
+      ],
+      "default": "false"
+    },
+    "rustup-profile": {
+      "description": "Which profile `rustup` should use for the installation",
+      "type": "string",
+      "proposals": [
+        "minimal",
+        "default",
+        "complete"
+      ],
+      "default": "minimal"
+    },
+    "additional-targets": {
+      "description": "List of additional targets to install",
+      "type": "string",
+      "proposals": [
+        "aarch64-unknown-linux-gnu",
+        "x86_64-unknown-redox,x86_64-unknown-uefi"
+      ],
+      "default": ""
+    },
+    "install-mold": {
+      "description": "Whether to install the mold linker",
+      "type": "string",
+      "proposals": [
+        "false",
+        "true"
+      ],
+      "default": "false"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "rust-lang.rust-analyzer",
+        "serayuzgur.crates",
+        "tamasfe.even-better-toml",
+        "vadimcn.vscode-lldb"
+      ]
+    }
+  },
+  "containerEnv": {
+    "__RUSTUP_HOME_INSTALL": "/usr/local/bin/rustup",
+    "__CARGO_HOME_INSTALL": "/usr/local/bin/rustup",
+    "CARGO_HOME": "/usr/local/.dev_container_feature_rust/cargo_home",
+    "CARGO_TARGET_DIR": "/usr/local/.dev_container_feature_rust/target",
+    "RUSTUP_HOME": "/usr/local/.dev_container_feature_rust/rustup_home",
+    "PATH": "/usr/local/bin/rustup/bin:${PATH}"
+  },
+  "capAdd": [
+    "SYS_PTRACE"
+  ],
+  "securityOpt": [
+    "seccomp=unconfined"
+  ],
+  "installsAfter": [
+    "ghcr.io/devcontainers/features/common-utils"
+  ]
+}
