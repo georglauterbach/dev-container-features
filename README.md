@@ -11,7 +11,7 @@ The feature has a [separate, auto-generated documentation page](./src/rust/READM
 
 ## About
 
-This Development Container Feature installs https://www.rust-lang.org/[Rust] via https://www.rust-lang.org/tools/install[rustup] and additional extensions required to work efficiently in Rust. This Feature is installed after `ghcr.io/devcontainers/features/common-utils`.
+This Development Container Feature installs [Rust](https://www.rust-lang.org/) via [rustup](https://www.rust-lang.org/tools/install) and additional extensions required to work efficiently in Rust. This feature is installed after `ghcr.io/devcontainers/features/common-utils`.
 
 > [!TIP]
 > #### Works Well With [`georglauterbach/dev-container-base`](https://github.com/georglauterbach/dev-container-base)
@@ -20,7 +20,7 @@ This Development Container Feature installs https://www.rust-lang.org/[Rust] via
 
 ### Supported Base / OS
 
-This Feature should work on recent versions of Debian- and Ubuntu-based distributions. This Feature depends on the APT package manager. Bash is required.
+This feature should work on recent versions of Debian- and Ubuntu-based distributions. This feature depends on the APT package manager. Bash is required.
 
 ### Environment Variables Set by This Feature
 
