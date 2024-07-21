@@ -39,19 +39,16 @@ function pre_flight_checks() {
 }
 
 function install_rust() {
-  local __CARGO_HOME_INSTALL='/usr/local/bin/rustup'
-  local __RUSTUP_HOME_INSTALL='/usr/local/bin/rustup'
-
-  mkdir -p "${__CARGO_HOME_INSTALL}" "${__RUSTUP_HOME_INSTALL}"
-
   # These directories
   #
   # 1. contain the binaries `cargo`, `rustup`, etc.;
   # 2. contain the repository files (mounted from the host)
   #
   # respectively.
-  export CARGO_HOME=${__RUSTUP_HOME_INSTALL}
-  export RUSTUP_HOME=${__RUSTUP_HOME_INSTALL}
+  export RUSTUP_HOME='/usr/local/bin/rustup'
+  export CARGO_HOME=${RUSTUP_HOME}
+
+  mkdir -p "${CARGO_HOME}"
 
   local RUSTUP_INSTALLER_ARGUMENTS=(
     '-y'

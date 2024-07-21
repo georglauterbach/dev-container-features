@@ -76,11 +76,9 @@
     }
   },
   "containerEnv": {
-    "__RUSTUP_HOME_INSTALL": "/usr/local/bin/rustup",
-    "__CARGO_HOME_INSTALL": "/usr/local/bin/rustup",
-    "CARGO_HOME": "/usr/local/dev_container_features/rust/cargo_home",
-    "CARGO_TARGET_DIR": "/usr/local/dev_container_features/rust/target",
-    "RUSTUP_HOME": "/usr/local/dev_container_features/rust/rustup_home",
+    "RUSTUP_HOME": "${containerWorkspaceFolder}/target/rustup_home",
+    "CARGO_HOME": "${containerWorkspaceFolder}/target/cargo_home",
+    "CARGO_TARGET_DIR": "${containerWorkspaceFolder}/target/cargo_target",
     "PATH": "/usr/local/bin/rustup/bin:${PATH}"
   },
   "capAdd": [
@@ -91,6 +89,5 @@
   ],
   "installsAfter": [
     "ghcr.io/devcontainers/features/common-utils"
-  ],
-  "postCreateCommand": "chown \"${USER}:${USER}\" /usr/local/dev_container_features/rust && chmod 755 /usr/local/dev_container_features/rust"
+  ]
 }
