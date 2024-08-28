@@ -46,6 +46,15 @@
       ],
       "default": ""
     },
+    "additional-components": {
+      "description": "List of additional `rustup` components",
+      "type": "string",
+      "proposals": [
+        "clippy",
+        "rust-std"
+      ],
+      "default": ""
+    },
     "additional-packages": {
       "description": "List of additional packages to install via APT",
       "type": "string",
