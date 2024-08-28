@@ -19,15 +19,17 @@ A Development Container Feature to work efficiently and effortlessly with the Ru
 | rustup-update-default-toolchain | Whether to update the default toolchain | string | false |
 | rustup-profile | Which profile `rustup` should use for the installation | string | minimal |
 | additional-targets | List of additional targets to install | string | - |
+| additional-components | List of additional `rustup` components | string | - |
 | additional-packages | List of additional packages to install via APT | string | - |
 | install-mold | Whether to install the mold linker | string | false |
+| mold-version | The version of the mold linker to install | string | 2.33.0 |
 
 ## Customizations
 
 ### VS Code Extensions
 
-- `rust-lang.rust-analyzer`
 - `fill-labs.dependi`
+- `rust-lang.rust-analyzer`
 - `tamasfe.even-better-toml`
 - `vadimcn.vscode-lldb`
 
@@ -40,7 +42,7 @@ This Development Container Feature installs [Rust](https://www.rust-lang.org/) v
 >
 > #### Works Well With [`georglauterbach/dev-container-base`](https://github.com/georglauterbach/dev-container-base)
 >
-> This Development Container Feature works well with base images that focus on recent versions of Ubuntu, like https://github.com/georglauterbach/dev-container-base/pkgs/container/dev-container-base[`ghcr.io/georglauterbach/dev-container-base:edge`].
+> This Development Container Feature works well with base images that focus on recent versions of Ubuntu, like [`ghcr.io/georglauterbach/dev-container-base:edge`](https://github.com/georglauterbach/dev-container-base/pkgs/container/dev-container-base).
 
 ### Supported Base / OS
 
@@ -54,11 +56,11 @@ This feature should work on recent versions of Debian- and Ubuntu-based distribu
 >
 > You should use a volume or a bind-mount to cache the files contained in the directories denoted by the environment variables.
 
-| Name                    | Description                                                                         | Value                                                 |
-| :---------------------- | :---------------------------------------------------------------------------------- | :---------------------------------------------------- |
-| `RUSTUP_HOME`           | Directory path that `rustup` uses as its "home" directory                           | `${containerWorkspaceFolder}/target/rustup_home` |
-| `CARGO_HOME`            | Directory path that `Cargo` uses as its "home" directory                            | `${containerWorkspaceFolder}/target/cargo_home`  |
-| `CARGO_TARGET_DIR`      | Changes the `target/` directory that Cargo uses to place binaries & build artifacts | `${containerWorkspaceFolder}/target/cargo_target`      |
+| Name                    | Description                                                                         | Value                                             |
+| :---------------------- | :---------------------------------------------------------------------------------- | :------------------------------------------------ |
+| `RUSTUP_HOME`           | Directory path that `rustup` uses as its "home" directory                           | `${containerWorkspaceFolder}/target/rustup_home`  |
+| `CARGO_HOME`            | Directory path that `Cargo` uses as its "home" directory                            | `${containerWorkspaceFolder}/target/cargo_home`   |
+| `CARGO_TARGET_DIR`      | Changes the `target/` directory that Cargo uses to place binaries & build artifacts | `${containerWorkspaceFolder}/target/cargo_target` |
 
 ### Additional Adjustments
 
