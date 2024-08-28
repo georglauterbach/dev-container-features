@@ -72,6 +72,11 @@
         "true"
       ],
       "default": "false"
+    },
+    "mold-version": {
+      "description": "The version of the mold linker to install",
+      "type": "string",
+      "default": "2.33.0"
     }
   },
   "customizations": {

@@ -18,6 +18,7 @@ function parse_dev_container_options() {
   ADDITIONAL_COMPONENTS=${ADDITIONAL_COMPONENTS?ADDITIONAL_COMPONENTS not set}
   ADDITIONAL_PACKAGES=${ADDITIONAL_PACKAGES?ADDITIONAL_PACKAGES not set}
   INSTALL_MOLD="${INSTALL_MOLD:?INSTALL_MOLD not set or null}"
+  MOLD_VERSION="${MOLD_VERSION?MOLD_VERSION not set}"
 }
 
 function pre_flight_checks() {
@@ -96,7 +97,6 @@ function install_rust() {
 
 function install_mold() {
   if [[ ${INSTALL_MOLD} == 'true' ]]; then
-    MOLD_VERSION='2.4.0'
     MOLD_DIR="mold-${MOLD_VERSION}-$(uname -m)-linux"
 
     curl --silent --show-error --fail --location                                               \
