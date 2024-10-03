@@ -93,6 +93,10 @@ function install_rust() {
     IFS=',' read -r -a PACKAGES <<< "${ADDITIONAL_PACKAGES// /}"
     apt-get --yes install --no-install-recommends "${PACKAGES[@]}"
   fi
+
+  mkdir -p                       /usr/share/bash-completion/completions
+  rustup completions bash       >/usr/share/bash-completion/completions/rustup
+  rustup completions bash cargo >/usr/share/bash-completion/completions/cargo
 }
 
 function install_mold() {
