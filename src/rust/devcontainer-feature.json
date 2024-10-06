@@ -96,6 +96,27 @@
         "usernamehw.errorlens@3.20.0", // turbocharge diagnostics
         "vadimcn.vscode-lldb@1.11.0" // LLDB debugger support
       ],
+      "settings": {
+        // bierner.docs-view
+        "docsView.documentationView.updateMode": "sticky",
+        // rust-lang.rust-analyzer
+        "rust-analyzer.restartServerOnConfigChange": true,
+        "rust-analyzer.testExplorer": true,
+        "rust-analyzer.debug.engine": "vadimcn.vscode-lldb",
+        "rust-analyzer.diagnostics.styleLints.enable": true,
+        "rust-analyzer.completion.fullFunctionSignatures.enable": true,
+        "rust-analyzer.completion.termSearch.enable": true,
+        "rust-analyzer.hover.actions.references.enable": true,
+        "rust-analyzer.imports.prefixExternPrelude": true,
+        "rust-analyzer.inlayHints.bindingModeHints.enable": true,
+        "rust-analyzer.inlayHints.closureCaptureHints.enable": true,
+        "rust-analyzer.inlayHints.closureReturnTypeHints.enable": "with_block",
+        "rust-analyzer.completion.limit": 20,
+        "rust-analyzer.semanticHighlighting.operator.specialization.enable": true,
+        "rust-analyzer.semanticHighlighting.punctuation.enable": true,
+        "rust-analyzer.semanticHighlighting.punctuation.separate.macro.bang": true,
+        "rust-analyzer.semanticHighlighting.punctuation.specialization.enable": true,
+      }
     }
   },
   "capAdd": [
