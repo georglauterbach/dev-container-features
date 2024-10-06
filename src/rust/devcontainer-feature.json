@@ -79,21 +79,21 @@
       "default": "2.33.0"
     }
   },
-  "customizations": {
-    "vscode": {
-      "extensions": [
-        "fill-labs.dependi",
-        "rust-lang.rust-analyzer",
-        "tamasfe.even-better-toml",
-        "vadimcn.vscode-lldb"
-      ]
-    }
-  },
   "containerEnv": {
     "RUSTUP_HOME": "${containerWorkspaceFolder}/target/rustup_home",
     "CARGO_HOME": "${containerWorkspaceFolder}/target/cargo_home",
     "CARGO_TARGET_DIR": "${containerWorkspaceFolder}/target/cargo_target",
     "PATH": "/usr/local/bin/rustup/bin:${PATH}"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "fill-labs.dependi@0.7.10", // manage dependency versions
+        "rust-lang.rust-analyzer@0.4.2135", // official Rust language server
+        "tamasfe.even-better-toml@0.19.2", // language support for TOML
+        "vadimcn.vscode-lldb@1.11.0" // LLDB debugger support
+      ],
+    }
   },
   "capAdd": [
     "SYS_PTRACE"
