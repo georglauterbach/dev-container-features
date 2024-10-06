@@ -1,6 +1,6 @@
 {
   "id": "rust",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "name": "Development Container Feature - Rust",
   "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/rust",
   "description": "A Development Container Feature to work efficiently and effortlessly with the Rust programming language",
@@ -111,7 +111,6 @@
         "rust-analyzer.inlayHints.bindingModeHints.enable": true,
         "rust-analyzer.inlayHints.closureCaptureHints.enable": true,
         "rust-analyzer.inlayHints.closureReturnTypeHints.enable": "with_block",
-        "rust-analyzer.completion.limit": 20,
         "rust-analyzer.semanticHighlighting.operator.specialization.enable": true,
         "rust-analyzer.semanticHighlighting.punctuation.enable": true,
         "rust-analyzer.semanticHighlighting.punctuation.separate.macro.bang": true,
