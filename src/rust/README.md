@@ -7,7 +7,7 @@ A Development Container Feature to work efficiently and effortlessly with the Ru
 
 ```json
 "features": {
-    "ghcr.io/georglauterbach/dev-container-features/rust:0": {}
+    "ghcr.io/georglauterbach/dev-container-features/rust:1": {}
 }
 ```
 
@@ -28,10 +28,13 @@ A Development Container Feature to work efficiently and effortlessly with the Ru
 
 ### VS Code Extensions
 
-- `fill-labs.dependi`
-- `rust-lang.rust-analyzer`
-- `tamasfe.even-better-toml`
-- `vadimcn.vscode-lldb`
+- `bierner.docs-view@0.1.0`
+- `editorconfig.editorconfig@0.16.4`
+- `fill-labs.dependi@0.7.10`
+- `rust-lang.rust-analyzer@0.4.2135`
+- `tamasfe.even-better-toml@0.19.2`
+- `usernamehw.errorlens@3.20.0`
+- `vadimcn.vscode-lldb@1.11.0`
 
 
 ## About
