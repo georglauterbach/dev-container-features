@@ -18,11 +18,17 @@ A Development Container Feature to work efficiently and effortlessly with the Ru
 | rustup-default-toolchain | The default toolchain to install | string | none |
 | rustup-update-default-toolchain | Whether to update the default toolchain | string | false |
 | rustup-profile | Which profile `rustup` should use for the installation | string | minimal |
+| rustup-dist-server | Root URI for downloading static resources related to Rust | string | https://static.rust-lang.org |
+| rustup-update-root | Root URL for downloading self-update | string | https://static.rust-lang.org/rustup |
+| rustup-init-target-triple | The target triple (without the architecture) | string | unknown-linux-gnu |
 | additional-targets | List of additional targets to install | string | - |
 | additional-components | List of additional `rustup` components | string | - |
 | additional-packages | List of additional packages to install via APT | string | - |
 | install-mold | Whether to install the mold linker | string | false |
 | mold-version | The version of the mold linker to install | string | 2.33.0 |
+| http_proxy | A URI for an HTTP proxy | string | - |
+| https_proxy | A URI for an HTTPS proxy | string | - |
+| no_proxy | List of URIs to not proxy | string | localhost,127.0.0.1 |
 
 ## Customizations
 
