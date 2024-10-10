@@ -1,6 +1,6 @@
 {
   "id": "rust",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "name": "Development Container Feature - Rust",
   "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/rust",
   "description": "A Development Container Feature to work efficiently and effortlessly with the Rust programming language",
@@ -152,8 +152,5 @@
   ],
   "securityOpt": [
     "seccomp=unconfined"
-  ],
-  "installsAfter": [
-    "ghcr.io/devcontainers/features/common-utils"
   ]
 }
