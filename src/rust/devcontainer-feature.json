@@ -1,6 +1,6 @@
 {
   "id": "rust",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "name": "Development Container Feature - Rust",
   "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/rust",
   "description": "A Development Container Feature to work efficiently and effortlessly with the Rust programming language",
@@ -13,8 +13,7 @@
         "stable",
         "beta",
         "nightly",
-        "1.79",
-        "1.78"
+        "1.81"
       ],
       "default": "none"
     },
@@ -36,6 +35,21 @@
         "complete"
       ],
       "default": "minimal"
+    },
+    "rustup-dist-server": {
+      "description": "Root URI for downloading static resources related to Rust",
+      "type": "string",
+      "default": "https://static.rust-lang.org"
+    },
+    "rustup-update-root": {
+      "description": "Root URL for downloading self-update",
+      "type": "string",
+      "default": "https://static.rust-lang.org/rustup"
+    },
+    "rustup-init-target-triple": {
+      "description": "The target triple (without the architecture)",
+      "type": "string",
+      "default": "unknown-linux-gnu"
     },
     "additional-targets": {
       "description": "List of additional targets to install",
@@ -77,6 +91,21 @@
       "description": "The version of the mold linker to install",
       "type": "string",
       "default": "2.33.0"
+    },
+    "http_proxy": {
+      "description": "A URI for an HTTP proxy",
+      "type": "string",
+      "default": ""
+    },
+    "https_proxy": {
+      "description": "A URI for an HTTPS proxy",
+      "type": "string",
+      "default": ""
+    },
+    "no_proxy": {
+      "description": "List of URIs to not proxy",
+      "type": "string",
+      "default": "localhost,127.0.0.1"
     }
   },
   "containerEnv": {

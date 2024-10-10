@@ -14,11 +14,20 @@ function parse_dev_container_options() {
   RUSTUP_DEFAULT_TOOLCHAIN="${RUSTUP_DEFAULT_TOOLCHAIN:?RUSTUP_DEFAULT_TOOLCHAIN not set or null}"
   RUSTUP_UPDATE_DEFAULT_TOOLCHAIN="${RUSTUP_UPDATE_DEFAULT_TOOLCHAIN:?RUSTUP_UPDATE_DEFAULT_TOOLCHAIN not set or null}"
   RUSTUP_PROFILE="${RUSTUP_PROFILE:?RUSTUP_PROFILE not set or null}"
+  RUSTUP_DIST_SERVER="${RUSTUP_DIST_SERVER:?RUSTUP_DIST_SERVER not set or null}"
+  RUSTUP_UPDATE_ROOT="${RUSTUP_UPDATE_ROOT:?RUSTUP_UPDATE_ROOT not set or null}"
+  RUSTUP_INIT_TARGET_TRIPLE=${RUSTUP_INIT_TARGET_TRIPLE:?RUSTUP_INIT_TARGET_TRIPLE is not set or null}
+
   ADDITIONAL_TARGETS="${ADDITIONAL_TARGETS?ADDITIONAL_TARGETS not set}"
   ADDITIONAL_COMPONENTS=${ADDITIONAL_COMPONENTS?ADDITIONAL_COMPONENTS not set}
   ADDITIONAL_PACKAGES=${ADDITIONAL_PACKAGES?ADDITIONAL_PACKAGES not set}
+
   INSTALL_MOLD="${INSTALL_MOLD:?INSTALL_MOLD not set or null}"
   MOLD_VERSION="${MOLD_VERSION?MOLD_VERSION not set}"
+
+  [[ -v http_proxy ]]  || export http_proxy=${HTTP_PROXY?HTTP_PROXY not set}
+  [[ -v https_proxy ]] || export https_proxy=${HTTP_PROXYS?HTTPS_PROXY not set}
+  [[ -v no_proxy ]]    || export no_proxy=${NO_PROXY?NO_PROXY not set}
 }
 
 function pre_flight_checks() {
@@ -49,7 +58,12 @@ function install_rust() {
   export RUSTUP_HOME='/usr/local/bin/rustup'
   export CARGO_HOME=${RUSTUP_HOME}
 
-  mkdir -p "${CARGO_HOME}"
+  # These variables are used when acquiring and
+  # updating `rustup`.
+  export RUSTUP_DIST_SERVER
+  export RUSTUP_UPDATE_ROOT
+
+  mkdir -p "${RUSTUP_HOME}"
 
   local RUSTUP_INSTALLER_ARGUMENTS=(
     '-y'
@@ -58,20 +72,23 @@ function install_rust() {
     '--profile' "${RUSTUP_PROFILE}"
   )
 
-  if [[ ${RUSTUP_UPDATE_DEFAULT_TOOLCHAIN} == 'true' ]]; then
+  if [[ ${RUSTUP_UPDATE_DEFAULT_TOOLCHAIN} == 'false' ]]; then
     RUSTUP_INSTALLER_ARGUMENTS+=('--no-update-default-toolchain')
   fi
 
-  # We do not install a toolchain at this point in time because
-  # on the one hand, Cargo will do so for us the first time we
-  # interact with the unCORE code, on the other hand, we want to
-  # keep this container image as small as possible.
-  curl -sSfL 'https://sh.rustup.rs' | bash -s -- "${RUSTUP_INSTALLER_ARGUMENTS[@]}"
+  # This is the point where the actual installation takes place.
+  wget -O "${RUSTUP_HOME}/rustup-init" "${RUSTUP_UPDATE_ROOT}/dist/$(uname -m)-${RUSTUP_INIT_TARGET_TRIPLE}/rustup-init"
+  chmod +x "${RUSTUP_HOME}/rustup-init"
+  "${RUSTUP_HOME}/rustup-init" "${RUSTUP_INSTALLER_ARGUMENTS[@]}"
 
   export PATH="/usr/local/bin/rustup/bin:${PATH}"
 
-  mkdir -p /usr/local/dev_container_features/rust
-  chmod -R 777 /usr/local/dev_container_features/rust
+  cat >>/etc/environment <<EOM
+
+# Rust
+RUSTUP_DIST_SERVER=${RUSTUP_DIST_SERVER}
+RUSTUP_UPDATE_ROOT=${RUSTUP_UPDATE_ROOT}
+EOM
 
   if [[ -n ${ADDITIONAL_TARGETS} ]]; then
     local TARGETS
