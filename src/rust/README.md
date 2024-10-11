@@ -7,7 +7,7 @@ A Development Container Feature to work efficiently and effortlessly with the Ru
 
 ```json
 "features": {
-    "ghcr.io/georglauterbach/dev-container-features/rust:2": {}
+    "ghcr.io/georglauterbach/dev-container-features/rust:3": {}
 }
 ```
 
@@ -15,21 +15,21 @@ A Development Container Feature to work efficiently and effortlessly with the Ru
 
 | Options Id | Description | Type | Default Value |
 |-----|-----|-----|-----|
-| install-rust | In environments where Rust is already installed, set this to false to not install it again | boolean | true |
-| rustup-default-toolchain | The default toolchain to install | string | none |
-| rustup-update-default-toolchain | Whether to update the default toolchain | boolean | false |
-| rustup-profile | Which profile `rustup` should use for the installation | string | minimal |
-| rustup-dist-server | Root URI for downloading static resources related to Rust | string | https://static.rust-lang.org |
-| rustup-update-root | Root URL for downloading self-update | string | https://static.rust-lang.org/rustup |
-| rustup-init-target-triple | The target triple (without the architecture) | string | unknown-linux-gnu |
-| additional-targets | List of additional targets to install | string | - |
-| additional-components | List of additional `rustup` components | string | - |
-| additional-packages | List of additional packages to install via APT | string | - |
-| install-mold | Whether to install the mold linker | boolean | false |
-| mold-version | The version of the mold linker to install | string | 2.33.0 |
-| http_proxy | A URI for an HTTP proxy | string | - |
-| https_proxy | A URI for an HTTPS proxy | string | - |
-| no_proxy | List of URIs to not proxy | string | localhost,127.0.0.1 |
+| rust.install | In environments where Rust is already installed, set this to false to not install Rust (again) | boolean | true |
+| rust.rustup.default-toolchain | Defines the [toolchain](https://rust-lang.github.io/rustup/concepts/toolchains.html) that will be installed via `rustup` | string | none |
+| rust.rustup.update-default-toolchain | Whether or not to update the default toolchain | boolean | false |
+| rust.rustup.profile | Defines the [profile](https://rust-lang.github.io/rustup/concepts/profiles.html) that will be used by `rustup` during the installation | string | minimal |
+| rust.rustup.additional-targets | A list of [additional targets](https://rust-lang.github.io/rustup/cross-compilation.html) that will be installed by `rustup` | string | - |
+| rust.rustup.additional-components | A list of [additional components](https://rust-lang.github.io/rustup/concepts/components.html) that will be installed by `rustup` | string | - |
+| rust.rustup.dist-server | The URI for downloading static resources related to Rust ([ref](https://rust-lang.github.io/rustup/environment-variables.html)) | string | https://static.rust-lang.org |
+| rust.rustup.update-root | The URI for downloading self-update ([ref](https://rust-lang.github.io/rustup/environment-variables.html)) | string | https://static.rust-lang.org/rustup |
+| rust.rustup.rustup-init.host-triple | The [host triple](https://wiki.osdev.org/Target_Triplet) (including the architecture) of the system that you want to bootstrap Rust on | string | - |
+| system.packages.additional-packages | A list of additional packages to install via the system's package manager | string | - |
+| linker.mold.install | Whether to install the linker [`mold`](https://github.com/rui314/mold) | boolean | false |
+| linker.mold.version | The version of the [`mold`](https://github.com/rui314/mold) linker to install | string | 2.34.1 |
+| proxy.http.http.address | A URI for an HTTP proxy | string | - |
+| proxy.http.https.address | A URI for an HTTPS proxy | string | - |
+| proxy.http.no-proxy.address | A list of URIs to not proxy | string | localhost,127.0.0.1 |
 
 ## Customizations
 
