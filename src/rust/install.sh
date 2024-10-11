@@ -11,7 +11,7 @@ function log() {
 function parse_dev_container_options() {
   log 'info' 'Parsing input from options'
 
-  INSTALL_RUST=${INSTALL_RUST:?INSTALL_RUST is not set or null}
+  INSTALL_RUST="${INSTALL_RUST:?INSTALL_RUST is not set or null}"
 
   RUSTUP_DEFAULT_TOOLCHAIN="${RUSTUP_DEFAULT_TOOLCHAIN:?RUSTUP_DEFAULT_TOOLCHAIN not set or null}"
   RUSTUP_UPDATE_DEFAULT_TOOLCHAIN="${RUSTUP_UPDATE_DEFAULT_TOOLCHAIN:?RUSTUP_UPDATE_DEFAULT_TOOLCHAIN not set or null}"
@@ -28,7 +28,7 @@ function parse_dev_container_options() {
   MOLD_VERSION="${MOLD_VERSION?MOLD_VERSION not set}"
 
   [[ -v http_proxy ]]  || export http_proxy=${HTTP_PROXY?HTTP_PROXY not set}
-  [[ -v https_proxy ]] || export https_proxy=${HTTP_PROXYS?HTTPS_PROXY not set}
+  [[ -v https_proxy ]] || export https_proxy=${HTTPS_PROXY?HTTPS_PROXY not set}
   [[ -v no_proxy ]]    || export no_proxy=${NO_PROXY?NO_PROXY not set}
 }
 
@@ -48,6 +48,9 @@ function pre_flight_checks() {
   export DEBIAN_FRONTEND=noninteractive
   apt-get --yes update
   apt-get --yes install --no-install-recommends 'build-essential'
+  apt-get --yes autoremove
+  apt-get --yes clean
+  rm -rf /var/lib/apt/lists/*
 }
 
 function install_rust() {
