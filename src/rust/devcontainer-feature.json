@@ -1,35 +1,36 @@
 // ref: https://github.com/devcontainers/spec/blob/main/schemas/devContainerFeature.schema.json
 {
   "id": "rust",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "name": "Development Container Feature - Rust",
   "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/rust",
   "description": "A Development Container Feature to work efficiently and effortlessly with the Rust programming language",
   "options": {
-    "install-rust": {
-      "description": "In environments where Rust is already installed, set this to false to not install it again",
+    "rust.install": {
+      "description": "In environments where Rust is already installed, set this to false to not install Rust (again)",
       "type": "boolean",
       "default": true
     },
-    "rustup-default-toolchain": {
-      "description": "The default toolchain to install",
+    "rust.rustup.default-toolchain": {
+      "description": "Defines the [toolchain](https://rust-lang.github.io/rustup/concepts/toolchains.html) that will be installed via `rustup`",
       "type": "string",
       "proposals": [
         "none",
         "stable",
         "beta",
         "nightly",
-        "1.81"
+        "1.81",
+        "1.80"
       ],
       "default": "none"
     },
-    "rustup-update-default-toolchain": {
-      "description": "Whether to update the default toolchain",
+    "rust.rustup.update-default-toolchain": {
+      "description": "Whether or not to update the default toolchain",
       "type": "boolean",
       "default": false
     },
-    "rustup-profile": {
-      "description": "Which profile `rustup` should use for the installation",
+    "rust.rustup.profile": {
+      "description": "Defines the [profile](https://rust-lang.github.io/rustup/concepts/profiles.html) that will be used by `rustup` during the installation",
       "type": "string",
       "proposals": [
         "minimal",
@@ -38,23 +39,8 @@
       ],
       "default": "minimal"
     },
-    "rustup-dist-server": {
-      "description": "Root URI for downloading static resources related to Rust",
-      "type": "string",
-      "default": "https://static.rust-lang.org"
-    },
-    "rustup-update-root": {
-      "description": "Root URL for downloading self-update",
-      "type": "string",
-      "default": "https://static.rust-lang.org/rustup"
-    },
-    "rustup-init-target-triple": {
-      "description": "The target triple (without the architecture)",
-      "type": "string",
-      "default": "unknown-linux-gnu"
-    },
-    "additional-targets": {
-      "description": "List of additional targets to install",
+    "rust.rustup.additional-targets": {
+      "description": "A list of [additional targets](https://rust-lang.github.io/rustup/cross-compilation.html) that will be installed by `rustup`",
       "type": "string",
       "proposals": [
         "aarch64-unknown-linux-gnu",
@@ -62,17 +48,38 @@
       ],
       "default": ""
     },
-    "additional-components": {
-      "description": "List of additional `rustup` components",
+    "rust.rustup.additional-components": {
+      "description": "A list of [additional components](https://rust-lang.github.io/rustup/concepts/components.html) that will be installed by `rustup`",
       "type": "string",
       "proposals": [
-        "clippy",
-        "rust-std"
+        "rustc",
+        "cargo,rustfmt",
+        "rust-std",
+        "miri"
       ],
       "default": ""
     },
-    "additional-packages": {
-      "description": "List of additional packages to install via APT",
+    "rust.rustup.dist-server": {
+      "description": "The URI for downloading static resources related to Rust ([ref](https://rust-lang.github.io/rustup/environment-variables.html))",
+      "type": "string",
+      "default": "https://static.rust-lang.org"
+    },
+    "rust.rustup.update-root": {
+      "description": "The URI for downloading self-update ([ref](https://rust-lang.github.io/rustup/environment-variables.html))",
+      "type": "string",
+      "default": "https://static.rust-lang.org/rustup"
+    },
+    "rust.rustup.rustup-init.host-triple": {
+      "description": "The [host triple](https://wiki.osdev.org/Target_Triplet) (including the architecture) of the system that you want to bootstrap Rust on",
+      "type": "string",
+      "proposals": [
+        "x86_64-unknown-linux-gnu",
+        "i686-pc-windows-msvc"
+      ],
+      "default": ""
+    },
+    "system.packages.additional-packages": {
+      "description": "A list of additional packages to install via the system's package manager",
       "type": "string",
       "proposals": [
         "gdb-multiarch",
@@ -80,28 +87,28 @@
       ],
       "default": ""
     },
-    "install-mold": {
-      "description": "Whether to install the mold linker",
+    "linker.mold.install": {
+      "description": "Whether to install the linker [`mold`](https://github.com/rui314/mold)",
       "type": "boolean",
       "default": false
     },
-    "mold-version": {
-      "description": "The version of the mold linker to install",
+    "linker.mold.version": {
+      "description": "The version of the [`mold`](https://github.com/rui314/mold) linker to install",
       "type": "string",
-      "default": "2.33.0"
+      "default": "2.34.1"
     },
-    "http_proxy": {
+    "proxy.http.http.address": {
       "description": "A URI for an HTTP proxy",
       "type": "string",
       "default": ""
     },
-    "https_proxy": {
+    "proxy.http.https.address": {
       "description": "A URI for an HTTPS proxy",
       "type": "string",
       "default": ""
     },
-    "no_proxy": {
-      "description": "List of URIs to not proxy",
+    "proxy.http.no-proxy.address": {
+      "description": "A list of URIs to not proxy",
       "type": "string",
       "default": "localhost,127.0.0.1"
     }
@@ -124,9 +131,9 @@
         "vadimcn.vscode-lldb@1.11.0" // LLDB debugger support
       ],
       "settings": {
-        // bierner.docs-view
+        // extension::bierner.docs-view
         "docsView.documentationView.updateMode": "sticky",
-        // rust-lang.rust-analyzer
+        // extension::rust-lang.rust-analyzer
         "rust-analyzer.restartServerOnConfigChange": true,
         "rust-analyzer.testExplorer": true,
         "rust-analyzer.debug.engine": "vadimcn.vscode-lldb",
@@ -142,6 +149,10 @@
         "rust-analyzer.semanticHighlighting.punctuation.enable": true,
         "rust-analyzer.semanticHighlighting.punctuation.separate.macro.bang": true,
         "rust-analyzer.semanticHighlighting.punctuation.specialization.enable": true,
+        // extension::vadimcn.vscode-lldb
+        "lldb.launch.sourceLanguages": [
+          "rust"
+        ]
       }
     }
   },

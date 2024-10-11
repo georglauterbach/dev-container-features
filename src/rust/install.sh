@@ -11,31 +11,30 @@ function log() {
 function parse_dev_container_options() {
   log 'info' 'Parsing input from options'
 
-  INSTALL_RUST="${INSTALL_RUST:?INSTALL_RUST is not set or null}"
+  RUST_INSTALL="${RUST_INSTALL:?RUST_INSTALL is not set or null}"
+  RUST_RUSTUP_DEFAULT_TOOLCHAIN=${RUST_RUSTUP_DEFAULT_TOOLCHAIN:?RUST_RUSTUP_DEFAULT_TOOLCHAIN not set or null}
+  RUST_RUSTUP_UPDATE_DEFAULT_TOOLCHAIN=${RUST_RUSTUP_UPDATE_DEFAULT_TOOLCHAIN:?RUST_RUSTUP_UPDATE_DEFAULT_TOOLCHAIN not set or null}
+  RUST_RUSTUP_PROFILE=${RUST_RUSTUP_PROFILE:?RUST_RUSTUP_PROFILE not set or null}
+  RUST_RUSTUP_ADDITIONAL_TARGETS=${RUST_RUSTUP_ADDITIONAL_TARGETS?RUST_RUSTUP_ADDITIONAL_TARGETS not set}
+  RUST_RUSTUP_ADDITIONAL_COMPONENTS=${RUST_RUSTUP_ADDITIONAL_COMPONENTS?RUST_RUSTUP_ADDITIONAL_COMPONENTS not set}
+  RUST_RUSTUP_DIST_SERVER=${RUST_RUSTUP_DIST_SERVER:?RUST_RUSTUP_DIST_SERVER not set or null}
+  RUST_RUSTUP_UPDATE_ROOT=${RUST_RUSTUP_UPDATE_ROOT:?RUST_RUSTUP_UPDATE_ROOT not set or null}
+  RUST_RUSTUP_RUSTUP_INIT_HOST_TRIPLE=${RUST_RUSTUP_RUSTUP_INIT_HOST_TRIPLE?RUST_RUSTUP_RUSTUP_INIT_HOST_TRIPLE is not set or null}
 
-  RUSTUP_DEFAULT_TOOLCHAIN="${RUSTUP_DEFAULT_TOOLCHAIN:?RUSTUP_DEFAULT_TOOLCHAIN not set or null}"
-  RUSTUP_UPDATE_DEFAULT_TOOLCHAIN="${RUSTUP_UPDATE_DEFAULT_TOOLCHAIN:?RUSTUP_UPDATE_DEFAULT_TOOLCHAIN not set or null}"
-  RUSTUP_PROFILE="${RUSTUP_PROFILE:?RUSTUP_PROFILE not set or null}"
-  RUSTUP_DIST_SERVER="${RUSTUP_DIST_SERVER:?RUSTUP_DIST_SERVER not set or null}"
-  RUSTUP_UPDATE_ROOT="${RUSTUP_UPDATE_ROOT:?RUSTUP_UPDATE_ROOT not set or null}"
-  RUSTUP_INIT_TARGET_TRIPLE=${RUSTUP_INIT_TARGET_TRIPLE:?RUSTUP_INIT_TARGET_TRIPLE is not set or null}
+  SYSTEM_PACKAGES_ADDITIONAL_PACKAGES="${SYSTEM_PACKAGES_ADDITIONAL_PACKAGES?SYSTEM_PACKAGES_ADDITIONAL_PACKAGES not set}"
 
-  ADDITIONAL_TARGETS="${ADDITIONAL_TARGETS?ADDITIONAL_TARGETS not set}"
-  ADDITIONAL_COMPONENTS=${ADDITIONAL_COMPONENTS?ADDITIONAL_COMPONENTS not set}
-  ADDITIONAL_PACKAGES=${ADDITIONAL_PACKAGES?ADDITIONAL_PACKAGES not set}
+  LINKER_MOLD_INSTALL=${LINKER_MOLD_INSTALL:?LINKER_MOLD_INSTALL not set or null}
+  LINKER_MOLD_VERSION=${LINKER_MOLD_VERSION?LINKER_MOLD_VERSION not set}
 
-  INSTALL_MOLD="${INSTALL_MOLD:?INSTALL_MOLD not set or null}"
-  MOLD_VERSION="${MOLD_VERSION?MOLD_VERSION not set}"
-
-  [[ -v http_proxy ]]  || export http_proxy=${HTTP_PROXY?HTTP_PROXY not set}
-  [[ -v https_proxy ]] || export https_proxy=${HTTPS_PROXY?HTTPS_PROXY not set}
-  [[ -v no_proxy ]]    || export no_proxy=${NO_PROXY?NO_PROXY not set}
+  [[ -v http_proxy ]]  || export http_proxy=${PROXY_HTTP_HTTP_ADDRESS?PROXY_HTTP_HTTP_ADDRESS not set}
+  [[ -v https_proxy ]] || export https_proxy=${PROXY_HTTP_HTTPS_ADDRESS?PROXY_HTTP_HTTPS_ADDRESS not set}
+  [[ -v no_proxy ]]    || export no_proxy=${PROXY_HTTP_NO_PROXY_ADDRESS?PROXY_HTTP_NO_PROXY_ADDRESS not set}
 }
 
 function pre_flight_checks() {
   log 'info' 'Checking privilege level'
   if [[ ${EUID} -ne 0 ]]; then
-    log 'info' 'This script must be run with superuser privilege (root)'
+    log 'error' 'This script must be run with superuser privilege (root)'
     exit 1
   fi
 
@@ -46,72 +45,64 @@ function pre_flight_checks() {
 }
 
 function install_rust() {
-  [[ ${INSTALL_RUST} == 'true' ]] || return 0
+  [[ ${RUST_INSTALL} == 'true' ]] || return 0
 
-  log 'info' 'Updating APT package index and installing required packages'
+  log 'info' 'Updating APT package index and installing required base packages'
   export DEBIAN_FRONTEND=noninteractive
   export DEBCONF_NONINTERACTIVE_SEEN=true
   apt-get --yes update
   apt-get --yes install --no-install-recommends 'build-essential'
-  apt-get --yes autoremove
-  apt-get --yes clean
-  rm -rf /var/lib/apt/lists/*
 
-  # These directories
-  #
-  # 1. contain the binaries `cargo`, `rustup`, etc.;
-  # 2. contain the repository files (mounted from the host)
-  #
-  # respectively.
+  log 'debug' 'Setting installation environment variables'
+  # These directories contain metadata and files required by
+  # `rustup` (toolchain files, components, etc.) and `cargo`
+  # (crates, etc.).
   export RUSTUP_HOME='/usr/local/bin/rustup'
   export CARGO_HOME=${RUSTUP_HOME}
 
-  # These variables are used when acquiring and
-  # updating `rustup`.
+  # These variables are used when acquiring and updating `rustup`.
   export RUSTUP_DIST_SERVER
-  export RUSTUP_UPDATE_ROOT
+  export RUST_RUSTUP_UPDATE_ROOT
 
-  # We update path to be able to execute `rustup-init`
-  # directly.
-  export PATH="/usr/local/bin/rustup/bin:${PATH}"
-
+  # We update path to be able to execute `rustup-init` directly.
+  log 'trace' 'Setting installation environment variables'
   mkdir -p "${RUSTUP_HOME}/bin"
+  export PATH="${RUSTUP_HOME}/bin:${PATH}"
 
   local RUSTUP_INSTALLER_ARGUMENTS=(
     '-y'
     '--no-modify-path'
-    '--default-toolchain' "${RUSTUP_DEFAULT_TOOLCHAIN}"
-    '--profile' "${RUSTUP_PROFILE}"
+    '--default-toolchain' "${RUST_RUSTUP_DEFAULT_TOOLCHAIN}"
+    '--profile' "${RUST_RUSTUP_PROFILE}"
   )
 
-  if [[ ${RUSTUP_UPDATE_DEFAULT_TOOLCHAIN} == 'false' ]]; then
+  if [[ ${RUST_RUSTUP_UPDATE_DEFAULT_TOOLCHAIN} == 'false' ]]; then
+  log 'trace' 'Default toolchain will not be updated'
     RUSTUP_INSTALLER_ARGUMENTS+=('--no-update-default-toolchain')
   fi
 
+  if [[ -z ${RUST_RUSTUP_RUSTUP_INIT_HOST_TRIPLE} ]]; then
+    RUST_RUSTUP_RUSTUP_INIT_HOST_TRIPLE="$(uname -m)-unknown-linux-gnu"
+  fi
+
   # This is the point where the actual installation takes place.
-  wget -O "${RUSTUP_HOME}/bin/rustup-init" "${RUSTUP_UPDATE_ROOT}/dist/$(uname -m)-${RUSTUP_INIT_TARGET_TRIPLE}/rustup-init"
+  wget -O "${RUSTUP_HOME}/bin/rustup-init" "${RUST_RUSTUP_UPDATE_ROOT}/dist/${RUST_RUSTUP_RUSTUP_INIT_HOST_TRIPLE}/rustup-init"
   chmod +x "${RUSTUP_HOME}/bin/"*
   rustup-init "${RUSTUP_INSTALLER_ARGUMENTS[@]}"
 
-  if [[ -n ${ADDITIONAL_TARGETS} ]]; then
-    local TARGETS
-    IFS=',' read -r -a TARGETS <<< "${ADDITIONAL_TARGETS// /}"
-    for TARGET in "${TARGETS[@]}"; do
-      log 'debug' "Installing additional target ${TARGET}"
-      rustup target add "${TARGET}"
+  if [[ -n ${RUST_RUSTUP_ADDITIONAL_TARGETS} ]]; then
+    local __RUST_RUSTUP_ADDITIONAL_TARGETS
+    IFS=',' read -r -a TARGETS <<< "${RUST_RUSTUP_ADDITIONAL_TARGETS// /}"
+    for RUSTUP_ADDITIONAL_TARGET in "${__RUST_RUSTUP_ADDITIONAL_TARGETS[@]}"; do
+      log 'debug' "Installing additional target ${RUSTUP_ADDITIONAL_TARGET}"
+      rustup target add "${RUSTUP_ADDITIONAL_TARGET}"
     done
   fi
 
-  if [[ -n ${ADDITIONAL_COMPONENTS} ]]; then
-    local COMPONENTS
-    IFS=',' read -r -a COMPONENTS <<< "${ADDITIONAL_COMPONENTS// /}"
-    rustup component add "${COMPONENTS[@]}"
-  fi
-
-  if [[ -n ${ADDITIONAL_PACKAGES} ]]; then
-    local PACKAGES
-    IFS=',' read -r -a PACKAGES <<< "${ADDITIONAL_PACKAGES// /}"
-    apt-get --yes install --no-install-recommends "${PACKAGES[@]}"
+  if [[ -n ${RUST_RUSTUP_ADDITIONAL_COMPONENTS} ]]; then
+    local __RUST_RUSTUP_ADDITIONAL_COMPONENTS
+    IFS=',' read -r -a __RUST_RUSTUP_ADDITIONAL_COMPONENTS <<< "${RUST_RUSTUP_ADDITIONAL_COMPONENTS// /}"
+    rustup component add "${__RUST_RUSTUP_ADDITIONAL_COMPONENTS[@]}"
   fi
 
   mkdir -p                       /usr/share/bash-completion/completions
@@ -119,16 +110,32 @@ function install_rust() {
   rustup completions bash cargo >/usr/share/bash-completion/completions/cargo
 }
 
-function install_mold() {
-  [[ ${INSTALL_MOLD} == 'true' ]] || return 0
+function install_additional_packages() {
+  if [[ -n ${SYSTEM_PACKAGES_ADDITIONAL_PACKAGES} ]]; then
+    local __SYSTEM_PACKAGES_ADDITIONAL_PACKAGES
+    IFS=',' read -r -a __SYSTEM_PACKAGES_ADDITIONAL_PACKAGES <<< "${SYSTEM_PACKAGES_ADDITIONAL_PACKAGES// /}"
+    apt-get --yes install --no-install-recommends "${__SYSTEM_PACKAGES_ADDITIONAL_PACKAGES[@]}"
+  fi
 
-  MOLD_DIR="mold-${MOLD_VERSION}-$(uname -m)-linux"
+  return 0
+}
+
+function install_mold() {
+  [[ ${LINKER_MOLD_INSTALL} == 'true' ]] || return 0
+
+  local MOLD_DIR="mold-${LINKER_MOLD_VERSION}-$(uname -m)-linux"
   curl --silent --show-error --fail --location                                               \
-    "https://github.com/rui314/mold/releases/download/v${MOLD_VERSION}/${MOLD_DIR}.tar.gz" | \
+    "https://github.com/rui314/mold/releases/download/v${LINKER_MOLD_VERSION}/${MOLD_DIR}.tar.gz" | \
     tar xvz -C /tmp
 
   cp "/tmp/${MOLD_DIR}/"{bin/{mold,ld.mold},lib/mold/mold-wrapper.so} /usr/local/bin/
   rm -r "/tmp/${MOLD_DIR}"
+}
+
+function post_flight_checks() {
+  apt-get --yes autoremove
+  apt-get --yes clean
+  rm -rf /var/lib/apt/lists/*
 }
 
 function main() {
@@ -136,7 +143,10 @@ function main() {
   pre_flight_checks
 
   install_rust
+  install_additional_packages
   install_mold
+
+  post_flight_checks
 }
 
 main "${@}"
