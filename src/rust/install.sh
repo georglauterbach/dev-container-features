@@ -43,18 +43,19 @@ function pre_flight_checks() {
   rm -f /etc/profile.d/00-restore-env.sh
   echo "export PATH=${PATH//$(sh -lc 'echo $PATH')/\$PATH}" >/etc/profile.d/00-restore-env.sh
   chmod +x /etc/profile.d/00-restore-env.sh
+}
+
+function install_rust() {
+  [[ ${INSTALL_RUST} == 'true' ]] || return 0
 
   log 'info' 'Updating APT package index and installing required packages'
   export DEBIAN_FRONTEND=noninteractive
+  export DEBCONF_NONINTERACTIVE_SEEN=true
   apt-get --yes update
   apt-get --yes install --no-install-recommends 'build-essential'
   apt-get --yes autoremove
   apt-get --yes clean
   rm -rf /var/lib/apt/lists/*
-}
-
-function install_rust() {
-  [[ ${INSTALL_RUST} == 'true' ]] || return 0
 
   # These directories
   #
