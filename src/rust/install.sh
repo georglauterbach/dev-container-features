@@ -63,7 +63,11 @@ function install_rust() {
   export RUSTUP_DIST_SERVER
   export RUSTUP_UPDATE_ROOT
 
-  mkdir -p "${RUSTUP_HOME}"
+  # We update path to be able to execute `rustup-init`
+  # directly.
+  export PATH="/usr/local/bin/rustup/bin:${PATH}"
+
+  mkdir -p "${RUSTUP_HOME}/bin"
 
   local RUSTUP_INSTALLER_ARGUMENTS=(
     '-y'
@@ -77,11 +81,9 @@ function install_rust() {
   fi
 
   # This is the point where the actual installation takes place.
-  wget -O "${RUSTUP_HOME}/rustup-init" "${RUSTUP_UPDATE_ROOT}/dist/$(uname -m)-${RUSTUP_INIT_TARGET_TRIPLE}/rustup-init"
-  chmod +x "${RUSTUP_HOME}/rustup-init"
-  "${RUSTUP_HOME}/rustup-init" "${RUSTUP_INSTALLER_ARGUMENTS[@]}"
-
-  export PATH="/usr/local/bin/rustup/bin:${PATH}"
+  wget -O "${RUSTUP_HOME}/bin/rustup-init" "${RUSTUP_UPDATE_ROOT}/dist/$(uname -m)-${RUSTUP_INIT_TARGET_TRIPLE}/rustup-init"
+  chmod +x "${RUSTUP_HOME}/bin/"*
+  rustup-init "${RUSTUP_INSTALLER_ARGUMENTS[@]}"
 
   cat >>/etc/environment <<EOM
 
