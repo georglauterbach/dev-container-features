@@ -7,7 +7,7 @@ A Development Container Feature to work efficiently and effortlessly with the Ru
 
 ```json
 "features": {
-    "ghcr.io/georglauterbach/dev-container-features/rust:1": {}
+    "ghcr.io/georglauterbach/dev-container-features/rust:2": {}
 }
 ```
 
@@ -15,8 +15,9 @@ A Development Container Feature to work efficiently and effortlessly with the Ru
 
 | Options Id | Description | Type | Default Value |
 |-----|-----|-----|-----|
+| install-rust | In environments where Rust is already installed, set this to false to not install it again | boolean | true |
 | rustup-default-toolchain | The default toolchain to install | string | none |
-| rustup-update-default-toolchain | Whether to update the default toolchain | string | false |
+| rustup-update-default-toolchain | Whether to update the default toolchain | boolean | false |
 | rustup-profile | Which profile `rustup` should use for the installation | string | minimal |
 | rustup-dist-server | Root URI for downloading static resources related to Rust | string | https://static.rust-lang.org |
 | rustup-update-root | Root URL for downloading self-update | string | https://static.rust-lang.org/rustup |
@@ -24,7 +25,7 @@ A Development Container Feature to work efficiently and effortlessly with the Ru
 | additional-targets | List of additional targets to install | string | - |
 | additional-components | List of additional `rustup` components | string | - |
 | additional-packages | List of additional packages to install via APT | string | - |
-| install-mold | Whether to install the mold linker | string | false |
+| install-mold | Whether to install the mold linker | boolean | false |
 | mold-version | The version of the mold linker to install | string | 2.33.0 |
 | http_proxy | A URI for an HTTP proxy | string | - |
 | https_proxy | A URI for an HTTPS proxy | string | - |
