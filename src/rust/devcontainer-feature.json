@@ -1,10 +1,16 @@
+// ref: https://github.com/devcontainers/spec/blob/main/schemas/devContainerFeature.schema.json
 {
   "id": "rust",
-  "version": "1.2.1",
+  "version": "2.0.0",
   "name": "Development Container Feature - Rust",
   "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/rust",
   "description": "A Development Container Feature to work efficiently and effortlessly with the Rust programming language",
   "options": {
+    "install-rust": {
+      "description": "In environments where Rust is already installed, set this to false to not install it again",
+      "type": "boolean",
+      "default": true
+    },
     "rustup-default-toolchain": {
       "description": "The default toolchain to install",
       "type": "string",
@@ -19,12 +25,8 @@
     },
     "rustup-update-default-toolchain": {
       "description": "Whether to update the default toolchain",
-      "type": "string",
-      "proposals": [
-        "false",
-        "true"
-      ],
-      "default": "false"
+      "type": "boolean",
+      "default": false
     },
     "rustup-profile": {
       "description": "Which profile `rustup` should use for the installation",
@@ -80,12 +82,8 @@
     },
     "install-mold": {
       "description": "Whether to install the mold linker",
-      "type": "string",
-      "proposals": [
-        "false",
-        "true"
-      ],
-      "default": "false"
+      "type": "boolean",
+      "default": false
     },
     "mold-version": {
       "description": "The version of the mold linker to install",

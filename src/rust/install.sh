@@ -11,6 +11,8 @@ function log() {
 function parse_dev_container_options() {
   log 'info' 'Parsing input from options'
 
+  INSTALL_RUST=${INSTALL_RUST:?INSTALL_RUST is not set or null}
+
   RUSTUP_DEFAULT_TOOLCHAIN="${RUSTUP_DEFAULT_TOOLCHAIN:?RUSTUP_DEFAULT_TOOLCHAIN not set or null}"
   RUSTUP_UPDATE_DEFAULT_TOOLCHAIN="${RUSTUP_UPDATE_DEFAULT_TOOLCHAIN:?RUSTUP_UPDATE_DEFAULT_TOOLCHAIN not set or null}"
   RUSTUP_PROFILE="${RUSTUP_PROFILE:?RUSTUP_PROFILE not set or null}"
@@ -49,6 +51,8 @@ function pre_flight_checks() {
 }
 
 function install_rust() {
+  [[ ${INSTALL_RUST} == 'true' ]] || return 0
+
   # These directories
   #
   # 1. contain the binaries `cargo`, `rustup`, etc.;
@@ -85,13 +89,6 @@ function install_rust() {
   chmod +x "${RUSTUP_HOME}/bin/"*
   rustup-init "${RUSTUP_INSTALLER_ARGUMENTS[@]}"
 
-  cat >>/etc/environment <<EOM
-
-# Rust
-RUSTUP_DIST_SERVER=${RUSTUP_DIST_SERVER}
-RUSTUP_UPDATE_ROOT=${RUSTUP_UPDATE_ROOT}
-EOM
-
   if [[ -n ${ADDITIONAL_TARGETS} ]]; then
     local TARGETS
     IFS=',' read -r -a TARGETS <<< "${ADDITIONAL_TARGETS// /}"
@@ -119,16 +116,15 @@ EOM
 }
 
 function install_mold() {
-  if [[ ${INSTALL_MOLD} == 'true' ]]; then
-    MOLD_DIR="mold-${MOLD_VERSION}-$(uname -m)-linux"
+  [[ ${INSTALL_MOLD} == 'true' ]] || return 0
 
-    curl --silent --show-error --fail --location                                               \
-      "https://github.com/rui314/mold/releases/download/v${MOLD_VERSION}/${MOLD_DIR}.tar.gz" | \
-      tar xvz -C /tmp
+  MOLD_DIR="mold-${MOLD_VERSION}-$(uname -m)-linux"
+  curl --silent --show-error --fail --location                                               \
+    "https://github.com/rui314/mold/releases/download/v${MOLD_VERSION}/${MOLD_DIR}.tar.gz" | \
+    tar xvz -C /tmp
 
-    cp "/tmp/${MOLD_DIR}/"{bin/{mold,ld.mold},lib/mold/mold-wrapper.so} /usr/local/bin/
-    rm -r "/tmp/${MOLD_DIR}"
-  fi
+  cp "/tmp/${MOLD_DIR}/"{bin/{mold,ld.mold},lib/mold/mold-wrapper.so} /usr/local/bin/
+  rm -r "/tmp/${MOLD_DIR}"
 }
 
 function main() {
