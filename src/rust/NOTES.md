@@ -1,7 +1,7 @@
 
 ## About
 
-This Development Container Feature installs [Rust](https://www.rust-lang.org/) via [rustup](https://www.rust-lang.org/tools/install) and additional extensions required to work efficiently in Rust. This feature is installed after `ghcr.io/devcontainers/features/common-utils`.
+This Development Container Feature installs [Rust](https://www.rust-lang.org/) via [rustup](https://www.rust-lang.org/tools/install) and additional extensions required to work efficiently in Rust.
 
 > [!TIP]
 >
@@ -11,7 +11,17 @@ This Development Container Feature installs [Rust](https://www.rust-lang.org/) v
 
 ### Supported Base / OS
 
-This feature should work on recent versions of Debian- and Ubuntu-based distributions. This feature depends on the APT package manager. Bash is required. The package `build-essential` has to be installable.
+This feature works on recent versions of Debian- and Ubuntu-based distributions (as this feature currently depends on the APT package manager). Bash is required. The package `build-essential` has to be installable.
+
+### Debugger Support
+
+#### rust-analyzer & CodeLLDB
+
+This feature installs the excellent extensions [`rust-lang.rust-analyzer`](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer) (language server) and [`vadimcn.vscode-lldb`](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb) (native LLDB debugger). rust-analyzer is, by default, configured to use CodeLLDB as its debugger of choice. 
+
+#### Niche Scenarios
+
+In case you do not use a default toolchain and your Rust code (e.g., `Cargo.toml`) does not live directly in the root directory, you may want to create a symbol link to `rust-toolchain.toml` if you are using such a file. The reason is a [currently existing shortcoming in acquiring `rustc`'s sysroot](https://github.com/vadimcn/codelldb/issues/1156).
 
 ### Environment Variables Set by This Feature
 
@@ -26,6 +36,7 @@ This feature should work on recent versions of Debian- and Ubuntu-based distribu
 | `RUSTUP_HOME`           | Directory path that `rustup` uses as its "home" directory                           | `${containerWorkspaceFolder}/target/rustup_home`  |
 | `CARGO_HOME`            | Directory path that `Cargo` uses as its "home" directory                            | `${containerWorkspaceFolder}/target/cargo_home`   |
 | `CARGO_TARGET_DIR`      | Changes the `target/` directory that Cargo uses to place binaries & build artifacts | `${containerWorkspaceFolder}/target/cargo_target` |
+| `PATH`                  | Extend `PATH` to include `rustup`, `cargo`, `rustc`, etc.                           | `/usr/local/bin/rustup/bin:${PATH}`               |
 
 ### Additional Adjustments
 
