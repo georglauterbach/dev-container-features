@@ -1,15 +1,25 @@
-name: Validation
+name: Schema Validation
 
 on:
   workflow_dispatch:
-  # pull_request:
+  pull_request:
   push:
     branches: [ main ]
-    paths: [ src/** ]
+    paths:
+      - src/**
+      - test/**
+      - .github/workflows
+
+defaults:
+  run:
+    shell: bash
+
+permissions:
+  contents: read
 
 jobs:
   validate:
-    name: Validate JSON
+    name: JSON
     runs-on: ubuntu-24.04
     permissions:
       contents: read
