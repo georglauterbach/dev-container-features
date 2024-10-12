@@ -16,7 +16,7 @@ function parse_linux_distribution() {
   # shellcheck disable=SC2034
   source /etc/os-release
 
-  if [[ ${ID} =~ ^(ubuntu|debian)$ ]]; then
+  if [[ ${ID_LIKE} =~ ^debian$ ]]; then
     LINUX_DISTRIBUTION_NAME='debian'
     export DEBIAN_FRONTEND=noninteractive
     export DEBCONF_NONINTERACTIVE_SEEN=true
@@ -52,6 +52,8 @@ function pre_flight_checks() {
     log 'error' 'This script must be run with superuser privilege (root)'
     exit 1
   fi
+
+  export HOME='/root'
 
   if [[ ${LINUX_DISTRIBUTION_NAME} == 'unknown' ]]; then
     log 'error' 'Could not determine Linux distribution name'
