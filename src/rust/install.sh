@@ -93,7 +93,6 @@ function install_rust() {
   export RUST_RUSTUP_UPDATE_ROOT
 
   # We update path to be able to execute `rustup-init` directly.
-  log 'trace' 'Setting installation environment variables'
   mkdir -p "${RUSTUP_HOME}/bin"
   export PATH="${RUSTUP_HOME}/bin:${PATH}"
 
@@ -105,37 +104,44 @@ function install_rust() {
   )
 
   if [[ ${RUST_RUSTUP_UPDATE_DEFAULT_TOOLCHAIN} == 'false' ]]; then
-  log 'trace' 'Default toolchain will not be updated'
+    log 'trace' 'Default toolchain will not be updated'
     RUSTUP_INSTALLER_ARGUMENTS+=('--no-update-default-toolchain')
   fi
 
   if [[ -z ${RUST_RUSTUP_RUSTUP_INIT_HOST_TRIPLE} ]]; then
     RUST_RUSTUP_RUSTUP_INIT_HOST_TRIPLE="$(uname -m)-unknown-linux-gnu"
+    log 'debug' "Host triple set to '${RUST_RUSTUP_RUSTUP_INIT_HOST_TRIPLE}'"
   fi
 
   # This is the point where the actual installation takes place.
+  log 'debug' "Acquiring rustup-init"
   curl -sSfL -o "${RUSTUP_HOME}/bin/rustup-init" "${RUST_RUSTUP_UPDATE_ROOT}/dist/${RUST_RUSTUP_RUSTUP_INIT_HOST_TRIPLE}/rustup-init"
   chmod +x "${RUSTUP_HOME}/bin/"*
+  log 'debug' "Installing rustup via rustup-init"
   rustup-init "${RUSTUP_INSTALLER_ARGUMENTS[@]}"
 
   if [[ -n ${RUST_RUSTUP_ADDITIONAL_TARGETS} ]]; then
     local __RUST_RUSTUP_ADDITIONAL_TARGETS
     IFS=',' read -r -a __RUST_RUSTUP_ADDITIONAL_TARGETS <<< "${RUST_RUSTUP_ADDITIONAL_TARGETS// /}"
-    for RUSTUP_ADDITIONAL_TARGET in "${__RUST_RUSTUP_ADDITIONAL_TARGETS[@]}"; do
-      log 'debug' "Installing additional target ${RUSTUP_ADDITIONAL_TARGET}"
-      rustup target add "${RUSTUP_ADDITIONAL_TARGET}"
-    done
+    log 'debug' "Installing additional rustup targets: ${__RUST_RUSTUP_ADDITIONAL_TARGETS[*]}"
+    rustup target add "${__RUST_RUSTUP_ADDITIONAL_TARGETS[@]}"
   fi
 
   if [[ -n ${RUST_RUSTUP_ADDITIONAL_COMPONENTS} ]]; then
     local __RUST_RUSTUP_ADDITIONAL_COMPONENTS
     IFS=',' read -r -a __RUST_RUSTUP_ADDITIONAL_COMPONENTS <<< "${RUST_RUSTUP_ADDITIONAL_COMPONENTS// /}"
+    log 'debug' "Adding additional rustup components: ${__RUST_RUSTUP_ADDITIONAL_COMPONENTS[*]}"
     rustup component add "${__RUST_RUSTUP_ADDITIONAL_COMPONENTS[@]}"
   fi
 
+  log 'debug' 'Setting up bash completion'
   mkdir -p                       /usr/share/bash-completion/completions
   rustup completions bash       >/usr/share/bash-completion/completions/rustup
   rustup completions bash cargo >/usr/share/bash-completion/completions/cargo
+
+  log 'debug' 'Creating default directories for rustup and cargo metadata and build files'
+  mkdir -p /usr/rust/{rustup_home,cargo_home,cargo_target}
+  chmod -R 777 /usr/rust
 }
 
 function install_additional_packages() {

@@ -17,7 +17,7 @@ This feature works on recent versions of Debian- and Ubuntu-based distributions 
 
 #### rust-analyzer & CodeLLDB
 
-This feature installs the excellent extensions [`rust-lang.rust-analyzer`](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer) (language server) and [`vadimcn.vscode-lldb`](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb) (native LLDB debugger). rust-analyzer is, by default, configured to use CodeLLDB as its debugger of choice. 
+This feature installs the excellent extensions [`rust-lang.rust-analyzer`](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer) (language server) and [`vadimcn.vscode-lldb`](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb) (native LLDB debugger). rust-analyzer is, by default, configured to use CodeLLDB as its debugger of choice.
 
 #### Niche Scenarios
 
@@ -31,12 +31,12 @@ In case you do not use a default toolchain and your Rust code (e.g., `Cargo.toml
 >
 > You should use a volume or a bind-mount to cache the files contained in the directories denoted by the environment variables.
 
-| Name                    | Description                                                                         | Value                                             |
-| :---------------------- | :---------------------------------------------------------------------------------- | :------------------------------------------------ |
-| `RUSTUP_HOME`           | Directory path that `rustup` uses as its "home" directory                           | `${containerWorkspaceFolder}/target/rustup_home`  |
-| `CARGO_HOME`            | Directory path that `Cargo` uses as its "home" directory                            | `${containerWorkspaceFolder}/target/cargo_home`   |
-| `CARGO_TARGET_DIR`      | Changes the `target/` directory that Cargo uses to place binaries & build artifacts | `${containerWorkspaceFolder}/target/cargo_target` |
-| `PATH`                  | Extend `PATH` to include `rustup`, `cargo`, `rustc`, etc.                           | `/usr/local/bin/rustup/bin:${PATH}`               |
+| Name                    | Description                                                   | Value                               |
+| :---------------------- | :------------------------------------------------------------ | :---------------------------------- |
+| `RUSTUP_HOME`           | Directory path that `rustup` uses as its "home" directory     | `/usr/rust/rustup_home`             |
+| `CARGO_HOME`            | Directory path that `Cargo` uses as its "home" directory      | `/usr/rust/cargo_home`              |
+| `CARGO_TARGET_DIR`      | Directory that Cargo uses to place binaries & build artifacts | `/usr/rust/cargo_target`            |
+| `PATH`                  | Extend `PATH` to include `rustup`, `cargo`, `rustc`, etc.     | `/usr/local/bin/rustup/bin:${PATH}` |
 
 ### Additional Adjustments
 

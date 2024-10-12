@@ -114,9 +114,9 @@
     }
   },
   "containerEnv": {
-    "RUSTUP_HOME": "${containerWorkspaceFolder}/target/rustup_home",
-    "CARGO_HOME": "${containerWorkspaceFolder}/target/cargo_home",
-    "CARGO_TARGET_DIR": "${containerWorkspaceFolder}/target/cargo_target",
+    "RUSTUP_HOME": "/usr/rust/rustup_home",
+    "CARGO_HOME": "/usr/rust/cargo_home",
+    "CARGO_TARGET_DIR": "/usr/rust/cargo_target",
     "PATH": "/usr/local/bin/rustup/bin:${PATH}"
   },
   "customizations": {
