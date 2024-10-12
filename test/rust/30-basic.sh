@@ -17,4 +17,9 @@ assert_success "version::rustc" rustc --version
 assert_success "version::Cargo" cargo --version
 assert_success "version::rustup" rustc --version
 
+cd
+assert_success "cargo::init" cargo new --bin test_project
+cd test_project
+assert_success "cargo::run" cargo run
+
 reportResults

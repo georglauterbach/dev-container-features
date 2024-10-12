@@ -43,10 +43,9 @@ A Development Container Feature to work efficiently and effortlessly with the Ru
 - `usernamehw.errorlens@3.20.0`
 - `vadimcn.vscode-lldb@1.11.0`
 
-
 ## About
 
-This Development Container Feature installs [Rust](https://www.rust-lang.org/) via [rustup](https://www.rust-lang.org/tools/install) and additional extensions required to work efficiently in Rust.
+This Development Container Feature installs [Rust](https://www.rust-lang.org/) via [rustup](https://www.rust-lang.org/tools/install) and additional extensions required to work efficiently with Rust.
 
 > [!TIP]
 >
@@ -56,17 +55,22 @@ This Development Container Feature installs [Rust](https://www.rust-lang.org/) v
 
 ### Supported Base / OS
 
-This feature works on recent versions of Debian- and Ubuntu-based distributions (as this feature currently depends on the APT package manager). Bash is required. The package `build-essential` has to be installable.
+Currently, this feature works on recent versions of Debian- and Ubuntu-based distributions. It may be extended to other Linux distributions too, requiring only to add the new distribution to a matcher and extending the package management steps. Bash is required in all cases.
 
 ### Debugger Support
 
 #### rust-analyzer & CodeLLDB
 
-This feature installs the excellent extensions [`rust-lang.rust-analyzer`](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer) (language server) and [`vadimcn.vscode-lldb`](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb) (native LLDB debugger). rust-analyzer is, by default, configured to use CodeLLDB as its debugger of choice.
+This feature installs the excellent extensions [`rust-lang.rust-analyzer`](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer) (language server) and [`vadimcn.vscode-lldb`](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb) (native LLDB debugger). [Rust-analyzer](https://github.com/rust-lang/rust-analyzer) is, by default, configured to use [CodeLLDB](https://github.com/vadimcn/codelldb) as its debugger of choice.
 
 #### Niche Scenarios
 
-In case you do not use a default toolchain and your Rust code (e.g., `Cargo.toml`) does not live directly in the root directory, you may want to create a symbol link to `rust-toolchain.toml` if you are using such a file. The reason is a [currently existing shortcoming in acquiring `rustc`'s sysroot](https://github.com/vadimcn/codelldb/issues/1156).
+In case
+
+1. you do not set a default toolchain (the default with this feature is `none`), and
+2. your Rust's root directory (e.g., the directory that contains `Cargo.toml`) is not the root directory that you open with VS Code,
+
+you may want to create a symbolic link to [`rust-toolchain.toml`](https://rust-lang.github.io/rustup/overrides.html#the-toolchain-file), if you are using such a file (which is advised). [Such a configuration is classified as a niche scenario by CodeLLDB](https://github.com/vadimcn/codelldb/issues/1156), and you may experience unformatted variables in the debugger.
 
 ### Environment Variables Set by This Feature
 
@@ -79,7 +83,7 @@ In case you do not use a default toolchain and your Rust code (e.g., `Cargo.toml
 
 > [!TIP]
 >
-> In case you do not want to use Cargo's default target directory, overwrite [the environment variable `CARGO_TARGET_DIR`](https://doc.rust-lang.org/cargo/reference/environment-variables.html).
+> In case you would rather not use Cargo's default target directory, overwrite [the environment variable `CARGO_TARGET_DIR`](https://doc.rust-lang.org/cargo/reference/environment-variables.html).
 >
 > We advise using a bind-mount or volume for this directory in case it is not a subdirectory of `${containerWorkspaceFolder}`.
 
