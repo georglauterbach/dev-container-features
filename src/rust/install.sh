@@ -120,6 +120,10 @@ function install_rust() {
   log 'debug' "Installing rustup via rustup-init"
   rustup-init "${RUSTUP_INSTALLER_ARGUMENTS[@]}"
 
+  if [[ ${RUST_RUSTUP_DEFAULT_TOOLCHAIN} != 'none' ]]; then
+    rustup default "${RUST_RUSTUP_DEFAULT_TOOLCHAIN}"
+  fi
+
   if [[ -n ${RUST_RUSTUP_ADDITIONAL_TARGETS} ]]; then
     local __RUST_RUSTUP_ADDITIONAL_TARGETS
     IFS=',' read -r -a __RUST_RUSTUP_ADDITIONAL_TARGETS <<< "${RUST_RUSTUP_ADDITIONAL_TARGETS// /}"
