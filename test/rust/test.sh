@@ -1,3 +1,9 @@
 #! /usr/bin/env bash
 
-exit 0
+set -eE -u -o pipefail
+shopt -s inherit_errexit
+
+command -v rustup-init
+command -v rustup
+command -v rustc
+command -v cargo

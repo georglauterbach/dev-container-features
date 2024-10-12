@@ -1,10 +1,11 @@
 {
   "install_rust": {
-      "image": "ghcr.io/georglauterbach/dev-container-base:2.1.0",
-      "features": {
-          "rust": {
-              "rust.install": true
-          }
+    "image": "ghcr.io/georglauterbach/dev-container-base:latest",
+    "features": {
+      "rust": {
+        "rust.rustup.default-toolchain": "stable",
+        "rust.rustup.update-default-toolchain": true
       }
+    }
   }
 }
