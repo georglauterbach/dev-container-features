@@ -8,6 +8,21 @@ function log() {
     "$(date +"%Y-%m-%dT%H:%M:%S.%6N%:z" || :)" "${1:-}" "${FUNCNAME[1]:-}" "${2:-}"
 }
 
+function parse_linux_distribution() {
+  export LINUX_DISTRIBUTION_NAME='unknown'
+
+  [[ -f /etc/os-release ]] || return 0
+
+  # shellcheck disable=SC2034
+  source /etc/os-release
+
+  if [[ ${ID} =~ ^(ubuntu|debian)$ ]]; then
+    LINUX_DISTRIBUTION_NAME='debian'
+    export DEBIAN_FRONTEND=noninteractive
+    export DEBCONF_NONINTERACTIVE_SEEN=true
+  fi
+}
+
 function parse_dev_container_options() {
   log 'info' 'Parsing input from options'
 
@@ -38,20 +53,31 @@ function pre_flight_checks() {
     exit 1
   fi
 
+  if [[ ${LINUX_DISTRIBUTION_NAME} == 'unknown' ]]; then
+    log 'error' 'Could not determine Linux distribution name'
+    exit 1
+  fi
+
   log 'debug' 'Ensuring that login shells get the correct path if the user updates PATH using ENV'
   rm -f /etc/profile.d/00-restore-env.sh
   echo "export PATH=${PATH//$(sh -lc 'echo $PATH')/\$PATH}" >/etc/profile.d/00-restore-env.sh
   chmod +x /etc/profile.d/00-restore-env.sh
+
+  case "${LINUX_DISTRIBUTION_NAME}" in
+    ( 'debian' )
+      log 'info' 'Updating APT package index and installing required base packages'
+      apt-get --yes update
+      apt-get --yes install --no-install-recommends 'build-essential' 'curl'
+      ;;
+
+    ( * )
+      log 'error' "This is a bug and should not have happened (could not match Linux distribution name '${LINUX_DISTRIBUTION_NAME}')"
+      exit 1
+  esac
 }
 
 function install_rust() {
   [[ ${RUST_INSTALL} == 'true' ]] || return 0
-
-  log 'info' 'Updating APT package index and installing required base packages'
-  export DEBIAN_FRONTEND=noninteractive
-  export DEBCONF_NONINTERACTIVE_SEEN=true
-  apt-get --yes update
-  apt-get --yes install --no-install-recommends 'build-essential'
 
   log 'debug' 'Setting installation environment variables'
   # These directories contain metadata and files required by
@@ -86,13 +112,13 @@ function install_rust() {
   fi
 
   # This is the point where the actual installation takes place.
-  wget -O "${RUSTUP_HOME}/bin/rustup-init" "${RUST_RUSTUP_UPDATE_ROOT}/dist/${RUST_RUSTUP_RUSTUP_INIT_HOST_TRIPLE}/rustup-init"
+  curl -sSfL -o "${RUSTUP_HOME}/bin/rustup-init" "${RUST_RUSTUP_UPDATE_ROOT}/dist/${RUST_RUSTUP_RUSTUP_INIT_HOST_TRIPLE}/rustup-init"
   chmod +x "${RUSTUP_HOME}/bin/"*
   rustup-init "${RUSTUP_INSTALLER_ARGUMENTS[@]}"
 
   if [[ -n ${RUST_RUSTUP_ADDITIONAL_TARGETS} ]]; then
     local __RUST_RUSTUP_ADDITIONAL_TARGETS
-    IFS=',' read -r -a TARGETS <<< "${RUST_RUSTUP_ADDITIONAL_TARGETS// /}"
+    IFS=',' read -r -a __RUST_RUSTUP_ADDITIONAL_TARGETS <<< "${RUST_RUSTUP_ADDITIONAL_TARGETS// /}"
     for RUSTUP_ADDITIONAL_TARGET in "${__RUST_RUSTUP_ADDITIONAL_TARGETS[@]}"; do
       log 'debug' "Installing additional target ${RUSTUP_ADDITIONAL_TARGET}"
       rustup target add "${RUSTUP_ADDITIONAL_TARGET}"
@@ -123,8 +149,9 @@ function install_additional_packages() {
 function install_mold() {
   [[ ${LINKER_MOLD_INSTALL} == 'true' ]] || return 0
 
-  local MOLD_DIR="mold-${LINKER_MOLD_VERSION}-$(uname -m)-linux"
-  curl --silent --show-error --fail --location                                               \
+  local MOLD_DIR
+  MOLD_DIR="mold-${LINKER_MOLD_VERSION}-$(uname -m)-linux"
+  curl --silent --show-error --fail --location                                                      \
     "https://github.com/rui314/mold/releases/download/v${LINKER_MOLD_VERSION}/${MOLD_DIR}.tar.gz" | \
     tar xvz -C /tmp
 
@@ -133,12 +160,22 @@ function install_mold() {
 }
 
 function post_flight_checks() {
-  apt-get --yes autoremove
-  apt-get --yes clean
-  rm -rf /var/lib/apt/lists/*
+  case "${LINUX_DISTRIBUTION_NAME}" in
+    ( 'debian' )
+      log 'info' 'Cleaning up APT and its cache'
+      apt-get --yes autoremove
+      apt-get --yes clean
+      rm -rf /var/lib/apt/lists/*
+      ;;
+
+    ( * )
+      log 'error' "This is a bug and should not have happened (could not match Linux distribution name '${LINUX_DISTRIBUTION_NAME}')"
+      exit 1
+  esac
 }
 
 function main() {
+  parse_linux_distribution
   parse_dev_container_options
   pre_flight_checks
 
