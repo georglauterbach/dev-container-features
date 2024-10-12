@@ -1,5 +1,5 @@
 {
-  "install_rust": {
+  "install_rust_basic": {
     "image": "ghcr.io/georglauterbach/dev-container-base:latest",
     "features": {
       "rust": {
