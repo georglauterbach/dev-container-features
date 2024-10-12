@@ -25,18 +25,18 @@ In case you do not use a default toolchain and your Rust code (e.g., `Cargo.toml
 
 ### Environment Variables Set by This Feature
 
+| Name                    | Description                                                   | Value                              |
+| :---------------------- | :------------------------------------------------------------ | :--------------------------------- |
+| `RUSTUP_HOME`           | Directory path that `rustup` uses as its "home" directory     | `/usr/rust/rustup/`                      |
+| `CARGO_HOME`            | Directory path that `Cargo` uses as its "home" directory      | `/usr/rust/cargo/home`                   |
+| `CARGO_TARGET_DIR`      | Directory that Cargo uses to place binaries & build artifacts | `${containerWorkspaceFolder}/target` |
+| `PATH`                  | Extend `PATH` to include `rustup`, `cargo`, `rustc`, etc.     | `/usr/rust/cargo/home/bin:${PATH}`       |
+
 > [!TIP]
 >
-> The following variables can be overwritten in the `containerEnv` section in your `devcontainer.json` file.
+> In case you do not want to use Cargo's default target directory, overwrite [the environment variable `CARGO_TARGET_DIR`](https://doc.rust-lang.org/cargo/reference/environment-variables.html).
 >
-> You should use a volume or a bind-mount to cache the files contained in the directories denoted by the environment variables.
-
-| Name                    | Description                                                   | Value                               |
-| :---------------------- | :------------------------------------------------------------ | :---------------------------------- |
-| `RUSTUP_HOME`           | Directory path that `rustup` uses as its "home" directory     | `/usr/rust/rustup_home`             |
-| `CARGO_HOME`            | Directory path that `Cargo` uses as its "home" directory      | `/usr/rust/cargo_home`              |
-| `CARGO_TARGET_DIR`      | Directory that Cargo uses to place binaries & build artifacts | `/usr/rust/cargo_target`            |
-| `PATH`                  | Extend `PATH` to include `rustup`, `cargo`, `rustc`, etc.     | `/usr/local/bin/rustup/bin:${PATH}` |
+> We advise using a bind-mount or volume for this directory in case it is not a subdirectory of `${containerWorkspaceFolder}`.
 
 ### Additional Adjustments
 

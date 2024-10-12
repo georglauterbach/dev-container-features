@@ -85,16 +85,15 @@ function install_rust() {
   # These directories contain metadata and files required by
   # `rustup` (toolchain files, components, etc.) and `cargo`
   # (crates, etc.).
-  export RUSTUP_HOME='/usr/local/bin/rustup'
-  export CARGO_HOME=${RUSTUP_HOME}
+  export RUSTUP_HOME='/usr/rust/rustup'
+  export CARGO_HOME='/usr/rust/cargo/home'
+  export CARGO_TARGET='/usr/rust/cargo/target'
+
+  mkdir -p "${RUSTUP_HOME}" "${CARGO_HOME}" "${CARGO_TARGET}"
 
   # These variables are used when acquiring and updating `rustup`.
   export RUSTUP_DIST_SERVER
   export RUST_RUSTUP_UPDATE_ROOT
-
-  # We update path to be able to execute `rustup-init` directly.
-  mkdir -p "${RUSTUP_HOME}/bin"
-  export PATH="${RUSTUP_HOME}/bin:${PATH}"
 
   local RUSTUP_INSTALLER_ARGUMENTS=(
     '-y'
@@ -115,10 +114,14 @@ function install_rust() {
 
   # This is the point where the actual installation takes place.
   log 'debug' "Acquiring rustup-init"
-  curl -sSfL -o "${RUSTUP_HOME}/bin/rustup-init" "${RUST_RUSTUP_UPDATE_ROOT}/dist/${RUST_RUSTUP_RUSTUP_INIT_HOST_TRIPLE}/rustup-init"
-  chmod +x "${RUSTUP_HOME}/bin/"*
+  curl -sSfL -o "${RUSTUP_HOME}/rustup-init" "${RUST_RUSTUP_UPDATE_ROOT}/dist/${RUST_RUSTUP_RUSTUP_INIT_HOST_TRIPLE}/rustup-init"
   log 'debug' "Installing rustup via rustup-init"
-  rustup-init "${RUSTUP_INSTALLER_ARGUMENTS[@]}"
+  chmod +x "${RUSTUP_HOME}/rustup-init"
+  "${RUSTUP_HOME}/rustup-init" "${RUSTUP_INSTALLER_ARGUMENTS[@]}"
+
+  # This commands exports a new PATH with `${CARGO_HOME}/bin` as an additional entry
+  # shellcheck source=/dev/null
+  source "${CARGO_HOME}/env"
 
   if [[ ${RUST_RUSTUP_DEFAULT_TOOLCHAIN} != 'none' ]]; then
     rustup default "${RUST_RUSTUP_DEFAULT_TOOLCHAIN}"
@@ -139,12 +142,11 @@ function install_rust() {
   fi
 
   log 'debug' 'Setting up bash completion'
-  mkdir -p                       /usr/share/bash-completion/completions
+  mkdir  -p                      /usr/share/bash-completion/completions
   rustup completions bash       >/usr/share/bash-completion/completions/rustup
   rustup completions bash cargo >/usr/share/bash-completion/completions/cargo
 
-  log 'debug' 'Creating default directories for rustup and cargo metadata and build files'
-  mkdir -p /usr/rust/{rustup_home,cargo_home,cargo_target}
+  log 'trace' 'Adjusting permissions for /usr/rust'
   chmod -R 777 /usr/rust
 }
 
@@ -152,7 +154,17 @@ function install_additional_packages() {
   if [[ -n ${SYSTEM_PACKAGES_ADDITIONAL_PACKAGES} ]]; then
     local __SYSTEM_PACKAGES_ADDITIONAL_PACKAGES
     IFS=',' read -r -a __SYSTEM_PACKAGES_ADDITIONAL_PACKAGES <<< "${SYSTEM_PACKAGES_ADDITIONAL_PACKAGES// /}"
-    apt-get --yes install --no-install-recommends "${__SYSTEM_PACKAGES_ADDITIONAL_PACKAGES[@]}"
+
+    case "${LINUX_DISTRIBUTION_NAME}" in
+      ( 'debian' )
+        log 'info' 'Installing additional packages via APT'
+        apt-get --yes install --no-install-recommends "${__SYSTEM_PACKAGES_ADDITIONAL_PACKAGES[@]}"
+        ;;
+
+      ( * )
+        log 'error' "This is a bug and should not have happened (could not match Linux distribution name '${LINUX_DISTRIBUTION_NAME}')"
+        exit 1
+    esac
   fi
 
   return 0

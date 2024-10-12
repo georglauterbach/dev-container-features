@@ -4,20 +4,23 @@
 
 set -e
 
-# shellcheck source=/dev/null
-source dev-container-features-test-lib
+# shellcheck source=test/rust/lib.sh
+source lib.sh
 
-check "Rust version" rustc --version
-check "Cargo version" cargo --version
-check "rustup version" rustc --version
+echo "RUSTUP_HOME=${RUSTUP_HOME}"
 
-for ENV_VARIABLE in                      \
-  'RUST_INSTALL'                         \
-  'RUST_RUSTUP_DEFAULT_TOOLCHAIN'        \
-  'RUST_RUSTUP_UPDATE_DEFAULT_TOOLCHAIN'
-do
-  check "Variable '${ENV_VARIABLE}'" \
-    echo "${ENV_VARIABLE}=${!ENV_VARIABLE:?${ENV_VARIABLE} not set or null}"
-done
+ls -lh /usr/rust/rustup/toolchains
+ls -lh /usr/rust/cargo/home
+ls -lh /usr/rust/cargo/home/bin
+
+command_exists rustup
+command_exists rustc
+command_exists cargo
+
+assert_success "rustup::default" "rustup default | grep stable"
+
+assert_success "version::rustc" rustc --version
+assert_success "version::Cargo" cargo --version
+assert_success "version::rustup" rustc --version
 
 reportResults

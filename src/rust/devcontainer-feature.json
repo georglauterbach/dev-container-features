@@ -1,7 +1,7 @@
 // ref: https://github.com/devcontainers/spec/blob/main/schemas/devContainerFeature.schema.json
 {
   "id": "rust",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "name": "Development Container Feature - Rust",
   "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/rust",
   "description": "A Development Container Feature to work efficiently and effortlessly with the Rust programming language",
@@ -114,10 +114,10 @@
     }
   },
   "containerEnv": {
-    "RUSTUP_HOME": "/usr/rust/rustup_home",
-    "CARGO_HOME": "/usr/rust/cargo_home",
-    "CARGO_TARGET_DIR": "/usr/rust/cargo_target",
-    "PATH": "/usr/local/bin/rustup/bin:${PATH}"
+    "RUSTUP_HOME": "/usr/rust/rustup",
+    "CARGO_HOME": "/usr/rust/cargo/home",
+    "CARGO_TARGET_DIR": "${containerWorkspaceFolder}/target",
+    "PATH": "/usr/rust/cargo/home/bin:${PATH}"
   },
   "customizations": {
     "vscode": {
