@@ -38,7 +38,7 @@ A Development Container Feature to work efficiently and effortlessly with the Ru
 - `bierner.docs-view@0.1.0`
 - `editorconfig.editorconfig@0.16.4`
 - `fill-labs.dependi@0.7.10`
-- `rust-lang.rust-analyzer@0.4.2135`
+- `rust-lang.rust-analyzer@0.4.2143`
 - `tamasfe.even-better-toml@0.19.2`
 - `usernamehw.errorlens@3.20.0`
 - `vadimcn.vscode-lldb@1.11.0`
