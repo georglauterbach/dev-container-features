@@ -69,7 +69,7 @@ function pre_flight_checks() {
     ( 'debian' )
       log 'info' 'Updating APT package index and installing required base packages'
       apt-get --yes update
-      apt-get --yes install --no-install-recommends 'build-essential' 'curl'
+      apt-get --yes install --no-install-recommends 'build-essential' 'ca-certificates' 'curl'
       ;;
 
     ( * )
