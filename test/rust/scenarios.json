@@ -1,5 +1,5 @@
 {
-  "basic": {
+  "30-basic": {
     "image": "docker.io/ubuntu:24.04",
     "features": {
       "rust": {
@@ -7,7 +7,7 @@
       }
     }
   },
-  "advanced": {
+  "60-advanced": {
     "image": "docker.io/ubuntu:24.04",
     "features": {
       "rust": {

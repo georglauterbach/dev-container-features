@@ -7,12 +7,6 @@ set -e
 # shellcheck source=test/rust/lib.sh
 source lib.sh
 
-echo "RUSTUP_HOME=${RUSTUP_HOME}"
-
-ls -lh /usr/rust/rustup/toolchains
-ls -lh /usr/rust/cargo/home
-ls -lh /usr/rust/cargo/home/bin
-
 command_exists rustup
 command_exists rustc
 command_exists cargo
