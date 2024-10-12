@@ -7,7 +7,7 @@ A Development Container Feature to work efficiently and effortlessly with the Ru
 
 ```json
 "features": {
-    "ghcr.io/georglauterbach/dev-container-features/rust:3": {}
+    "ghcr.io/georglauterbach/dev-container-features/rust:4": {}
 }
 ```
 
@@ -20,7 +20,7 @@ A Development Container Feature to work efficiently and effortlessly with the Ru
 | rust.rustup.update-default-toolchain | Whether or not to update the default toolchain | boolean | false |
 | rust.rustup.profile | Defines the [profile](https://rust-lang.github.io/rustup/concepts/profiles.html) that will be used by `rustup` during the installation | string | minimal |
 | rust.rustup.additional-targets | A list of [additional targets](https://rust-lang.github.io/rustup/cross-compilation.html) that will be installed by `rustup` | string | - |
-| rust.rustup.additional-components | A list of [additional components](https://rust-lang.github.io/rustup/concepts/components.html) that will be installed by `rustup` | string | - |
+| rust.rustup.additional-components | A list of [additional components](https://rust-lang.github.io/rustup/concepts/components.html) that ill be installed by `rustup` (ref: [release-component-target-matrix](https://rust-lang.github.io/rustup-components-history/)) | string | - |
 | rust.rustup.dist-server | The URI for downloading static resources related to Rust ([ref](https://rust-lang.github.io/rustup/environment-variables.html)) | string | https://static.rust-lang.org |
 | rust.rustup.update-root | The URI for downloading self-update ([ref](https://rust-lang.github.io/rustup/environment-variables.html)) | string | https://static.rust-lang.org/rustup |
 | rust.rustup.rustup-init.host-triple | The [host triple](https://wiki.osdev.org/Target_Triplet) (including the architecture) of the system that you want to bootstrap Rust on | string | - |
@@ -62,7 +62,7 @@ This feature works on recent versions of Debian- and Ubuntu-based distributions 
 
 #### rust-analyzer & CodeLLDB
 
-This feature installs the excellent extensions [`rust-lang.rust-analyzer`](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer) (language server) and [`vadimcn.vscode-lldb`](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb) (native LLDB debugger). rust-analyzer is, by default, configured to use CodeLLDB as its debugger of choice. 
+This feature installs the excellent extensions [`rust-lang.rust-analyzer`](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer) (language server) and [`vadimcn.vscode-lldb`](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb) (native LLDB debugger). rust-analyzer is, by default, configured to use CodeLLDB as its debugger of choice.
 
 #### Niche Scenarios
 
@@ -70,18 +70,18 @@ In case you do not use a default toolchain and your Rust code (e.g., `Cargo.toml
 
 ### Environment Variables Set by This Feature
 
+| Name                    | Description                                                   | Value                              |
+| :---------------------- | :------------------------------------------------------------ | :--------------------------------- |
+| `RUSTUP_HOME`           | Directory path that `rustup` uses as its "home" directory     | `/usr/rust/rustup/`                      |
+| `CARGO_HOME`            | Directory path that `Cargo` uses as its "home" directory      | `/usr/rust/cargo/home`                   |
+| `CARGO_TARGET_DIR`      | Directory that Cargo uses to place binaries & build artifacts | `${containerWorkspaceFolder}/target` |
+| `PATH`                  | Extend `PATH` to include `rustup`, `cargo`, `rustc`, etc.     | `/usr/rust/cargo/home/bin:${PATH}`       |
+
 > [!TIP]
 >
-> The following variables can be overwritten in the `containerEnv` section in your `devcontainer.json` file.
+> In case you do not want to use Cargo's default target directory, overwrite [the environment variable `CARGO_TARGET_DIR`](https://doc.rust-lang.org/cargo/reference/environment-variables.html).
 >
-> You should use a volume or a bind-mount to cache the files contained in the directories denoted by the environment variables.
-
-| Name                    | Description                                                                         | Value                                             |
-| :---------------------- | :---------------------------------------------------------------------------------- | :------------------------------------------------ |
-| `RUSTUP_HOME`           | Directory path that `rustup` uses as its "home" directory                           | `${containerWorkspaceFolder}/target/rustup_home`  |
-| `CARGO_HOME`            | Directory path that `Cargo` uses as its "home" directory                            | `${containerWorkspaceFolder}/target/cargo_home`   |
-| `CARGO_TARGET_DIR`      | Changes the `target/` directory that Cargo uses to place binaries & build artifacts | `${containerWorkspaceFolder}/target/cargo_target` |
-| `PATH`                  | Extend `PATH` to include `rustup`, `cargo`, `rustc`, etc.                           | `/usr/local/bin/rustup/bin:${PATH}`               |
+> We advise using a bind-mount or volume for this directory in case it is not a subdirectory of `${containerWorkspaceFolder}`.
 
 ### Additional Adjustments
 
