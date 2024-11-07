@@ -10,12 +10,14 @@ This Development Container Feature installs [Rust](https://www.rust-lang.org/) v
 
 ### Environment Variables Set by This Feature
 
-| Name                    | Description                                                   | Value                                 |
-| :---------------------- | :------------------------------------------------------------ | :------------------------------------ |
-| `RUSTUP_HOME`           | Directory path that `rustup` uses as its "home" directory     | `${containerWorkspaceFolder}/.rustup` |
-| `CARGO_HOME`            | Directory path that `Cargo` uses as its "home" directory      | `/usr/rust/cargo/home`                |
-| `CARGO_TARGET_DIR`      | Directory that Cargo uses to place binaries & build artifacts | `${containerWorkspaceFolder}/target`  |
-| `PATH`                  | Extend `PATH` to include `rustup`, `cargo`, `rustc`, etc.     | `/usr/rust/cargo/home/bin:${PATH}`    |
+| Name                    | Description                                                   | Value                                |
+| :---------------------- | :------------------------------------------------------------ | :----------------------------------- |
+| `RUSTUP_HOME`           | Directory path that `rustup` uses as its "home" directory     | `/usr/rust/rustup`                   |
+| `CARGO_HOME`            | Directory path that `Cargo` uses as its "home" directory      | `/usr/rust/cargo/home`               |
+| `CARGO_TARGET_DIR`      | Directory that Cargo uses to place binaries & build artifacts | `${containerWorkspaceFolder}/target` |
+| `PATH`                  | Extend `PATH` to include `rustup`, `cargo`, `rustc`, etc.     | `/usr/rust/cargo/home/bin:${PATH}`   |
+
+ATTENTION: You may want to overwrite the environment variable `RUSTUP_HOME`. The new value should be a location that is persisted across container restarts. The variable points to a directory in which `rustup` stores toolchain information.
 
 NOTE: You will not see the `.rustup/` directory in your explorer in VS Code as this feature provides default settings that hide this directory.
 

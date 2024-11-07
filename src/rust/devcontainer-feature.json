@@ -114,7 +114,7 @@
     }
   },
   "containerEnv": {
-    "RUSTUP_HOME": "${containerWorkspaceFolder}/.rustup",
+    "RUSTUP_HOME": "/usr/rust/rustup",
     "CARGO_HOME": "/usr/rust/cargo/home",
     "CARGO_TARGET_DIR": "${containerWorkspaceFolder}/target",
     "PATH": "/usr/rust/cargo/home/bin:${PATH}"
@@ -124,11 +124,11 @@
       "extensions": [
         "bierner.docs-view@0.1.0", // display documentation in side bar
         "editorconfig.editorconfig@0.16.4", // obey https://editorconfig.org/
-        "fill-labs.dependi@0.7.10", // manage dependency versions
-        "rust-lang.rust-analyzer@0.4.2143", // official Rust language server
+        "fill-labs.dependi@0.7.11", // manage dependency versions
+        "rust-lang.rust-analyzer@0.4.2175", // official Rust language server
         "tamasfe.even-better-toml@0.19.2", // language support for TOML
         "usernamehw.errorlens@3.20.0", // turbocharge diagnostics
-        "vadimcn.vscode-lldb@1.11.0" // LLDB debugger support
+        "vadimcn.vscode-lldb@1.11.1" // LLDB debugger support
       ],
       "settings": {
         // extension::bierner.docs-view
