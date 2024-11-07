@@ -1,7 +1,7 @@
 // ref: https://github.com/devcontainers/spec/blob/main/schemas/devContainerFeature.schema.json
 {
   "id": "rust",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "name": "Development Container Feature - Rust",
   "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/rust",
   "description": "A Development Container Feature to work efficiently and effortlessly with the Rust programming language",
@@ -114,7 +114,7 @@
     }
   },
   "containerEnv": {
-    "RUSTUP_HOME": "/usr/rust/rustup",
+    "RUSTUP_HOME": "${containerWorkspaceFolder}/.rustup",
     "CARGO_HOME": "/usr/rust/cargo/home",
     "CARGO_TARGET_DIR": "${containerWorkspaceFolder}/target",
     "PATH": "/usr/rust/cargo/home/bin:${PATH}"
@@ -152,7 +152,10 @@
         // extension::vadimcn.vscode-lldb
         "lldb.launch.sourceLanguages": [
           "rust"
-        ]
+        ],
+        "files.exclude": {
+          ".rustup": true
+        }
       }
     }
   },
