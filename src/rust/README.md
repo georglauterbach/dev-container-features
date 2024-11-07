@@ -7,7 +7,7 @@ A Development Container Feature to work efficiently and effortlessly with the Ru
 
 ```json
 "features": {
-    "ghcr.io/georglauterbach/dev-container-features/rust:4": {}
+    "ghcr.io/georglauterbach/dev-container-features/rust:5": {}
 }
 ```
 
@@ -37,11 +37,11 @@ A Development Container Feature to work efficiently and effortlessly with the Ru
 
 - `bierner.docs-view@0.1.0`
 - `editorconfig.editorconfig@0.16.4`
-- `fill-labs.dependi@0.7.10`
-- `rust-lang.rust-analyzer@0.4.2143`
+- `fill-labs.dependi@0.7.11`
+- `rust-lang.rust-analyzer@0.4.2175`
 - `tamasfe.even-better-toml@0.19.2`
 - `usernamehw.errorlens@3.20.0`
-- `vadimcn.vscode-lldb@1.11.0`
+- `vadimcn.vscode-lldb@1.11.1`
 
 ## About
 
@@ -52,6 +52,24 @@ This Development Container Feature installs [Rust](https://www.rust-lang.org/) v
 > #### Works Well With [`georglauterbach/dev-container-base`](https://github.com/georglauterbach/dev-container-base)
 >
 > This Development Container Feature works well with base images that focus on recent versions of Ubuntu, like [`ghcr.io/georglauterbach/dev-container-base:edge`](https://github.com/georglauterbach/dev-container-base/pkgs/container/dev-container-base).
+
+### Environment Variables Set by This Feature
+
+| Name                    | Description                                                   | Value                                |
+| :---------------------- | :------------------------------------------------------------ | :----------------------------------- |
+| `RUSTUP_HOME`           | Directory path that `rustup` uses as its "home" directory     | `/usr/rust/rustup`                   |
+| `CARGO_HOME`            | Directory path that `Cargo` uses as its "home" directory      | `/usr/rust/cargo/home`               |
+| `CARGO_TARGET_DIR`      | Directory that Cargo uses to place binaries & build artifacts | `${containerWorkspaceFolder}/target` |
+| `PATH`                  | Extend `PATH` to include `rustup`, `cargo`, `rustc`, etc.     | `/usr/rust/cargo/home/bin:${PATH}`   |
+
+ATTENTION: You may want to overwrite the environment variable `RUSTUP_HOME`. The new value should be a location that is persisted across container restarts. The variable points to a directory in which `rustup` stores toolchain information.
+
+NOTE: You will not see the `.rustup/` directory in your explorer in VS Code as this feature provides default settings that hide this directory.
+
+### Additional Adjustments
+
+1. Inside the container, `securityOpt` is set to `seccomp=unconfined`.
+2. A new capability is added: `SYS_PTRACE` for proper debugging.
 
 ### Supported Base / OS
 
@@ -71,26 +89,6 @@ In case
 2. your Rust's root directory (e.g., the directory that contains `Cargo.toml`) is not the root directory that you open with VS Code,
 
 you may want to create a symbolic link to [`rust-toolchain.toml`](https://rust-lang.github.io/rustup/overrides.html#the-toolchain-file), if you are using such a file (which is advised). [Such a configuration is classified as a niche scenario by CodeLLDB](https://github.com/vadimcn/codelldb/issues/1156), and you may experience unformatted variables in the debugger.
-
-### Environment Variables Set by This Feature
-
-| Name                    | Description                                                   | Value                              |
-| :---------------------- | :------------------------------------------------------------ | :--------------------------------- |
-| `RUSTUP_HOME`           | Directory path that `rustup` uses as its "home" directory     | `/usr/rust/rustup/`                      |
-| `CARGO_HOME`            | Directory path that `Cargo` uses as its "home" directory      | `/usr/rust/cargo/home`                   |
-| `CARGO_TARGET_DIR`      | Directory that Cargo uses to place binaries & build artifacts | `${containerWorkspaceFolder}/target` |
-| `PATH`                  | Extend `PATH` to include `rustup`, `cargo`, `rustc`, etc.     | `/usr/rust/cargo/home/bin:${PATH}`       |
-
-> [!TIP]
->
-> In case you would rather not use Cargo's default target directory, overwrite [the environment variable `CARGO_TARGET_DIR`](https://doc.rust-lang.org/cargo/reference/environment-variables.html).
->
-> We advise using a bind-mount or volume for this directory in case it is not a subdirectory of `${containerWorkspaceFolder}`.
-
-### Additional Adjustments
-
-1. Inside the container, `securityOpt` is set to `seccomp=unconfined`.
-2. A new capability is added: `SYS_PTRACE` for proper debugging.
 
 
 ---
