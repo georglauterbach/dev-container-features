@@ -17,11 +17,11 @@ This Development Container Feature installs [Rust](https://www.rust-lang.org/) v
 | `CARGO_TARGET_DIR`      | Directory that Cargo uses to place binaries & build artifacts | `${containerWorkspaceFolder}/target` | No              |
 | `PATH`                  | Extend `PATH` to include `rustup`, `cargo`, `rustc`, etc.     | `/usr/rust/cargo/home/bin:${PATH}`   | No              |
 
-> [!Important]
+> [!IMPORTANT]
 >
 > You may need to overwrite the environment variables marked with "Yes" in the "Needs Overwrite" column. The new values should be locations that are persisted across container restarts. You most likely want to overwrite these variables when you work with different toolchains at the same time and having them side-by-side is desired.
 >
-> You can define these variables in `containerEnv` in your `devcontainer.json` file. Good defaults are: `RUSTUP_HOME: "${containerWorkspaceFolder}/.rust/rustup_home"` and `"CARGO_HOME": "${containerWorkspaceFolder}/.rust/cargo_home"`.
+> You should define these variables in `containerEnv` and additionally in `remoteEnv` in your `devcontainer.json` file. Good defaults are: `RUSTUP_HOME: "${containerWorkspaceFolder}/.rust/rustup_home"` and `"CARGO_HOME": "${containerWorkspaceFolder}/.rust/cargo_home"`.
 
 > [!NOTE]
 >
