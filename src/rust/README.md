@@ -55,16 +55,22 @@ This Development Container Feature installs [Rust](https://www.rust-lang.org/) v
 
 ### Environment Variables Set by This Feature
 
-| Name                    | Description                                                   | Value                                |
-| :---------------------- | :------------------------------------------------------------ | :----------------------------------- |
-| `RUSTUP_HOME`           | Directory path that `rustup` uses as its "home" directory     | `/usr/rust/rustup`                   |
-| `CARGO_HOME`            | Directory path that `Cargo` uses as its "home" directory      | `/usr/rust/cargo/home`               |
-| `CARGO_TARGET_DIR`      | Directory that Cargo uses to place binaries & build artifacts | `${containerWorkspaceFolder}/target` |
-| `PATH`                  | Extend `PATH` to include `rustup`, `cargo`, `rustc`, etc.     | `/usr/rust/cargo/home/bin:${PATH}`   |
+| Name                    | Description                                                   | Value                                | Needs Overwrite |
+| :---------------------- | :------------------------------------------------------------ | :----------------------------------- | :-------------- |
+| `RUSTUP_HOME`           | Directory path that `rustup` uses as its "home" directory     | `/usr/rust/rustup`                   | Yes             |
+| `CARGO_HOME`            | Directory path that `Cargo` uses as its "home" directory      | `/usr/rust/cargo/home`               | Yes             |
+| `CARGO_TARGET_DIR`      | Directory that Cargo uses to place binaries & build artifacts | `${containerWorkspaceFolder}/target` | No              |
+| `PATH`                  | Extend `PATH` to include `rustup`, `cargo`, `rustc`, etc.     | `/usr/rust/cargo/home/bin:${PATH}`   | No              |
 
-ATTENTION: You may want to overwrite the environment variable `RUSTUP_HOME`. The new value should be a location that is persisted across container restarts. The variable points to a directory in which `rustup` stores toolchain information.
+> [!Important]
+>
+> You may need to overwrite the environment variables marked with "Yes" in the "Needs Overwrite" column. The new values should be locations that are persisted across container restarts. You most likely want to overwrite these variables when you work with different toolchains at the same time and having them side-by-side is desired.
+>
+> You can define these variables in `containerEnv` in your `devcontainer.json` file. Good defaults are: `RUSTUP_HOME: "${containerWorkspaceFolder}/.rust/rustup_home"` and `"CARGO_HOME": "${containerWorkspaceFolder}/.rust/cargo_home"`.
 
-NOTE: You will not see the `.rustup/` directory in your explorer in VS Code as this feature provides default settings that hide this directory.
+> [!NOTE]
+>
+> You will not see the `.rust/` directory in your explorer in VS Code as this feature provides default settings that hide this directory.
 
 ### Additional Adjustments
 
