@@ -1,7 +1,7 @@
 // ref: https://github.com/devcontainers/spec/blob/main/schemas/devContainerFeature.schema.json
 {
   "id": "rust",
-  "version": "5.1.0",
+  "version": "5.2.0",
   "name": "Development Container Feature - Rust",
   "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/rust",
   "description": "A Development Container Feature to work efficiently and effortlessly with the Rust programming language",
@@ -19,8 +19,8 @@
         "stable",
         "beta",
         "nightly",
-        "1.81.0",
-        "1.80.0"
+        "1.82.0",
+        "1.81.0"
       ],
       "default": "none"
     },
@@ -154,7 +154,7 @@
           "rust"
         ],
         "files.exclude": {
-          ".rustup": true
+          ".rust": true
         }
       }
     }
