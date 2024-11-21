@@ -1,7 +1,7 @@
 // ref: https://github.com/devcontainers/spec/blob/main/schemas/devContainerFeature.schema.json
 {
   "id": "rust",
-  "version": "5.2.1",
+  "version": "5.3.0",
   "name": "Development Container Feature - Rust",
   "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/rust",
   "description": "A Development Container Feature to work efficiently and effortlessly with the Rust programming language",
@@ -124,8 +124,8 @@
       "extensions": [
         "bierner.docs-view@0.1.0", // display documentation in side bar
         "editorconfig.editorconfig@0.16.4", // obey https://editorconfig.org/
-        "fill-labs.dependi@0.7.11", // manage dependency versions
-        "rust-lang.rust-analyzer@0.4.2175", // official Rust language server
+        "fill-labs.dependi@0.7.12", // manage dependency versions
+        "rust-lang.rust-analyzer", // official Rust language server
         "tamasfe.even-better-toml@0.19.2", // language support for TOML
         "usernamehw.errorlens@3.20.0", // turbocharge diagnostics
         "vadimcn.vscode-lldb@1.11.1" // LLDB debugger support
