@@ -64,9 +64,11 @@ This Development Container Feature installs [Rust](https://www.rust-lang.org/) v
 
 > [!IMPORTANT]
 >
-> You may need to overwrite the environment variables marked with "Yes" in the "Needs Overwrite" column. The new values should be locations that are persisted across container restarts. You most likely want to overwrite these variables when you work with different toolchains at the same time and having them side-by-side is desired.
+> You may want to overwrite or extend the set of predefined environment variables above. Those marked with  `Yes` in the "Needs Overwrite" column should definitely be overwritten in `containerEnv`. The new values should be locations that are persisted across container restarts. You most likely want to overwrite these variables when you work with different toolchains at the same time and having them side-by-side is desired.
 >
-> You should define these variables in `containerEnv` and additionally in `remoteEnv` in your `devcontainer.json` file. Good defaults are: `RUSTUP_HOME: "${containerWorkspaceFolder}/.rust/rustup_home"` and `"CARGO_HOME": "${containerWorkspaceFolder}/.rust/cargo_home"`.
+> You should define these variables in `containerEnv` in your `devcontainer.json` file. Good defaults are: `RUSTUP_HOME: "${containerWorkspaceFolder}/.rust/rustup_home"` and `"CARGO_HOME": "${containerWorkspaceFolder}/.rust/cargo_home"`.
+>
+> If you want to extend `PATH` to the new `CARGO_HOME`, add `"PATH": "${containerEnv:CARGO_HOME}/bin:${containerEnv:PATH}"` to `remoteEnv`.
 
 > [!NOTE]
 >
