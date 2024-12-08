@@ -68,8 +68,9 @@ function pre_flight_checks() {
   case "${LINUX_DISTRIBUTION_NAME}" in
     ( 'debian' )
       log 'info' 'Updating APT package index and installing required base packages'
-      apt-get --yes --quiet=2 update
-      apt-get --yes --quiet=2 install --no-install-recommends 'build-essential' 'ca-certificates' 'curl'
+      apt-get --yes --quiet=2 --option=Dpkg::Use-Pty=0 update
+      apt-get --yes --quiet=2 --option=Dpkg::Use-Pty=0 install --no-install-recommends \
+        'build-essential' 'ca-certificates' 'curl'
       ;;
 
     ( * )
@@ -158,7 +159,8 @@ function install_additional_packages() {
     case "${LINUX_DISTRIBUTION_NAME}" in
       ( 'debian' )
         log 'info' 'Installing additional packages via APT'
-        apt-get --yes --quiet=2 install --no-install-recommends "${__SYSTEM_PACKAGES_ADDITIONAL_PACKAGES[@]}"
+        apt-get --yes --quiet=2 --option=Dpkg::Use-Pty=0 install --no-install-recommends \
+          "${__SYSTEM_PACKAGES_ADDITIONAL_PACKAGES[@]}"
         ;;
 
       ( * )
@@ -187,8 +189,8 @@ function post_flight_checks() {
   case "${LINUX_DISTRIBUTION_NAME}" in
     ( 'debian' )
       log 'info' 'Cleaning up APT and its cache'
-      apt-get --yes autoremove
-      apt-get --yes clean
+      apt-get --yes --quiet=2 --option=Dpkg::Use-Pty=0 autoremove
+      apt-get --yes --quiet=2 --option=Dpkg::Use-Pty=0 clean
       rm -rf /var/lib/apt/lists/*
       ;;
 
