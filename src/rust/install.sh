@@ -69,7 +69,7 @@ function pre_flight_checks() {
     ( 'debian' )
       log 'info' 'Updating APT package index and installing required base packages'
       apt-get --yes --quiet=2 update
-      apt-get --yes --quiet install --no-install-recommends 'build-essential' 'ca-certificates' 'curl'
+      apt-get --yes --quiet=2 install --no-install-recommends 'build-essential' 'ca-certificates' 'curl'
       ;;
 
     ( * )
@@ -158,7 +158,7 @@ function install_additional_packages() {
     case "${LINUX_DISTRIBUTION_NAME}" in
       ( 'debian' )
         log 'info' 'Installing additional packages via APT'
-        apt-get --yes --quiet install --no-install-recommends "${__SYSTEM_PACKAGES_ADDITIONAL_PACKAGES[@]}"
+        apt-get --yes --quiet=2 install --no-install-recommends "${__SYSTEM_PACKAGES_ADDITIONAL_PACKAGES[@]}"
         ;;
 
       ( * )
