@@ -40,7 +40,7 @@ A Development Container Feature to work efficiently and effortlessly with the Ru
 - `fill-labs.dependi@0.7.13`
 - `rust-lang.rust-analyzer`
 - `tamasfe.even-better-toml@0.19.2`
-- `usernamehw.errorlens@3.20.0`
+- `usernamehw.errorlens@3.21.0`
 - `vadimcn.vscode-lldb@1.11.1`
 
 ## About
