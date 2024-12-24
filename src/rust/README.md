@@ -39,8 +39,8 @@ A Development Container Feature to work efficiently and effortlessly with the Ru
 - `editorconfig.editorconfig@0.16.4`
 - `fill-labs.dependi@0.7.13`
 - `rust-lang.rust-analyzer`
-- `tamasfe.even-better-toml@0.19.2`
-- `usernamehw.errorlens@3.21.0`
+- `tamasfe.even-better-toml@0.21.2`
+- `usernamehw.errorlens@3.22.0`
 - `vadimcn.vscode-lldb@1.11.1`
 
 ## About
