@@ -1,7 +1,7 @@
 // ref: https://github.com/devcontainers/spec/blob/main/schemas/devContainerFeature.schema.json
 {
   "id": "bash",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "name": "Development Container Feature - Bash",
   "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/bash",
   "description": "A Development Container Feature to work efficiently and effortlessly with the Bash",
@@ -22,7 +22,6 @@
         "shellcheck.run": "onSave",
         "shellcheck.customArgs": [
           "--shell=bash",
-          "--check-sourced",
           "--external-sources",
           "--color=auto",
           "--severity=style",
