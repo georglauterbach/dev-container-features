@@ -205,7 +205,7 @@ function setup_post_create_command() {
   cat >"${PCC}" <<EOF
 #! /usr/bin/env -S bash -eE -u -o pipefail -O inherit_errexit
 
-if [[ -n ${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE} ]]; then
+if [[ -n "${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE}" ]]; then
   RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE="\${REPOSITORY_ROOT_DIR}/${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE}"
   if ! cd \$(dirname "\${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE}"); then
     echo "ERROR: Could not change into directory of toolchain file '\${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE}'" >&2
