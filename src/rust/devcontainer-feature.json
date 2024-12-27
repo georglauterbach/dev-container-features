@@ -1,7 +1,7 @@
 // ref: https://github.com/devcontainers/spec/blob/main/schemas/devContainerFeature.schema.json
 {
   "id": "rust",
-  "version": "5.4.2",
+  "version": "5.4.3",
   "name": "Development Container Feature - Rust",
   "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/rust",
   "description": "A Development Container Feature to work efficiently and effortlessly with the Rust programming language",
@@ -147,6 +147,7 @@
         "docsView.documentationView.updateMode": "sticky",
         // extension::rust-lang.rust-analyzer
         "rust-analyzer.restartServerOnConfigChange": true,
+        "rust-analyzer.checkOnSave": true,
         "rust-analyzer.testExplorer": true,
         "rust-analyzer.debug.engine": "vadimcn.vscode-lldb",
         "rust-analyzer.diagnostics.styleLints.enable": true,
