@@ -199,7 +199,7 @@ function post_flight_checks() {
 }
 
 function setup_post_create_command() {
-  local PCC='/usr/local/bin/devcontainer_feature_rust_post_create_command.sh'
+  local PCC='/usr/local/bin/devcontainer_feature_rust_post_start_command.sh'
   readonly PCC
 
   cat >"${PCC}" <<EOF

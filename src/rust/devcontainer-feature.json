@@ -128,8 +128,8 @@
     "CARGO_TARGET_DIR": "${containerWorkspaceFolder}/target",
     "PATH": "/usr/rust/cargo/home/bin:${PATH}"
   },
-  "postCreateCommand": {
-    "DevContainer Feature - Rust": "/usr/local/bin/devcontainer_feature_rust_post_create_command.sh"
+  "postStartCommand": {
+    "DevContainer Feature - Rust": "/usr/local/bin/devcontainer_feature_rust_post_start_command.sh"
   },
   "customizations": {
     "vscode": {
