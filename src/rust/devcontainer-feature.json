@@ -1,7 +1,7 @@
 // ref: https://github.com/devcontainers/spec/blob/main/schemas/devContainerFeature.schema.json
 {
   "id": "rust",
-  "version": "5.3.7",
+  "version": "5.4.0",
   "name": "Development Container Feature - Rust",
   "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/rust",
   "description": "A Development Container Feature to work efficiently and effortlessly with the Rust programming language",
@@ -23,6 +23,15 @@
         "1.81.0"
       ],
       "default": "none"
+    },
+    "rust.rustup.default-toolchain-file": {
+      "description": "Defines the [toolchain file](https://rust-lang.github.io/rustup/overrides.html#the-toolchain-file) that contains extra information about the toolchain. This path **must** be relative to the base of the repository. This is useful to set a default (global) toolchain when 'rust.rustup.default-toolchain' is not used, but a 'rust-toolchain.toml' exists.",
+      "type": "string",
+      "proposals": [
+        "rust-toolchain.toml",
+        "code/rust-toolchain.toml"
+      ],
+      "default": ""
     },
     "rust.rustup.update-default-toolchain": {
       "description": "Whether or not to update the default toolchain",
@@ -118,6 +127,9 @@
     "CARGO_HOME": "/usr/rust/cargo/home",
     "CARGO_TARGET_DIR": "${containerWorkspaceFolder}/target",
     "PATH": "/usr/rust/cargo/home/bin:${PATH}"
+  },
+  "postCreateCommand": {
+    "DevContainer Feature - Rust": "/usr/local/bin/devcontainer_feature_rust_post_create_command.sh"
   },
   "customizations": {
     "vscode": {

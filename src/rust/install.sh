@@ -1,7 +1,4 @@
-#! /usr/bin/env bash
-
-set -eE -u -o pipefail
-shopt -s inherit_errexit
+#! /usr/bin/env -S bash -eE -u -o pipefail -O inherit_errexit
 
 function log() {
   printf "%s %-5s %s: %s\n" \
@@ -28,6 +25,7 @@ function parse_dev_container_options() {
 
   RUST_INSTALL="${RUST_INSTALL:?RUST_INSTALL is not set or null}"
   RUST_RUSTUP_DEFAULT_TOOLCHAIN=${RUST_RUSTUP_DEFAULT_TOOLCHAIN:?RUST_RUSTUP_DEFAULT_TOOLCHAIN not set or null}
+  RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE=${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE?RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE not set}
   RUST_RUSTUP_UPDATE_DEFAULT_TOOLCHAIN=${RUST_RUSTUP_UPDATE_DEFAULT_TOOLCHAIN:?RUST_RUSTUP_UPDATE_DEFAULT_TOOLCHAIN not set or null}
   RUST_RUSTUP_PROFILE=${RUST_RUSTUP_PROFILE:?RUST_RUSTUP_PROFILE not set or null}
   RUST_RUSTUP_ADDITIONAL_TARGETS=${RUST_RUSTUP_ADDITIONAL_TARGETS?RUST_RUSTUP_ADDITIONAL_TARGETS not set}
@@ -200,6 +198,32 @@ function post_flight_checks() {
   esac
 }
 
+function setup_post_create_command() {
+  local PCC='/usr/local/bin/devcontainer_feature_rust_post_create_command.sh'
+  readonly PCC
+
+  cat >"${PCC}" <<EOF
+#! /usr/bin/env -S bash -eE -u -o pipefail -O inherit_errexit
+
+if [[ -n ${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE} ]]; then
+  RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE="\${REPOSITORY_ROOT_DIR}/${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE}"
+  if ! cd \$(dirname "\${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE}"); then
+    echo "ERROR: Could not change into directory of toolchain file '\${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE}'" >&2
+    exit 1
+  fi
+
+  TOOLCHAIN_VERSION=\$(command grep -E 'channel = .*' "\${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE}" | cut -d '=' -f 2 | tr -d "'\" " || echo '')
+  if [[ -z \${TOOLCHAIN_VERSION} ]]; then
+    echo "WARN: Could not determine rustup toolchain version from file '\${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE}'" >&2
+  else
+    echo "INFO: Setting default rustup toolchain version to '\${TOOLCHAIN_VERSION}'"
+    rustup default "\${TOOLCHAIN_VERSION}"
+  fi
+fi
+EOF
+  chmod +x "${PCC}"
+}
+
 function main() {
   parse_linux_distribution
   parse_dev_container_options
@@ -210,6 +234,7 @@ function main() {
   install_mold
 
   post_flight_checks
+  setup_post_create_command
 }
 
 main "${@}"
