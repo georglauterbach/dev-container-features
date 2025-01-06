@@ -1,7 +1,7 @@
 // ref: https://github.com/devcontainers/spec/blob/main/schemas/devContainerFeature.schema.json
 {
   "id": "rust",
-  "version": "5.4.3",
+  "version": "5.5.0",
   "name": "Development Container Feature - Rust",
   "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/rust",
   "description": "A Development Container Feature to work efficiently and effortlessly with the Rust programming language",
@@ -134,7 +134,6 @@
   "customizations": {
     "vscode": {
       "extensions": [
-        "bierner.docs-view@0.1.0", // display documentation in side bar
         "editorconfig.editorconfig@0.16.4", // obey https://editorconfig.org/
         "fill-labs.dependi@0.7.13", // manage dependency versions
         "rust-lang.rust-analyzer", // official Rust language server
