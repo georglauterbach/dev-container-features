@@ -27,7 +27,7 @@ A Development Container Feature to work efficiently and effortlessly with the Ru
 | rust.rustup.rustup-init.host-triple | The [host triple](https://wiki.osdev.org/Target_Triplet) (including the architecture) of the system that you want to bootstrap Rust on | string | - |
 | system.packages.additional-packages | A list of additional packages to install via the system's package manager | string | - |
 | linker.mold.install | Whether to install the linker [`mold`](https://github.com/rui314/mold) | boolean | false |
-| linker.mold.version | The version of the [`mold`](https://github.com/rui314/mold) linker to install | string | 2.34.1 |
+| linker.mold.version | The version of the [`mold`](https://github.com/rui314/mold) linker to install | string | 2.36.0 |
 | proxy.http.http.address | A URI for an HTTP proxy | string | - |
 | proxy.http.https.address | A URI for an HTTPS proxy | string | - |
 | proxy.http.no-proxy.address | A list of URIs to not proxy | string | localhost,127.0.0.1 |
