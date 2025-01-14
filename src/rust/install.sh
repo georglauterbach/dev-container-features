@@ -205,20 +205,31 @@ function setup_post_create_command() {
   cat >"${PCC}" <<EOF
 #! /usr/bin/env -S bash -eE -u -o pipefail -O inherit_errexit
 
-if [[ -n "${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE}" ]]; then
-  RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE="\${REPOSITORY_ROOT_DIR}/${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE}"
-  if ! cd \$(dirname "\${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE}"); then
-    echo "ERROR: Could not change into directory of toolchain file '\${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE}'" >&2
-    exit 1
-  fi
+if [[ -z "${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE}" ]]; then
+  echo "INFO  No toolchain file provided - skipping setup"
+  exit 0
+fi
 
-  TOOLCHAIN_VERSION=\$(command grep -E 'channel = .*' "\${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE}" | cut -d '=' -f 2 | tr -d "'\" " || echo '')
-  if [[ -z \${TOOLCHAIN_VERSION} ]]; then
-    echo "WARN: Could not determine rustup toolchain version from file '\${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE}'" >&2
-  else
-    echo "INFO: Setting default rustup toolchain version to '\${TOOLCHAIN_VERSION}'"
-    rustup default "\${TOOLCHAIN_VERSION}"
-  fi
+readonly RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE="\${REPOSITORY_ROOT_DIR}/${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE}"
+echo "INFO  Toolchain file set to '\${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE}'"
+
+if ! cd \$(dirname "\${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE}"); then
+  echo "ERROR Could not change into directory of toolchain file '\${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE}'" >&2
+  exit 1
+fi
+
+readonly TOOLCHAIN_VERSION=\$(command grep -E 'channel = .*' "\${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE}" | cut -d '=' -f 2 | tr -d "'\" " || echo '')
+echo "INFO  Toolchain version set to '\${TOOLCHAIN_VERSION}'"
+
+if [[ -z \${TOOLCHAIN_VERSION} ]]; then
+  echo "INFO  Toolchain file '\${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE}' does not contain toolchain version information"
+  exit 0
+fi
+
+echo "INFO: Setting default rustup toolchain version to '\${TOOLCHAIN_VERSION}'"
+if ! rustup default "\${TOOLCHAIN_VERSION}"; then
+  echo "ERROR  Could not set default toolchain to '\${RUSTUP_TOOLCHAIN}' (loaded from '\${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE}')" >&2
+  exit 1
 fi
 EOF
   chmod +x "${PCC}"
