@@ -1,31 +1,31 @@
 // ref: https://github.com/devcontainers/spec/blob/main/schemas/devContainerFeature.schema.json
 {
   "id": "bash",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "name": "Development Container Feature - Bash",
   "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/bash",
   "description": "A Development Container Feature to work efficiently and effortlessly with the Bash",
   "customizations": {
     "vscode": {
       "extensions": [
+        "editorconfig.editorconfig",
         "mads-hartmann.bash-ide-vscode",
         "timonwong.shellcheck"
       ],
       "settings": {
-        "shellcheck.useWorkspaceRootAsCwd": true,
+        "shellcheck.useWorkspaceRootAsCwd": false,
         "shellcheck.exclude": [
-          "SC2310",
-          "SC2312"
+          "2310",
+          "2312"
         ],
-        "shellcheck.enableQuickFix": true,
-        "shellcheck.enable": true,
         "shellcheck.run": "onSave",
         "shellcheck.customArgs": [
           "--shell=bash",
-          "--external-sources",
-          "--color=auto",
           "--severity=style",
-          "--enable=all"
+          "--extended-analysis=true",
+          "--source-path=SCRIPTDIR",
+          "--external-sources",
+          "--color=auto"
         ]
       }
     }
