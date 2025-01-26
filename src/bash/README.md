@@ -17,6 +17,7 @@ A Development Container Feature to work efficiently and effortlessly with the Ba
 
 ### VS Code Extensions
 
+- `editorconfig.editorconfig`
 - `mads-hartmann.bash-ide-vscode`
 - `timonwong.shellcheck`
 
