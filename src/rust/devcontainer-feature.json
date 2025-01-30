@@ -1,7 +1,7 @@
 // ref: https://github.com/devcontainers/spec/blob/main/schemas/devContainerFeature.schema.json
 {
   "id": "rust",
-  "version": "5.6.1",
+  "version": "5.7.0",
   "name": "Development Container Feature - Rust",
   "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/rust",
   "description": "A Development Container Feature to work efficiently and effortlessly with the Rust programming language",
@@ -135,11 +135,10 @@
     "vscode": {
       "extensions": [
         "editorconfig.editorconfig@0.16.4", // obey https://editorconfig.org/
-        "fill-labs.dependi@0.7.13", // manage dependency versions
         "rust-lang.rust-analyzer", // official Rust language server
         "tamasfe.even-better-toml@0.21.2", // language support for TOML
-        "usernamehw.errorlens@3.22.0", // turbocharge diagnostics
-        "vadimcn.vscode-lldb@1.11.2" // LLDB debugger support
+        "usernamehw.errorlens@3.22.1", // turbocharge diagnostics
+        "vadimcn.vscode-lldb@1.11.3" // LLDB debugger support
       ],
       "settings": {
         // extension::bierner.docs-view
