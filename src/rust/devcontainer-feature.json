@@ -137,7 +137,7 @@
         "editorconfig.editorconfig@0.16.4", // obey https://editorconfig.org/
         "rust-lang.rust-analyzer", // official Rust language server
         "tamasfe.even-better-toml@0.21.2", // language support for TOML
-        "usernamehw.errorlens@3.22.1", // turbocharge diagnostics
+        "usernamehw.errorlens@3.23.0", // in-editor diagnostics
         "vadimcn.vscode-lldb@1.11.3" // LLDB debugger support
       ],
       "settings": {
