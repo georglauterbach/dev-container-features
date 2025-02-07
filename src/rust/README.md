@@ -36,7 +36,7 @@ A Development Container Feature to work efficiently and effortlessly with the Ru
 
 ### VS Code Extensions
 
-- `editorconfig.editorconfig@0.16.4`
+- `editorconfig.editorconfig@0.16.7`
 - `rust-lang.rust-analyzer`
 - `tamasfe.even-better-toml@0.21.2`
 - `usernamehw.errorlens@3.23.0`
