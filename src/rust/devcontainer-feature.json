@@ -1,7 +1,7 @@
 // ref: https://github.com/devcontainers/spec/blob/main/schemas/devContainerFeature.schema.json
 {
   "id": "rust",
-  "version": "5.7.3",
+  "version": "5.8.0",
   "name": "Development Container Feature - Rust",
   "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/rust",
   "description": "A Development Container Feature to work efficiently and effortlessly with the Rust programming language",
@@ -141,6 +141,12 @@
         "vadimcn.vscode-lldb@1.11.3" // LLDB debugger support
       ],
       "settings": {
+        // files
+        "files.readonlyInclude": {
+          // mark Rust indexes as read-only
+          "${containerEnv:CARGO_HOME}": true,
+          "${containerEnv:RUSTUP_HOME}": true
+        },
         // extension::bierner.docs-view
         "docsView.documentationView.updateMode": "sticky",
         // extension::rust-lang.rust-analyzer
