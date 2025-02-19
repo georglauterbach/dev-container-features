@@ -228,7 +228,7 @@ fi
 
 echo "INFO: Setting default rustup toolchain version to '\${TOOLCHAIN_VERSION}'"
 if ! rustup default "\${TOOLCHAIN_VERSION}"; then
-  echo "ERROR  Could not set default toolchain to '\${RUSTUP_TOOLCHAIN}' (loaded from '\${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE}')" >&2
+  echo "ERROR  Could not set default toolchain to '\${TOOLCHAIN_VERSION}' (loaded from '\${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE}')" >&2
   exit 1
 fi
 EOF
