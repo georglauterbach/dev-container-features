@@ -1,7 +1,7 @@
 // ref: https://github.com/devcontainers/spec/blob/main/schemas/devContainerFeature.schema.json
 {
   "id": "rust",
-  "version": "5.9.0",
+  "version": "5.10.0",
   "name": "Development Container Feature - Rust",
   "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/rust",
   "description": "A Development Container Feature to work efficiently and effortlessly with the Rust programming language",
@@ -104,7 +104,7 @@
     "linker.mold.version": {
       "description": "The version of the [`mold`](https://github.com/rui314/mold) linker to install",
       "type": "string",
-      "default": "2.36.0"
+      "default": "2.37.1"
     },
     "proxy.http.http.address": {
       "description": "A URI for an HTTP proxy",
