@@ -13,11 +13,12 @@ chown --recursive "${_REMOTE_USER}:${_REMOTE_USER}" "${CACHE_MOUNT_POINT}"
 mkdir --parents "${_REMOTE_USER_HOME}/.vscode-server"{,-insiders}
 chown "${_REMOTE_USER}:${_REMOTE_USER}" "${_REMOTE_USER_HOME}/.vscode-server"{,-insiders}
 
-ln --force --symbolic --no-target-directory \
-  "${CACHE_MOUNT_POINT}/stable"   "${_REMOTE_USER_HOME}/.vscode-server/extensions"
-ln --force --symbolic --no-target-directory \
-  "${CACHE_MOUNT_POINT}/insiders" "${_REMOTE_USER_HOME}/.vscode-server-insiders/extensions"
+readonly EXTENSIONS_DIR="${_REMOTE_USER_HOME}/.vscode-server/extensions"
+[[ -e ${EXTENSIONS_DIR} ]] && rm --recursive --force "${EXTENSIONS_DIR}"
+ln --force --symbolic --no-target-directory "${CACHE_MOUNT_POINT}/stable" "${EXTENSIONS_DIR}"
 
-chown --no-dereference "${_REMOTE_USER}:${_REMOTE_USER}" \
-  "${_REMOTE_USER_HOME}/.vscode-server/extensions"       \
-  "${_REMOTE_USER_HOME}/.vscode-server-insiders/extensions"
+readonly EXTENSIONS_INSIDERS_DIR="${_REMOTE_USER_HOME}/.vscode-server-insiders/extensions"
+[[ -e ${EXTENSIONS_INSIDERS_DIR} ]] && rm --recursive --force "${EXTENSIONS_INSIDERS_DIR}"
+ln --force --symbolic --no-target-directory "${CACHE_MOUNT_POINT}/insiders" "${EXTENSIONS_INSIDERS_DIR}"
+
+chown --no-dereference "${_REMOTE_USER}:${_REMOTE_USER}" "${EXTENSIONS_DIR}" "${EXTENSIONS_INSIDERS_DIR}"
