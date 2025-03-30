@@ -1,5 +1,5 @@
 
-# Development Container Feature - Cache VS Code Extensions (bash)
+# Development Container Feature - Cache VS Code Extensions (cache-vscode-extensions)
 
 A Development Container Feature that prevents superfluous (re-)installations of VS extensions upon container restarts by caching the extensions
 
@@ -7,7 +7,7 @@ A Development Container Feature that prevents superfluous (re-)installations of 
 
 ```json
 "features": {
-    "ghcr.io/georglauterbach/dev-container-features/bash:0": {}
+    "ghcr.io/georglauterbach/dev-container-features/cache-vscode-extensions:0": {}
 }
 ```
 
