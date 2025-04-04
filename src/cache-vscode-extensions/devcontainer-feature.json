@@ -1,7 +1,7 @@
 // ref: https://github.com/devcontainers/spec/blob/main/schemas/devContainerFeature.schema.json
 {
   "id": "cache-vscode-extensions",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "name": "Development Container Feature - Cache VS Code Extensions",
   "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/cache-vscode-extensions",
   "description": "A Development Container Feature that prevents superfluous (re-)installations of VS extensions upon container restarts by caching the extensions",

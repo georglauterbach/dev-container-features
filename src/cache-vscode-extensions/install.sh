@@ -12,9 +12,7 @@ chown --recursive "${_REMOTE_USER}:${_REMOTE_USER}" "${CACHE_MOUNT_POINT}"
 chmod --recursive 777 "${CACHE_MOUNT_POINT}"
 
 mkdir --parents "${_REMOTE_USER_HOME}/.vscode-server"{,-insiders}
-chmod --recursive 777 \
-  "${_REMOTE_USER}:${_REMOTE_USER}" \
-  "${_REMOTE_USER_HOME}/.vscode-server"{,-insiders}
+chmod --recursive 777 "${_REMOTE_USER_HOME}/.vscode-server"{,-insiders}
 
 readonly EXTENSIONS_DIR="${_REMOTE_USER_HOME}/.vscode-server/extensions"
 [[ -e ${EXTENSIONS_DIR} ]] && rm --recursive --force "${EXTENSIONS_DIR}"
