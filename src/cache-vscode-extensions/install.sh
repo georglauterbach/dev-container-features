@@ -14,9 +14,10 @@ readonly CACHE_MOUNT_POINT='/opt/vscode/extensions/cache'
 # existing directory. We _cannot_ use `chown` here because of
 # `updateRemoteUserUID: true` in some cases, which would result in
 # a UID mismatch; hence, we need `777` as the permissions.
-for CACHE_DIR in "stable," "insiders,-insiders"; do
-  PERSISTENCE_DIR="${CACHE_MOUNT_POINT}/$(cut --delimiter=, --fields=1)"
-  TMP_STORAGE_DIR="${_REMOTE_USER_HOME}/.vscode-server$(cut --delimiter=, --fields=2)"
+for LOOP_VAR in "stable," "insiders,-insiders"; do
+  PERSISTENCE_DIR="${CACHE_MOUNT_POINT}/$(cut --delimiter=, --fields=1 <<< "${LOOP_VAR}")"
+  TMP_STORAGE_DIR="${_REMOTE_USER_HOME}/.vscode-server$(\
+    cut --delimiter=, --fields=2  <<< "${LOOP_VAR}")"
 
   mkdir --parents "${PERSISTENCE_DIR}" "${TMP_STORAGE_DIR}"
   chmod --recursive 777 "${PERSISTENCE_DIR}" "${TMP_STORAGE_DIR}"
