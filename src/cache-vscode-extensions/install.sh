@@ -8,7 +8,7 @@ shopt -s inherit_errexit
 readonly CACHE_MOUNT_POINT='/opt/vscode-extensions-cache'
 
 mkdir --parents "${CACHE_MOUNT_POINT}/"{stable,insiders}
-chown --recursive "${_REMOTE_USER}:${_REMOTE_USER}" "${CACHE_MOUNT_POINT}"
+chown --recursive "${_CONTAINER_USER}:${_REMOTE_USER}" "${CACHE_MOUNT_POINT}"
 chmod --recursive 777 "${CACHE_MOUNT_POINT}"
 
 mkdir --parents "${_REMOTE_USER_HOME}/.vscode-server"{,-insiders}
@@ -22,4 +22,4 @@ readonly EXTENSIONS_INSIDERS_DIR="${_REMOTE_USER_HOME}/.vscode-server-insiders/e
 [[ -e ${EXTENSIONS_INSIDERS_DIR} ]] && rm --recursive --force "${EXTENSIONS_INSIDERS_DIR}"
 ln --force --symbolic --no-target-directory "${CACHE_MOUNT_POINT}/insiders" "${EXTENSIONS_INSIDERS_DIR}"
 
-chown --recursive "${_REMOTE_USER}:${_REMOTE_USER}" "${EXTENSIONS_DIR}" "${EXTENSIONS_INSIDERS_DIR}"
+chmod --recursive 777 "${EXTENSIONS_DIR}" "${EXTENSIONS_INSIDERS_DIR}"
