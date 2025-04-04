@@ -15,7 +15,8 @@ readonly CACHE_MOUNT_POINT='/opt/vscode/extensions/cache'
 # `updateRemoteUserUID: true` in some cases, which would result in
 # a UID mismatch; hence, we need `777` as the permissions.
 for LOOP_VAR in "stable," "insiders,-insiders"; do
-  PERSISTENCE_DIR="${CACHE_MOUNT_POINT}/$(cut --delimiter=, --fields=1 <<< "${LOOP_VAR}")"
+  PERSISTENCE_DIR="${CACHE_MOUNT_POINT}/$(\
+    cut --delimiter=, --fields=1 <<< "${LOOP_VAR}")"
   TMP_STORAGE_DIR="${_REMOTE_USER_HOME}/.vscode-server$(\
     cut --delimiter=, --fields=2  <<< "${LOOP_VAR}")"
 
