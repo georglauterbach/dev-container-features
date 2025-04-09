@@ -5,30 +5,11 @@ function log() {
     "$(date +"%Y-%m-%dT%H:%M:%S.%6N%:z" || :)" "${1:-}" "${FUNCNAME[1]:-}" "${2:-}"
 }
 
-function parse_linux_distribution() {
-  export LINUX_DISTRIBUTION_NAME='unknown'
-
-  [[ -f /etc/os-release ]] || return 0
-
-  # shellcheck disable=SC2034
-  source /etc/os-release
-
-  if [[ ${ID_LIKE} =~ ^debian$ ]]; then
-    LINUX_DISTRIBUTION_NAME='debian'
-    export DEBIAN_FRONTEND=noninteractive
-    export DEBCONF_NONINTERACTIVE_SEEN=true
-
-    local APT_CONFIG_FILE='/etc/apt/apt.conf' ; readonly APT_CONFIG_FILE
-    mkdir --parents "$(dirname "${APT_CONFIG_FILE}")"
-    [[ -n ${http_proxy} ]]  && echo "Acquire::http::Proxy \"${http_proxy}\";"   >>"${APT_CONFIG_FILE}"
-    [[ -n ${https_proxy} ]] && echo "Acquire::https::Proxy \"${https_proxy}\";" >>"${APT_CONFIG_FILE}"
-  fi
-}
-
 function parse_dev_container_options() {
   log 'info' 'Parsing input from options'
 
   RUST_INSTALL="${RUST_INSTALL:?RUST_INSTALL is not set or null}"
+  RUST_INSTALL_BASE_PACKAGES="${RUST_INSTALL_BASE_PACKAGES:?RUST_INSTALL_BASE_PACKAGES is not set or null}"
   RUST_RUSTUP_DEFAULT_TOOLCHAIN=${RUST_RUSTUP_DEFAULT_TOOLCHAIN:?RUST_RUSTUP_DEFAULT_TOOLCHAIN not set or null}
   RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE=${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE?RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE not set}
   RUST_RUSTUP_UPDATE_DEFAULT_TOOLCHAIN=${RUST_RUSTUP_UPDATE_DEFAULT_TOOLCHAIN:?RUST_RUSTUP_UPDATE_DEFAULT_TOOLCHAIN not set or null}
@@ -47,6 +28,26 @@ function parse_dev_container_options() {
   [[ -v http_proxy ]]  || export http_proxy=${PROXY_HTTP_HTTP_ADDRESS?PROXY_HTTP_HTTP_ADDRESS not set}
   [[ -v https_proxy ]] || export https_proxy=${PROXY_HTTP_HTTPS_ADDRESS?PROXY_HTTP_HTTPS_ADDRESS not set}
   [[ -v no_proxy ]]    || export no_proxy=${PROXY_HTTP_NO_PROXY_ADDRESS?PROXY_HTTP_NO_PROXY_ADDRESS not set}
+}
+
+function parse_linux_distribution() {
+  export LINUX_DISTRIBUTION_NAME='unknown'
+
+  [[ -f /etc/os-release ]] || return 0
+
+  # shellcheck disable=SC2034
+  source /etc/os-release
+
+  if [[ ${ID_LIKE} =~ ^debian$ ]]; then
+    LINUX_DISTRIBUTION_NAME='debian'
+    export DEBIAN_FRONTEND=noninteractive
+    export DEBCONF_NONINTERACTIVE_SEEN=true
+
+    local APT_CONFIG_FILE='/etc/apt/apt.conf' ; readonly APT_CONFIG_FILE
+    mkdir --parents "$(dirname "${APT_CONFIG_FILE}")"
+    [[ -n ${http_proxy} ]]  && echo "Acquire::http::Proxy \"${http_proxy}\";"   >>"${APT_CONFIG_FILE}"
+    [[ -n ${https_proxy} ]] && echo "Acquire::https::Proxy \"${https_proxy}\";" >>"${APT_CONFIG_FILE}"
+  fi
 }
 
 function pre_flight_checks() {
@@ -70,16 +71,39 @@ function pre_flight_checks() {
 
   case "${LINUX_DISTRIBUTION_NAME}" in
     ( 'debian' )
-      log 'info' 'Updating APT package index and installing required base packages'
-      apt-get --yes --quiet=2 --option=Dpkg::Use-Pty=0 update
-      apt-get --yes --quiet=2 --option=Dpkg::Use-Pty=0 install --no-install-recommends \
-        'build-essential' 'ca-certificates' 'curl'
+      if ${RUST_INSTALL_BASE_PACKAGES}; then
+        log 'info' 'Updating APT package index and installing required base packages'
+        apt-get --yes --quiet=2 --option=Dpkg::Use-Pty=0 update
+        apt-get --yes --quiet=2 --option=Dpkg::Use-Pty=0 install --no-install-recommends \
+          'build-essential' 'ca-certificates' 'curl'
+      fi
       ;;
 
     ( * )
       log 'error' "This is a bug and should not have happened (could not match Linux distribution name '${LINUX_DISTRIBUTION_NAME}')"
       exit 1
   esac
+}
+
+function install_additional_packages() {
+  if [[ -n ${SYSTEM_PACKAGES_ADDITIONAL_PACKAGES} ]]; then
+    local __SYSTEM_PACKAGES_ADDITIONAL_PACKAGES
+    IFS=',' read -r -a __SYSTEM_PACKAGES_ADDITIONAL_PACKAGES <<< "${SYSTEM_PACKAGES_ADDITIONAL_PACKAGES// /}"
+
+    case "${LINUX_DISTRIBUTION_NAME}" in
+      ( 'debian' )
+        log 'info' 'Installing additional packages via APT'
+        apt-get --yes --quiet=2 --option=Dpkg::Use-Pty=0 install --no-install-recommends \
+          "${__SYSTEM_PACKAGES_ADDITIONAL_PACKAGES[@]}"
+        ;;
+
+      ( * )
+        log 'error' "This is a bug and should not have happened (could not match Linux distribution name '${LINUX_DISTRIBUTION_NAME}')"
+        exit 1
+    esac
+  fi
+
+  return 0
 }
 
 function install_rust() {
@@ -154,27 +178,6 @@ function install_rust() {
   chmod -R 777 /usr/rust
 }
 
-function install_additional_packages() {
-  if [[ -n ${SYSTEM_PACKAGES_ADDITIONAL_PACKAGES} ]]; then
-    local __SYSTEM_PACKAGES_ADDITIONAL_PACKAGES
-    IFS=',' read -r -a __SYSTEM_PACKAGES_ADDITIONAL_PACKAGES <<< "${SYSTEM_PACKAGES_ADDITIONAL_PACKAGES// /}"
-
-    case "${LINUX_DISTRIBUTION_NAME}" in
-      ( 'debian' )
-        log 'info' 'Installing additional packages via APT'
-        apt-get --yes --quiet=2 --option=Dpkg::Use-Pty=0 install --no-install-recommends \
-          "${__SYSTEM_PACKAGES_ADDITIONAL_PACKAGES[@]}"
-        ;;
-
-      ( * )
-        log 'error' "This is a bug and should not have happened (could not match Linux distribution name '${LINUX_DISTRIBUTION_NAME}')"
-        exit 1
-    esac
-  fi
-
-  return 0
-}
-
 function install_mold() {
   [[ ${LINKER_MOLD_INSTALL} == 'true' ]] || return 0
 
@@ -188,21 +191,6 @@ function install_mold() {
   rm -r "/tmp/${MOLD_DIR}"
 }
 
-function post_flight_checks() {
-  case "${LINUX_DISTRIBUTION_NAME}" in
-    ( 'debian' )
-      log 'info' 'Cleaning up APT and its cache'
-      apt-get --yes --quiet=2 --option=Dpkg::Use-Pty=0 autoremove
-      apt-get --yes --quiet=2 --option=Dpkg::Use-Pty=0 clean
-      rm -rf /var/lib/apt/lists/*
-      ;;
-
-    ( * )
-      log 'error' "This is a bug and should not have happened (could not match Linux distribution name '${LINUX_DISTRIBUTION_NAME}')"
-      exit 1
-  esac
-}
-
 function setup_post_create_command() {
   local PSC='/opt/devcontainer/features/ghcr_io/georglauterbach/rust/post_start_command.sh'
   readonly PSC
@@ -214,10 +202,9 @@ function setup_post_create_command() {
 if [[ -z "${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE}" ]]; then
   echo "INFO  No toolchain file provided - skipping setup"
   exit 0
+else
+  echo "INFO  Toolchain file set to '\${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE}'"
 fi
-
-readonly RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE="\${__REPOSITORY_ROOT_DIR}/${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE}"
-echo "INFO  Toolchain file set to '\${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE}'"
 
 if ! cd \$(dirname "\${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE}"); then
   echo "ERROR Could not change into directory of toolchain file '\${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE}'" >&2
@@ -246,11 +233,10 @@ function main() {
   parse_linux_distribution
   pre_flight_checks
 
-  install_rust
   install_additional_packages
+  install_rust
   install_mold
 
-  post_flight_checks
   setup_post_create_command
 }
 

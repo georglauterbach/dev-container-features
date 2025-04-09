@@ -1,13 +1,18 @@
 // ref: https://github.com/devcontainers/spec/blob/main/schemas/devContainerFeature.schema.json
 {
   "id": "rust",
-  "version": "6.0.0",
+  "version": "6.1.0",
   "name": "Development Container Feature - Rust",
   "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/rust",
   "description": "A Development Container Feature to work efficiently and effortlessly with the Rust programming language",
   "options": {
     "rust.install": {
       "description": "In environments where Rust is already installed, set this to false to not install Rust (again)",
+      "type": "boolean",
+      "default": true
+    },
+    "rust.install_base_packages": {
+      "description": "Install packages Rust required to work properly (like 'build-essential')",
       "type": "boolean",
       "default": true
     },
@@ -19,8 +24,8 @@
         "stable",
         "beta",
         "nightly",
-        "1.82.0",
-        "1.81.0"
+        "1.86.0",
+        "1.85.0"
       ],
       "default": "none"
     },
@@ -87,7 +92,7 @@
       "default": ""
     },
     "system.packages.additional-packages": {
-      "description": "A list of additional packages to install via the system's package manager",
+      "description": "A list of additional packages to install via the system's package manager. These packages are installed **prior** to Rust.",
       "type": "string",
       "proposals": [
         "gdb-multiarch",
