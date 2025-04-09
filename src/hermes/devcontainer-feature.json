@@ -1,6 +1,6 @@
 // ref: https://github.com/devcontainers/spec/blob/main/schemas/devContainerFeature.schema.json
 {
-  "id": "common",
+  "id": "hermes",
   "version": "0.1.0",
   "name": "Development Container Feature - hermes",
   "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/hermes",
