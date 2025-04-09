@@ -1,7 +1,7 @@
 // ref: https://github.com/devcontainers/spec/blob/main/schemas/devContainerFeature.schema.json
 {
   "id": "hermes",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "name": "Development Container Feature - hermes",
   "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/hermes",
   "description": "Delivers setup and configuration for your container using [`hermes`](https://github.com/georglauterbach/hermes)",
@@ -9,7 +9,7 @@
     "hermes.version": {
       "description": "The released version of hermes to use",
       "type": "string",
-      "default": "7.0.0"
+      "default": "7.1.0"
     },
     "hermes.acquire-insecure": {
       "description": "Whether to download `hermes` without checking certificates",
