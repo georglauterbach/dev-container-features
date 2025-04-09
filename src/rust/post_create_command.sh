@@ -4,7 +4,7 @@ set -eE -u -o pipefail
 shopt -s inherit_errexit
 
 # shellcheck disable=SC2157
-if [[ -z RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE ]]; then
+if [[ -z "RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE" ]]; then
   echo "INFO  No toolchain file provided - skipping setup"
   exit 0
 else
