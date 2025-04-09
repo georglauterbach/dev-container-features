@@ -44,27 +44,30 @@ function parse_linux_distribution() {
   log 'info' 'Parsing Linux distribution'
   export LINUX_DISTRIBUTION_NAME='unknown'
 
-  [[ -f /etc/os-release ]] || return 0
+  if [[ ! -f /etc/os-release ]]; then
+    log 'warn' "In this container, '/etc/os-release' does not exists - expect things to go wrong"
+    return 0
+  fi
 
   # shellcheck disable=SC2034
   source /etc/os-release
 
   case "${ID_LIKE}" in
     ( 'debian' )
-    log 'info' "Distribution recognized as Debian-like"
-    LINUX_DISTRIBUTION_NAME='debian'
-    export DEBIAN_FRONTEND=noninteractive
-    export DEBCONF_NONINTERACTIVE_SEEN=true
+      log 'info' "Distribution recognized as Debian-like"
+      LINUX_DISTRIBUTION_NAME='debian'
+      export DEBIAN_FRONTEND=noninteractive
+      export DEBCONF_NONINTERACTIVE_SEEN=true
 
-    local APT_CONFIG_FILE='/etc/apt/apt.conf' ; readonly APT_CONFIG_FILE
-    mkdir --parents "$(dirname "${APT_CONFIG_FILE}")"
-    [[ -n ${http_proxy} ]]  && echo "Acquire::http::Proxy \"${http_proxy}\";"   >>"${APT_CONFIG_FILE}"
-    [[ -n ${https_proxy} ]] && echo "Acquire::https::Proxy \"${https_proxy}\";" >>"${APT_CONFIG_FILE}"
-    ;;
+      local APT_CONFIG_FILE='/etc/apt/apt.conf' ; readonly APT_CONFIG_FILE
+      mkdir --parents "$(dirname "${APT_CONFIG_FILE}")"
+      [[ -n ${http_proxy} ]]  && echo "Acquire::http::Proxy \"${http_proxy}\";"   >>"${APT_CONFIG_FILE}"
+      [[ -n ${https_proxy} ]] && echo "Acquire::https::Proxy \"${https_proxy}\";" >>"${APT_CONFIG_FILE}"
+      ;;
 
-   ( * )
-    log 'warn' "Distribution not recognized"
-    ;;
+    ( * )
+      log 'warn' "Distribution not recognized"
+      ;;
 
   esac
 
