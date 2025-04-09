@@ -1,4 +1,7 @@
-#! /usr/bin/env -S bash -eE -u -o pipefail -O inherit_errexit
+#! /usr/bin/env bash
+
+set -eE -u -o pipefail
+shopt -s inherit_errexit
 
 function log() {
   printf "%s %-5s %s: %s\n" \

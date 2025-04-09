@@ -9,14 +9,17 @@ words:
   - riscv
   - rustc
   - rustup
+  - tzdata
   - uefi
 ignoreWords:
   - debconf
+  - doas
   - errorlens
   - georglauterbach
   - msvc
   - multiarch
   - noninteractive
+  - nopass
   - seccomp
   - tamasfe
   - usernamehw
