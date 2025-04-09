@@ -130,7 +130,9 @@
     "__REPOSITORY_ROOT_DIR": "${containerWorkspaceFolder}"
   },
   "postStartCommand": {
-    "DevContainer Feature - Rust": [ "/opt/devcontainer/features/georglauterbach/rust/post_start_command.sh" ]
+    "DevContainer Feature - Rust": [
+      "/opt/devcontainer/features/ghcr_io/georglauterbach/rust/post_start_command.sh"
+    ]
   },
   "customizations": {
     "vscode": {
