@@ -199,10 +199,10 @@ function post_flight_checks() {
 }
 
 function setup_post_create_command() {
-  local PCC='/usr/local/bin/devcontainer_feature_rust_post_start_command.sh'
-  readonly PCC
+  local PSC='/opt/devcontainer/features/ghcr_io/georglauterbach/rust/post_start_command.sh'
+  readonly PSC
 
-  cat >"${PCC}" <<EOF
+  cat >"${PSC}" <<EOF
 #! /usr/bin/env -S bash -eE -u -o pipefail -O inherit_errexit
 
 if [[ -z "${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE}" ]]; then
@@ -210,7 +210,7 @@ if [[ -z "${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE}" ]]; then
   exit 0
 fi
 
-readonly RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE="\${REPOSITORY_ROOT_DIR}/${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE}"
+readonly RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE="\${__REPOSITORY_ROOT_DIR}/${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE}"
 echo "INFO  Toolchain file set to '\${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE}'"
 
 if ! cd \$(dirname "\${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE}"); then
@@ -232,7 +232,7 @@ if ! rustup default "\${TOOLCHAIN_VERSION}"; then
   exit 1
 fi
 EOF
-  chmod +x "${PCC}"
+  chmod +x "${PSC}"
 }
 
 function main() {

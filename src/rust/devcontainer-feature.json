@@ -1,7 +1,7 @@
 // ref: https://github.com/devcontainers/spec/blob/main/schemas/devContainerFeature.schema.json
 {
   "id": "rust",
-  "version": "5.10.0",
+  "version": "5.11.0",
   "name": "Development Container Feature - Rust",
   "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/rust",
   "description": "A Development Container Feature to work efficiently and effortlessly with the Rust programming language",
@@ -126,10 +126,11 @@
     "RUSTUP_HOME": "/usr/rust/rustup",
     "CARGO_HOME": "/usr/rust/cargo/home",
     "CARGO_TARGET_DIR": "${containerWorkspaceFolder}/target",
-    "PATH": "/usr/rust/cargo/home/bin:${PATH}"
+    "PATH": "/usr/rust/cargo/home/bin:${PATH}",
+    "__REPOSITORY_ROOT_DIR": "${containerWorkspaceFolder}"
   },
   "postStartCommand": {
-    "DevContainer Feature - Rust": [ "/usr/local/bin/devcontainer_feature_rust_post_start_command.sh" ]
+    "DevContainer Feature - Rust": [ "/opt/devcontainer/features/georglauterbach/rust/post_start_command.sh" ]
   },
   "customizations": {
     "vscode": {
