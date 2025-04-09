@@ -17,6 +17,11 @@ function parse_linux_distribution() {
     LINUX_DISTRIBUTION_NAME='debian'
     export DEBIAN_FRONTEND=noninteractive
     export DEBCONF_NONINTERACTIVE_SEEN=true
+
+    local APT_CONFIG_FILE='/etc/apt/apt.conf' ; readonly APT_CONFIG_FILE
+    mkdir --parents "$(dirname "${APT_CONFIG_FILE}")"
+    [[ -n ${http_proxy} ]]  && echo "Acquire::http::Proxy \"${http_proxy}\";"   >>"${APT_CONFIG_FILE}"
+    [[ -n ${https_proxy} ]] && echo "Acquire::https::Proxy \"${https_proxy}\";" >>"${APT_CONFIG_FILE}"
   fi
 }
 
@@ -237,8 +242,8 @@ EOF
 }
 
 function main() {
-  parse_linux_distribution
   parse_dev_container_options
+  parse_linux_distribution
   pre_flight_checks
 
   install_rust

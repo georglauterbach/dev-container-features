@@ -1,7 +1,7 @@
 // ref: https://github.com/devcontainers/spec/blob/main/schemas/devContainerFeature.schema.json
 {
   "id": "rust",
-  "version": "5.11.2",
+  "version": "6.0.0",
   "name": "Development Container Feature - Rust",
   "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/rust",
   "description": "A Development Container Feature to work efficiently and effortlessly with the Rust programming language",
@@ -25,11 +25,10 @@
       "default": "none"
     },
     "rust.rustup.default-toolchain-file": {
-      "description": "Defines the [toolchain file](https://rust-lang.github.io/rustup/overrides.html#the-toolchain-file) that contains extra information about the toolchain. This path **must** be relative to the base of the repository. This is useful to set a default (global) toolchain when 'rust.rustup.default-toolchain' is not used, but a 'rust-toolchain.toml' exists.",
+      "description": "Defines the [toolchain file](https://rust-lang.github.io/rustup/overrides.html#the-toolchain-file) that contains extra information about the toolchain. This path **must be absolute** and include the file name. This is useful to set a default (global) toolchain when 'rust.rustup.default-toolchain' is not used, but a 'rust-toolchain.toml' exists.",
       "type": "string",
       "proposals": [
-        "rust-toolchain.toml",
-        "code/rust-toolchain.toml"
+        "${containerWorkspaceFolder}/rust-toolchain.toml"
       ],
       "default": ""
     },
@@ -126,8 +125,7 @@
     "RUSTUP_HOME": "/usr/rust/rustup",
     "CARGO_HOME": "/usr/rust/cargo/home",
     "CARGO_TARGET_DIR": "${containerWorkspaceFolder}/target",
-    "PATH": "/usr/rust/cargo/home/bin:${PATH}",
-    "__REPOSITORY_ROOT_DIR": "${containerWorkspaceFolder}"
+    "PATH": "/usr/rust/cargo/home/bin:${PATH}"
   },
   "postStartCommand": {
     "DevContainer Feature - Rust": [
@@ -137,10 +135,8 @@
   "customizations": {
     "vscode": {
       "extensions": [
-        "editorconfig.editorconfig", // obey https://editorconfig.org/
         "rust-lang.rust-analyzer", // official Rust language server
         "tamasfe.even-better-toml", // language support for TOML
-        "usernamehw.errorlens", // in-editor diagnostics
         "vadimcn.vscode-lldb@1.11.4" // LLDB debugger support
       ],
       "settings": {
@@ -148,15 +144,21 @@
         "files.readonlyInclude": {
           // mark toolchain data as read-only
           "${containerEnv:CARGO_HOME}": true,
-          "${containerEnv:RUSTUP_HOME}": true
+          "${containerEnv:RUSTUP_HOME}": true,
+          "${containerEnv:CARGO_TARGET_DIR}": true
         },
         "files.watcherExclude": {
           // ensure the watcher does not process toolchain data
           "${containerEnv:CARGO_HOME}": true,
+          "${containerEnv:RUSTUP_HOME}": true,
+          "${containerEnv:CARGO_TARGET_DIR}": true
+        },
+        "files.exclude": {
+          // ensure we do not see Cargo's or rustup's home
+          // directories, even when they are inside the repository
+          "${containerEnv:CARGO_HOME}": true,
           "${containerEnv:RUSTUP_HOME}": true
         },
-        // extension::bierner.docs-view
-        "docsView.documentationView.updateMode": "sticky",
         // extension::rust-lang.rust-analyzer
         "rust-analyzer.restartServerOnConfigChange": true,
         "rust-analyzer.checkOnSave": true,
@@ -177,10 +179,7 @@
         // extension::vadimcn.vscode-lldb
         "lldb.launch.sourceLanguages": [
           "rust"
-        ],
-        "files.exclude": {
-          ".rust": true
-        }
+        ]
       }
     }
   },
