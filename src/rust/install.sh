@@ -202,6 +202,7 @@ function setup_post_create_command() {
   local PSC='/opt/devcontainer/features/ghcr_io/georglauterbach/rust/post_start_command.sh'
   readonly PSC
 
+  mkdir --parents "$(dirname "${PSC}")"
   cat >"${PSC}" <<EOF
 #! /usr/bin/env -S bash -eE -u -o pipefail -O inherit_errexit
 
