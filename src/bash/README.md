@@ -21,6 +21,9 @@ A Development Container Feature to work efficiently and effortlessly with the Ba
 - `mads-hartmann.bash-ide-vscode`
 - `timonwong.shellcheck`
 
+## About
+
+This feature does currently not run any setup, but simply installs extensions and configures VS Code settings.
 
 
 ---

@@ -59,7 +59,6 @@ This Development Container Feature installs [Rust](https://www.rust-lang.org/) v
 | `CARGO_HOME`            | Directory path that `Cargo` uses as its "home" directory      | `/usr/rust/cargo/home`               | Yes             |
 | `CARGO_TARGET_DIR`      | Directory that Cargo uses to place binaries & build artifacts | `${containerWorkspaceFolder}/target` | No              |
 | `PATH`                  | Extend `PATH` to include `rustup`, `cargo`, `rustc`, etc.     | `/usr/rust/cargo/home/bin:${PATH}`   | No              |
-| `__REPOSITORY_ROOT_DIR` | A marker for the container workspace directory                | `${containerWorkspaceFolder}`        | No              |
 
 > [!IMPORTANT]
 >
