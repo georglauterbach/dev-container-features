@@ -1,8 +1,0 @@
-// ref: https://github.com/devcontainers/spec/blob/main/schemas/devContainerFeature.schema.json
-{
-  "id": "common",
-  "version": "0.1.0",
-  "name": "Development Container Feature - Common Setup",
-  "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/common",
-  "description": "Basic setup via [hermes](https://github.com/georglauterbach/hermes)"
-}
