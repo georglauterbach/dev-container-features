@@ -8,6 +8,11 @@ function log() {
     "$(date +"%Y-%m-%dT%H:%M:%S.%6N%:z" || :)" "${1:-}" "${FUNCNAME[1]:-}" "${2:-}"
 }
 
+function value_is_true() {
+  declare -n __VAR=${1}
+  [[ ${__VAR} == 'true' ]]
+}
+
 function parse_dev_container_options() {
   log 'info' 'Parsing input from options'
 
@@ -31,9 +36,12 @@ function parse_dev_container_options() {
   [[ -v http_proxy ]]  || export http_proxy=${PROXY_HTTP_HTTP_ADDRESS?PROXY_HTTP_HTTP_ADDRESS not set}
   [[ -v https_proxy ]] || export https_proxy=${PROXY_HTTP_HTTPS_ADDRESS?PROXY_HTTP_HTTPS_ADDRESS not set}
   [[ -v no_proxy ]]    || export no_proxy=${PROXY_HTTP_NO_PROXY_ADDRESS?PROXY_HTTP_NO_PROXY_ADDRESS not set}
+
+  return 0
 }
 
 function parse_linux_distribution() {
+  log 'info' 'Parsing Linux distribution'
   export LINUX_DISTRIBUTION_NAME='unknown'
 
   [[ -f /etc/os-release ]] || return 0
@@ -41,7 +49,9 @@ function parse_linux_distribution() {
   # shellcheck disable=SC2034
   source /etc/os-release
 
-  if [[ ${ID_LIKE} =~ ^debian$ ]]; then
+  case "${ID_LIKE}" in
+    ( 'debian' )
+    log 'info' "Distribution recognized as Debian-like"
     LINUX_DISTRIBUTION_NAME='debian'
     export DEBIAN_FRONTEND=noninteractive
     export DEBCONF_NONINTERACTIVE_SEEN=true
@@ -50,31 +60,23 @@ function parse_linux_distribution() {
     mkdir --parents "$(dirname "${APT_CONFIG_FILE}")"
     [[ -n ${http_proxy} ]]  && echo "Acquire::http::Proxy \"${http_proxy}\";"   >>"${APT_CONFIG_FILE}"
     [[ -n ${https_proxy} ]] && echo "Acquire::https::Proxy \"${https_proxy}\";" >>"${APT_CONFIG_FILE}"
-  fi
+    ;;
+
+   ( * )
+    log 'warn' "Distribution not recognized"
+    ;;
+
+  esac
+
+  return 0
 }
 
 function pre_flight_checks() {
-  log 'info' 'Checking privilege level'
-  if [[ ${EUID} -ne 0 ]]; then
-    log 'error' 'This script must be run with superuser privilege (root)'
-    exit 1
-  fi
-
-  export HOME='/root'
-
-  if [[ ${LINUX_DISTRIBUTION_NAME} == 'unknown' ]]; then
-    log 'error' 'Could not determine Linux distribution name'
-    exit 1
-  fi
-
-  log 'debug' 'Ensuring that login shells get the correct path if the user updates PATH using ENV'
-  rm -f /etc/profile.d/00-restore-env.sh
-  echo "export PATH=${PATH//$(sh -lc 'echo $PATH')/\$PATH}" >/etc/profile.d/00-restore-env.sh
-  chmod +x /etc/profile.d/00-restore-env.sh
+  log 'info' "Running pre-flight checks"
 
   case "${LINUX_DISTRIBUTION_NAME}" in
     ( 'debian' )
-      if ${RUST_INSTALL_BASE_PACKAGES}; then
+      if value_is_true RUST_INSTALL_BASE_PACKAGES; then
         log 'info' 'Updating APT package index and installing required base packages'
         apt-get --yes --quiet=2 --option=Dpkg::Use-Pty=0 update
         apt-get --yes --quiet=2 --option=Dpkg::Use-Pty=0 install --no-install-recommends \
@@ -82,10 +84,10 @@ function pre_flight_checks() {
       fi
       ;;
 
-    ( * )
-      log 'error' "This is a bug and should not have happened (could not match Linux distribution name '${LINUX_DISTRIBUTION_NAME}')"
-      exit 1
+    ( * ) ;;
   esac
+
+  return 0
 }
 
 function install_additional_packages() {
@@ -96,13 +98,15 @@ function install_additional_packages() {
     case "${LINUX_DISTRIBUTION_NAME}" in
       ( 'debian' )
         log 'info' 'Installing additional packages via APT'
+        apt-get --yes --quiet=2 --option=Dpkg::Use-Pty=0 update
         apt-get --yes --quiet=2 --option=Dpkg::Use-Pty=0 install --no-install-recommends \
           "${__SYSTEM_PACKAGES_ADDITIONAL_PACKAGES[@]}"
         ;;
 
       ( * )
-        log 'error' "This is a bug and should not have happened (could not match Linux distribution name '${LINUX_DISTRIBUTION_NAME}')"
+        log 'error' 'Distribution unknown - installing additional packages is not supported'
         exit 1
+        ;;
     esac
   fi
 
@@ -110,7 +114,7 @@ function install_additional_packages() {
 }
 
 function install_rust() {
-  [[ ${RUST_INSTALL} == 'true' ]] || return 0
+  value_is_true RUST_INSTALL || return 0
 
   log 'debug' 'Setting installation environment variables'
   # These directories contain metadata and files required by
@@ -133,7 +137,7 @@ function install_rust() {
     '--profile' "${RUST_RUSTUP_PROFILE}"
   )
 
-  if [[ ${RUST_RUSTUP_UPDATE_DEFAULT_TOOLCHAIN} == 'false' ]]; then
+  if ! value_is_true RUST_RUSTUP_UPDATE_DEFAULT_TOOLCHAIN; then
     log 'trace' 'Default toolchain will not be updated'
     RUSTUP_INSTALLER_ARGUMENTS+=('--no-update-default-toolchain')
   fi
@@ -179,10 +183,13 @@ function install_rust() {
 
   log 'trace' 'Adjusting permissions for /usr/rust'
   chmod -R 777 /usr/rust
+
+  return 0
 }
 
 function install_mold() {
-  [[ ${LINKER_MOLD_INSTALL} == 'true' ]] || return 0
+  value_is_true LINKER_MOLD_INSTALL || return 0
+  log 'info' "Installing linker 'mold'"
 
   local MOLD_DIR
   MOLD_DIR="mold-${LINKER_MOLD_VERSION}-$(uname -m)-linux"
@@ -192,42 +199,19 @@ function install_mold() {
 
   cp "/tmp/${MOLD_DIR}/"{bin/{mold,ld.mold},lib/mold/mold-wrapper.so} /usr/local/bin/
   rm -r "/tmp/${MOLD_DIR}"
+
+  return 0
 }
 
 function setup_post_create_command() {
+  log 'info' 'Setting up postCreateCommand script'
+
   local PSC='/opt/devcontainer/features/ghcr_io/georglauterbach/rust/post_start_command.sh'
   readonly PSC
 
   mkdir --parents "$(dirname "${PSC}")"
-  cat >"${PSC}" <<EOF
-#! /usr/bin/env -S bash -eE -u -o pipefail -O inherit_errexit
-
-if [[ -z "${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE}" ]]; then
-  echo "INFO  No toolchain file provided - skipping setup"
-  exit 0
-else
-  echo "INFO  Toolchain file set to '\${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE}'"
-fi
-
-if ! cd \$(dirname "\${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE}"); then
-  echo "ERROR Could not change into directory of toolchain file '\${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE}'" >&2
-  exit 1
-fi
-
-readonly TOOLCHAIN_VERSION=\$(command grep -E 'channel = .*' "\${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE}" | cut -d '=' -f 2 | tr -d "'\" " || echo '')
-echo "INFO  Toolchain version set to '\${TOOLCHAIN_VERSION}'"
-
-if [[ -z \${TOOLCHAIN_VERSION} ]]; then
-  echo "INFO  Toolchain file '\${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE}' does not contain toolchain version information"
-  exit 0
-fi
-
-echo "INFO: Setting default rustup toolchain version to '\${TOOLCHAIN_VERSION}'"
-if ! rustup default "\${TOOLCHAIN_VERSION}"; then
-  echo "ERROR  Could not set default toolchain to '\${TOOLCHAIN_VERSION}' (loaded from '\${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE}')" >&2
-  exit 1
-fi
-EOF
+  cp "$(realpath -eL "$(dirname "${BASH_SOURCE[0]}")")/post_create_command.sh" "${PSC}"
+  sed -i "s|RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE|${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE}|g" "${PSC}"
   chmod +x "${PSC}"
 }
 
