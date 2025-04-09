@@ -15,7 +15,7 @@ Delivers setup and configuration for your container using [`hermes`](https://git
 
 | Options Id | Description | Type | Default Value |
 |-----|-----|-----|-----|
-| hermes.version | The released version of hermes to use | string | 7.0.0 |
+| hermes.version | The released version of hermes to use | string | 7.1.0 |
 | hermes.acquire-insecure | Whether to download `hermes` without checking certificates | boolean | false |
 | hermes.run | Whether to actually run `hermes` | boolean | true |
 | hermes.arguments | Additional arguments to supply to `hermes` after `hermes --verbose --non-interactive run` | string | --install-packages |
