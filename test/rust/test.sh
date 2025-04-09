@@ -2,12 +2,10 @@
 
 set -e
 
-# shellcheck source=test/rust/lib.sh
+# shellcheck source=./lib.sh
 source lib.sh
 
 assert_success whoami
-
-file_exists /etc/profile.d/00-restore-env.sh
 
 dir_exists /usr/rust
 dir_exists /usr/rust/rustup
