@@ -16,7 +16,7 @@ A Development Container Feature to work efficiently and effortlessly with the Ru
 | Options Id | Description | Type | Default Value |
 |-----|-----|-----|-----|
 | rust.install | In environments where Rust is already installed, set this to false to not install Rust (again) | boolean | true |
-| rust.install_base_packages | Install packages Rust required to work properly (like 'build-essential') | boolean | true |
+| rust.install-base-packages | Install packages Rust required to work properly (like 'build-essential') | boolean | true |
 | rust.rustup.default-toolchain | Defines the [toolchain](https://rust-lang.github.io/rustup/concepts/toolchains.html) that will be installed via `rustup` | string | none |
 | rust.rustup.default-toolchain-file | Defines the [toolchain file](https://rust-lang.github.io/rustup/overrides.html#the-toolchain-file) that contains extra information about the toolchain. This path **must be absolute** and include the file name. This is useful to set a default (global) toolchain when 'rust.rustup.default-toolchain' is not used, but a 'rust-toolchain.toml' exists. | string | - |
 | rust.rustup.update-default-toolchain | Whether or not to update the default toolchain | boolean | false |
