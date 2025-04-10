@@ -213,7 +213,7 @@ function setup_post_create_command() {
   readonly PSC
 
   mkdir --parents "$(dirname "${PSC}")"
-  cp "$(realpath -eL "$(dirname "${BASH_SOURCE[0]}")")/post_create_command.sh" "${PSC}"
+  cp "$(realpath -eL "$(dirname "${BASH_SOURCE[0]}")")/$(basename "${PSC}")" "${PSC}"
   sed -i "s|RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE|${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE}|g" "${PSC}"
   chmod +x "${PSC}"
 }
