@@ -4,7 +4,7 @@
   "version": "6.2.1",
   "name": "Development Container Feature - Rust",
   "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/rust",
-  "description": "A Development Container Feature to work efficiently and effortlessly with the Rust programming language",
+  "description": "Work efficiently and effortlessly with the Rust programming language",
   "options": {
     "rust.install": {
       "description": "In environments where Rust is already installed, set this to false to not install Rust (again)",

@@ -4,7 +4,7 @@
   "version": "0.3.0",
   "name": "Development Container Feature - Bash",
   "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/bash",
-  "description": "A Development Container Feature to work efficiently and effortlessly with the Bash",
+  "description": "Work efficiently and effortlessly with Bash",
   "customizations": {
     "vscode": {
       "extensions": [

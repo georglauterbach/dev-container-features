@@ -1,6 +1,6 @@
 # Development Container Feature Collection
 
-This repository contains a collection of Development Container features.
+This repository contains a collection of Development Container features. To see which one exist, [navigate into the `src/`](./src/) directory.
 
 > [!NOTE]
 >

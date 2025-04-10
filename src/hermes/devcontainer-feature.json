@@ -4,7 +4,7 @@
   "version": "0.1.1",
   "name": "Development Container Feature - hermes",
   "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/hermes",
-  "description": "Delivers setup and configuration for your container using [`hermes`](https://github.com/georglauterbach/hermes)",
+  "description": "Use [`hermes`](https://github.com/georglauterbach/hermes) in your container",
   "options": {
     "hermes.version": {
       "description": "The released version of hermes to use",
