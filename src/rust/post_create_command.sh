@@ -11,6 +11,11 @@ else
   echo "INFO  Toolchain file set to 'RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE'"
 fi
 
+if [[ ! -f "RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE" ]]; then
+  echo "ERROR Rust toolchain file 'RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE' does not exist"
+  exit 1
+fi
+
 if ! cd "$(dirname "RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE")"; then
   echo "ERROR Could not change into directory of toolchain file 'RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE'" >&2
   exit 1
