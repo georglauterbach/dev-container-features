@@ -1,7 +1,7 @@
 // ref: https://github.com/devcontainers/spec/blob/main/schemas/devContainerFeature.schema.json
 {
   "id": "rust",
-  "version": "6.3.1",
+  "version": "6.4.0",
   "name": "Development Container Feature - Rust",
   "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/rust",
   "description": "Work efficiently and effortlessly with the Rust programming language",
@@ -99,6 +99,11 @@
         "jq,qemu-system-riscv64"
       ],
       "default": ""
+    },
+    "system.packages.package-manager.set-proxies": {
+      "description": "Whether to add the proxy to the package manager configuration, if proxies were supplied",
+      "type": "boolean",
+      "default": false
     },
     "linker.mold.install": {
       "description": "Whether to install the linker [`mold`](https://github.com/rui314/mold)",

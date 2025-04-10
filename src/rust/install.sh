@@ -28,6 +28,7 @@ function parse_dev_container_options() {
   RUST_RUSTUP_UPDATE_ROOT=${RUST_RUSTUP_UPDATE_ROOT:?RUST_RUSTUP_UPDATE_ROOT not set or null}
   RUST_RUSTUP_RUSTUP_INIT_HOST_TRIPLE=${RUST_RUSTUP_RUSTUP_INIT_HOST_TRIPLE?RUST_RUSTUP_RUSTUP_INIT_HOST_TRIPLE is not set or null}
 
+  SYSTEM_PACKAGES_PACKAGE_MANAGER_SET_PROXIES=${SYSTEM_PACKAGES_PACKAGE_MANAGER_SET_PROXIES:?SYSTEM_PACKAGES_PACKAGE_MANAGER_SET_PROXIES not set or null}
   SYSTEM_PACKAGES_ADDITIONAL_PACKAGES="${SYSTEM_PACKAGES_ADDITIONAL_PACKAGES?SYSTEM_PACKAGES_ADDITIONAL_PACKAGES not set}"
 
   LINKER_MOLD_INSTALL=${LINKER_MOLD_INSTALL:?LINKER_MOLD_INSTALL not set or null}
@@ -59,10 +60,15 @@ function parse_linux_distribution() {
       export DEBIAN_FRONTEND=noninteractive
       export DEBCONF_NONINTERACTIVE_SEEN=true
 
-      local APT_CONFIG_FILE='/etc/apt/apt.conf' ; readonly APT_CONFIG_FILE
-      mkdir --parents "$(dirname "${APT_CONFIG_FILE}")"
-      [[ -n ${http_proxy} ]]  && echo "Acquire::http::Proxy \"${http_proxy}\";"   >>"${APT_CONFIG_FILE}"
-      [[ -n ${https_proxy} ]] && echo "Acquire::https::Proxy \"${https_proxy}\";" >>"${APT_CONFIG_FILE}"
+      if value_is_true SYSTEM_PACKAGES_PACKAGE_MANAGER_SET_PROXIES; then
+        local APT_CONFIG_FILE='/etc/apt/apt.conf' ; readonly APT_CONFIG_FILE
+        mkdir --parents "$(dirname "${APT_CONFIG_FILE}")"
+        if [[ -n ${https_proxy} ]]; then
+          echo "Acquire::http::Proxy \"${https_proxy}\";" >>"${APT_CONFIG_FILE}"
+        elif [[ -n ${http_proxy} ]]; then
+          echo "Acquire::http::Proxy \"${http_proxy}\";"  >>"${APT_CONFIG_FILE}"
+        fi
+      fi
       ;;
 
     ( * )
