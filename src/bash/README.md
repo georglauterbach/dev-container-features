@@ -1,7 +1,7 @@
 
 # Development Container Feature - Bash (bash)
 
-A Development Container Feature to work efficiently and effortlessly with the Bash
+Work efficiently and effortlessly with Bash
 
 ## Example Usage
 

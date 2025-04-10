@@ -1,7 +1,7 @@
 
 # Development Container Feature - Rust (rust)
 
-A Development Container Feature to work efficiently and effortlessly with the Rust programming language
+Work efficiently and effortlessly with the Rust programming language
 
 ## Example Usage
 
@@ -45,12 +45,6 @@ A Development Container Feature to work efficiently and effortlessly with the Ru
 
 This Development Container Feature installs [Rust](https://www.rust-lang.org/) via [rustup](https://www.rust-lang.org/tools/install) and additional extensions required to work efficiently with Rust.
 
-> [!TIP]
->
-> #### Works Well With [`georglauterbach/dev-container-base`](https://github.com/georglauterbach/dev-container-base)
->
-> This Development Container Feature works well with base images that focus on recent versions of Ubuntu, like [`ghcr.io/georglauterbach/dev-container-base:edge`](https://github.com/georglauterbach/dev-container-base/pkgs/container/dev-container-base).
-
 ### Environment Variables Set by This Feature
 
 | Name                    | Description                                                   | Value                                | Needs Overwrite |
@@ -62,15 +56,24 @@ This Development Container Feature installs [Rust](https://www.rust-lang.org/) v
 
 > [!IMPORTANT]
 >
-> You may want to overwrite or extend the set of predefined environment variables above. Those marked with  `Yes` in the "Needs Overwrite" column should definitely be overwritten in `containerEnv`. The new values should be locations that are persisted across container restarts. You most likely want to overwrite these variables when you work with different toolchains at the same time and having them side-by-side is desired.
+> You **SHOULD** overwrite or extend the set of predefined environment variables above, especially those marked with  `Yes` in the "Needs Overwrite" column. The new values should be locations that are persisted across container restarts. You most likely want to overwrite these variables when you work with different toolchains at the same time and having them side-by-side is desired.
 >
-> You should define these variables in `containerEnv` in your `devcontainer.json` file. Good defaults are: `RUSTUP_HOME: "${containerWorkspaceFolder}/.rust/rustup_home"` and `"CARGO_HOME": "${containerWorkspaceFolder}/.rust/cargo_home"`.
+> ---
 >
-> If you want to extend `PATH` to the new `CARGO_HOME`, add `"PATH": "${containerEnv:CARGO_HOME}/bin:${containerEnv:PATH}"` to `remoteEnv`.
-
-> [!NOTE]
+> You should define these variables in `containerEnv` in your `devcontainer.json` file. Good defaults are:
 >
-> You will not see the `.rust/` directory in your explorer in VS Code as this feature provides default settings that hide this directory.
+> - `RUSTUP_HOME: "${containerWorkspaceFolder}/.rust/rustup_home"`
+> - `"CARGO_HOME": "${containerWorkspaceFolder}/.rust/cargo_home"`.
+>
+> You will not see the `.rust/` directory in your VS Code explorer as this feature provides default settings that hide this directory.
+>
+> ---
+>
+> If you want to extend `PATH` to the new `CARGO_HOME`, add
+>
+> - `"PATH": "${containerEnv:CARGO_HOME}/bin:${containerEnv:PATH}"`
+>
+> to `remoteEnv`.
 
 ### Additional Adjustments
 
