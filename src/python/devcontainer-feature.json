@@ -1,0 +1,74 @@
+// ref: https://github.com/devcontainers/spec/blob/main/schemas/devContainerFeature.schema.json
+{
+  "id": "python",
+  "version": "0.1.0",
+  "name": "Development Container Feature - Python",
+  "documentationURL": "TODO",
+  "description": "Work efficiently and effortlessly with Python",
+  "options": {
+    "uv.install": {
+      "description": "",
+      "type": "boolean",
+      "default": false
+    },
+    "uv.install.version": {
+      "description": "Which [version of `uv`](https://github.com/astral-sh/uv/releases) to install (use 'latest' to install the latest version)",
+      "type": "string",
+      "default": "latest"
+    },
+    "uv.install.method": {
+      "description": "Defines the [method with which `uv` should be install](https://docs.astral.sh/uv/getting-started/installation/)",
+      "type": "string",
+      "enum": [
+        "curl",
+        "wget",
+        "pip",
+        "pipx"
+      ],
+      "default": "curl"
+    },
+    "uv.install.uri": {
+      "description": "Custom URI to download the `uv` installation script from (takes precedence over `uv.install.version`)",
+      "type": "string",
+      "default": ""
+    },
+    "proxy.http.http.address": {
+      "description": "A URI for an HTTP proxy",
+      "type": "string",
+      "default": ""
+    },
+    "proxy.http.https.address": {
+      "description": "A URI for an HTTPS proxy",
+      "type": "string",
+      "default": ""
+    },
+    "proxy.http.no-proxy.address": {
+      "description": "A list of URIs to not proxy",
+      "type": "string",
+      "default": "localhost,127.0.0.1"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "charliermarsh.ruff",
+        "ms-python.isort"
+      ],
+      "settings": {
+        // ? Python
+        "[python]": {
+          "editor.defaultFormatter": "charliermarsh.ruff"
+        },
+        "ruff.nativeServer": "on",
+        // ruff is currently unable to sort imports
+        // ref: https://docs.astral.sh/ruff/formatter/#sorting-imports
+        // hence, we use isort from MS
+        "ruff.organizeImports": false,
+        "isort.args": [
+          "--profile",
+          "black"
+        ]
+      }
+    }
+  }
+}
