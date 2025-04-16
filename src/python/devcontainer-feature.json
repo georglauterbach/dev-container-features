@@ -3,7 +3,7 @@
   "id": "python",
   "version": "0.1.0",
   "name": "Development Container Feature - Python",
-  "documentationURL": "TODO",
+  "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/python",
   "description": "Work efficiently and effortlessly with Python",
   "options": {
     "uv.install": {

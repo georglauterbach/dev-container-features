@@ -6,7 +6,7 @@ shopt -s inherit_errexit
 CURRENT_DIR="$(realpath -eL "$(dirname "${BASH_SOURCE[0]}")")"
 readonly CURRENT_DIR
 
-# shellcheck source=../common.sh
+# shellcheck source=./common.sh
 source "${CURRENT_DIR}/common.sh"
 
 function parse_dev_container_options() {
