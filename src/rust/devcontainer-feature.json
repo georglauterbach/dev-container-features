@@ -1,7 +1,7 @@
 // ref: https://github.com/devcontainers/spec/blob/main/schemas/devContainerFeature.schema.json
 {
   "id": "rust",
-  "version": "6.5.1",
+  "version": "6.6.0",
   "name": "Development Container Feature - Rust",
   "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/rust",
   "description": "Work efficiently and effortlessly with the Rust programming language",
@@ -114,6 +114,11 @@
       "description": "The version of the [`mold`](https://github.com/rui314/mold) linker to install",
       "type": "string",
       "default": "2.37.1"
+    },
+    "download-acquire-insecure": {
+      "description": "Whether to download files without checking certificates",
+      "type": "boolean",
+      "default": true
     },
     "proxy.http.http.address": {
       "description": "A URI for an HTTP proxy",

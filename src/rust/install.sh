@@ -30,6 +30,8 @@ function parse_dev_container_options() {
   readonly LINKER_MOLD_INSTALL=${LINKER_MOLD_INSTALL:?LINKER_MOLD_INSTALL not set or null}
   readonly LINKER_MOLD_VERSION=${LINKER_MOLD_VERSION?LINKER_MOLD_VERSION not set}
 
+  readonly DOWNLOAD_ACQUIRE_INSECURE="${DOWNLOAD_ACQUIRE_INSECURE:?DOWNLOAD_ACQUIRE_INSECURE set or null}"
+
   [[ -v http_proxy ]]  || export http_proxy=${PROXY_HTTP_HTTP_ADDRESS?PROXY_HTTP_HTTP_ADDRESS not set}
   [[ -v https_proxy ]] || export https_proxy=${PROXY_HTTP_HTTPS_ADDRESS?PROXY_HTTP_HTTPS_ADDRESS not set}
   [[ -v no_proxy ]]    || export no_proxy=${PROXY_HTTP_NO_PROXY_ADDRESS?PROXY_HTTP_NO_PROXY_ADDRESS not set}
@@ -123,9 +125,23 @@ function install_rust() {
     log 'debug' "Host triple set to '${RUST_RUSTUP_RUSTUP_INIT_HOST_TRIPLE}'"
   fi
 
+  if command -v curl &>/dev/null; then
+    DOWNLOAD_COMMAND=('curl' '--silent' '--show-error' '--location' '--fail')
+    value_is_true DOWNLOAD_ACQUIRE_INSECURE && DOWNLOAD_COMMAND+=('--insecure')
+    DOWNLOAD_COMMAND+=('--output' "${RUSTUP_HOME}/rustup-init")
+  elif command -v wget &>/dev/null; then
+    DOWNLOAD_COMMAND=('wget')
+    value_is_true DOWNLOAD_ACQUIRE_INSECURE && DOWNLOAD_COMMAND+=('--no-check-certificate')
+    DOWNLOAD_COMMAND+=("--output-document=${RUSTUP_HOME}/rustup-init")
+  else
+    log 'error' "Neither 'curl' nor 'wget' found, but required"
+    exit 1
+  fi
+
   # This is the point where the actual installation takes place.
   log 'debug' "Acquiring rustup-init"
-  curl -sSfL -o "${RUSTUP_HOME}/rustup-init" "${RUST_RUSTUP_UPDATE_ROOT}/dist/${RUST_RUSTUP_RUSTUP_INIT_HOST_TRIPLE}/rustup-init"
+  "${DOWNLOAD_COMMAND[@]}" "${RUST_RUSTUP_UPDATE_ROOT}/dist/${RUST_RUSTUP_RUSTUP_INIT_HOST_TRIPLE}/rustup-init"
+
   log 'debug' "Installing rustup via rustup-init"
   chmod +x "${RUSTUP_HOME}/rustup-init"
   "${RUSTUP_HOME}/rustup-init" "${RUSTUP_INSTALLER_ARGUMENTS[@]}"
@@ -169,9 +185,21 @@ function install_mold() {
 
   local MOLD_DIR
   MOLD_DIR="mold-${LINKER_MOLD_VERSION}-$(uname -m)-linux"
-  curl --silent --show-error --fail --location                                                      \
-    "https://github.com/rui314/mold/releases/download/v${LINKER_MOLD_VERSION}/${MOLD_DIR}.tar.gz" | \
-    tar xvz -C /tmp
+
+  if command -v curl &>/dev/null; then
+    DOWNLOAD_COMMAND=('curl' '--silent' '--show-error' '--location' '--fail')
+    value_is_true DOWNLOAD_ACQUIRE_INSECURE && DOWNLOAD_COMMAND+=('--insecure')
+  elif command -v wget &>/dev/null; then
+    DOWNLOAD_COMMAND=('wget')
+    value_is_true DOWNLOAD_ACQUIRE_INSECURE && DOWNLOAD_COMMAND+=('--no-check-certificate')
+  else
+    log 'error' "Neither 'curl' nor 'wget' found, but required"
+    exit 1
+  fi
+
+  "${DOWNLOAD_COMMAND[@]}" \
+    "https://github.com/rui314/mold/releases/download/v${LINKER_MOLD_VERSION}/${MOLD_DIR}.tar.gz" \
+    | tar xvz -C /tmp
 
   cp "/tmp/${MOLD_DIR}/"{bin/{mold,ld.mold},lib/mold/mold-wrapper.so} /usr/local/bin/
   rm -r "/tmp/${MOLD_DIR}"
