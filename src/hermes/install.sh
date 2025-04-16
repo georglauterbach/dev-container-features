@@ -29,8 +29,6 @@ function parse_dev_container_options() {
 function pre_flight_checks() {
   log 'info' 'Running pre-flight checks'
 
-  DOWNLOAD_COMMAND=('curl' '--silent' '--show-error' '--location' '--fail')
-
   case "${LINUX_DISTRIBUTION_NAME}" in
     ( 'debian' )
       log 'info' 'Distribution recognized as Debian-like'
@@ -57,6 +55,7 @@ function pre_flight_checks() {
   fi
 
   if command -v curl &>/dev/null; then
+    DOWNLOAD_COMMAND=('curl' '--silent' '--show-error' '--location' '--fail')
     value_is_true HERMES_ACQUIRE_INSECURE && DOWNLOAD_COMMAND+=('--insecure')
     DOWNLOAD_COMMAND+=('--output' "${HERMES_OUTPUT_FILE}")
   elif command -v wget &>/dev/null; then
