@@ -63,7 +63,7 @@ function pre_flight_checks() {
     value_is_true HERMES_ACQUIRE_INSECURE && DOWNLOAD_COMMAND+=('--no-check-certificate')
     DOWNLOAD_COMMAND+=("--output-document=${HERMES_OUTPUT_FILE}")
   else
-    log 'error' "Neither 'curl' nor 'wget' found but required"
+    log 'error' "Neither 'curl' nor 'wget' found, but required"
     exit 1
   fi
 

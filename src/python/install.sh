@@ -12,7 +12,7 @@ source "${CURRENT_DIR}/common.sh"
 function parse_dev_container_options() {
   log 'info' 'Parsing input from options'
 
-  readonly UV_INSTALL="${UV_INSTALL:?UV_INSTALLnot set or null}"
+  readonly UV_INSTALL="${UV_INSTALL:?UV_INSTALL not set or null}"
   readonly UV_INSTALL_VERSION=${UV_INSTALL_VERSION:?UV_INSTALL_VERSION not set or null}
   readonly UV_INSTALL_METHOD="${UV_INSTALL_METHOD:?UV_INSTALL_METHOD not set or null}"
   readonly UV_INSTALL_URI="${UV_INSTALL_URI?UV_INSTALL_URI not set}"
