@@ -3,15 +3,11 @@
 set -eE -u -o pipefail
 shopt -s inherit_errexit
 
-function log() {
-  printf "%s %-5s %s: %s\n" \
-    "$(date +"%Y-%m-%dT%H:%M:%S.%6N%:z" || :)" "${1:-}" "${FUNCNAME[1]:-}" "${2:-}"
-}
+CURRENT_DIR="$(realpath -eL "$(dirname "${BASH_SOURCE[0]}")")"
+readonly CURRENT_DIR
 
-function value_is_true() {
-  declare -n __VAR=${1}
-  [[ ${__VAR} == 'true' ]]
-}
+# shellcheck source=../common.sh
+source "${CURRENT_DIR}/common.sh"
 
 function parse_dev_container_options() {
   log 'info' 'Parsing input from options'
@@ -41,25 +37,11 @@ function parse_dev_container_options() {
   return 0
 }
 
-function parse_linux_distribution() {
-  log 'info' 'Parsing Linux distribution'
-  export LINUX_DISTRIBUTION_NAME='unknown'
+function pre_flight_checks() {
+  log 'info' "Running pre-flight checks"
 
-  if [[ ! -f /etc/os-release ]]; then
-    log 'warn' "In this container, '/etc/os-release' does not exists - expect things to go wrong"
-    return 0
-  fi
-
-  # shellcheck disable=SC2034
-  source /etc/os-release
-
-  case "${ID_LIKE}" in
+  case "${LINUX_DISTRIBUTION_NAME}" in
     ( 'debian' )
-      log 'info' "Distribution recognized as Debian-like"
-      LINUX_DISTRIBUTION_NAME='debian'
-      export DEBIAN_FRONTEND=noninteractive
-      export DEBCONF_NONINTERACTIVE_SEEN=true
-
       if value_is_true SYSTEM_PACKAGES_PACKAGE_MANAGER_SET_PROXIES; then
         local APT_CONFIG_FILE='/etc/apt/apt.conf' ; readonly APT_CONFIG_FILE
         mkdir --parents "$(dirname "${APT_CONFIG_FILE}")"
@@ -69,22 +51,7 @@ function parse_linux_distribution() {
           echo "Acquire::http::Proxy \"${http_proxy}\";"  >>"${APT_CONFIG_FILE}"
         fi
       fi
-      ;;
 
-    ( * )
-      log 'warn' "Distribution not recognized"
-      ;;
-
-  esac
-
-  return 0
-}
-
-function pre_flight_checks() {
-  log 'info' "Running pre-flight checks"
-
-  case "${LINUX_DISTRIBUTION_NAME}" in
-    ( 'debian' )
       if value_is_true RUST_INSTALL_BASE_PACKAGES; then
         log 'info' 'Updating APT package index and installing required base packages'
         apt-get --yes --quiet=2 --option=Dpkg::Use-Pty=0 update

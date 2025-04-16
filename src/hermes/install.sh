@@ -5,15 +5,11 @@
 set -eE -u -o pipefail
 shopt -s inherit_errexit
 
-function log() {
-  printf "%s %-5s %s: %s\n" \
-    "$(date +"%Y-%m-%dT%H:%M:%S.%6N%:z" || :)" "${1:-}" "${FUNCNAME[1]:-}" "${2:-}"
-}
+CURRENT_DIR="$(realpath -eL "$(dirname "${BASH_SOURCE[0]}")")"
+readonly CURRENT_DIR
 
-function value_is_true() {
-  declare -n __VAR=${1}
-  [[ ${__VAR} == 'true' ]]
-}
+# shellcheck source=../common.sh
+source "${CURRENT_DIR}/common.sh"
 
 function parse_dev_container_options() {
   log 'info' 'Parsing input from options'
@@ -35,20 +31,9 @@ function pre_flight_checks() {
 
   DOWNLOAD_COMMAND=('curl' '--silent' '--show-error' '--location' '--fail')
 
-  if [[ ! -f /etc/os-release ]]; then
-    log 'error' "No '/etc/os-release' - no way of determining distribution"
-    exit 1
-  fi
-
-  # shellcheck disable=SC2034
-  source /etc/os-release
-
-  case "${ID_LIKE}" in
+  case "${LINUX_DISTRIBUTION_NAME}" in
     ( 'debian' )
       log 'info' 'Distribution recognized as Debian-like'
-
-      export DEBIAN_FRONTEND=noninteractive
-      export DEBCONF_NONINTERACTIVE_SEEN=true
 
       if ! apt-get --yes --quiet=2 --option=Dpkg::Use-Pty=0 update \
       || ! apt-get --yes --quiet=2 --option=Dpkg::Use-Pty=0 install \
@@ -58,7 +43,7 @@ function pre_flight_checks() {
       ;;
 
     ( * )
-      log 'warn' "Distribution '${ID_LIKE}' currently not supported - expect problems"
+      log 'warn' "Distribution '${LINUX_DISTRIBUTION_NAME}' currently not supported - expect problems"
       ;;
   esac
 
@@ -101,6 +86,7 @@ function acquire_hermes() {
 
 function main() {
   parse_dev_container_options
+  parse_linux_distribution
   pre_flight_checks
   acquire_hermes
 
