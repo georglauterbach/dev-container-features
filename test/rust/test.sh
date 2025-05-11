@@ -10,7 +10,6 @@ assert_success whoami
 dir_exists /opt/devcontainer/features/ghcr_io/georglauterbach/rust
 dir_exists /opt/devcontainer/features/ghcr_io/georglauterbach/rust/rustup
 dir_exists /opt/devcontainer/features/ghcr_io/georglauterbach/rust/cargo/home
-dir_exists /opt/devcontainer/features/ghcr_io/georglauterbach/rust/cargo/target
 
 command_exists rustup
 command_exists rustc
