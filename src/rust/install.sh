@@ -218,8 +218,7 @@ function setup_post_start_command() {
   local PSC="${DATA_DIR}/post_start_command.sh"
   readonly PSC
 
-  mkdir --parents "$(dirname "${PSC}")"
-  cp "$(realpath -eL "$(dirname "${BASH_SOURCE[0]}")")/$(basename "${PSC}")" "${PSC}"
+  cp "${CURRENT_DIR}/$(basename "${PSC}")" "${PSC}"
   sed -i "s|RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE|${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE}|g" "${PSC}"
   chmod +x "${PSC}"
 }

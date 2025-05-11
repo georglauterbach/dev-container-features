@@ -47,12 +47,12 @@ This feature installs the excellent extensions [`rust-lang.rust-analyzer`](https
 Tp enable pretty symbols in the debugger, you want to add the setting
 
 ```jsonc
-"preRunCommands": [
-   "command script import ${containerEnv:RUST_PRETTIFIER_FOR_LLDB_FILE}"
+"lldb.launch.preRunCommands": [
+  "command script import ${containerEnv:RUST_PRETTIFIER_FOR_LLDB_FILE}"
 ]
 ```
 
-to your `devcontainer.json` definition. The symbol definitions are copied from [`cmrschwarz/rust-prettifier-for-lldb`](https://github.com/cmrschwarz/rust-prettifier-for-lldb).
+to the `devcontainer.json`'s IDE-specific settings (example shown is for VS Code). The symbol definitions are copied from [`cmrschwarz/rust-prettifier-for-lldb`](https://github.com/cmrschwarz/rust-prettifier-for-lldb).
 
 #### Niche Scenarios
 
