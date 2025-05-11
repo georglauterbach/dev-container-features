@@ -8,7 +8,7 @@ source lib.sh
 assert_success whoami
 
 dir_exists /opt/devcontainer/features/ghcr_io/georglauterbach/rust
-dir_exists /opt/devcontainer/features/ghcr_io/georglauterbach/rust/rustup
+dir_exists /opt/devcontainer/features/ghcr_io/georglauterbach/rust/rustup/home
 dir_exists /opt/devcontainer/features/ghcr_io/georglauterbach/rust/cargo/home
 
 command_exists rustup
@@ -21,7 +21,7 @@ dir_exists  /usr/share/bash-completion/completions
 file_exists /usr/share/bash-completion/completions/rustup
 file_exists /usr/share/bash-completion/completions/cargo
 
-file_exists /opt/devcontainer/features/ghcr_io/georglauterbach/rust/rustup/rustup-init
+file_exists /opt/devcontainer/features/ghcr_io/georglauterbach/rust/rustup/home/rustup-init
 file_exists /opt/devcontainer/features/ghcr_io/georglauterbach/rust/cargo/home/env
 dir_exists  /opt/devcontainer/features/ghcr_io/georglauterbach/rust/cargo/home/bin
 
