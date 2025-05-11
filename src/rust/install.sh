@@ -6,6 +6,9 @@ shopt -s inherit_errexit
 CURRENT_DIR="$(realpath -eL "$(dirname "${BASH_SOURCE[0]}")")"
 readonly CURRENT_DIR
 
+readonly DATA_DIR='/opt/devcontainer/features/ghcr_io/georglauterbach/rust'
+mkdir -p "${DATA_DIR}"
+
 # shellcheck source=./common.sh
 source "${CURRENT_DIR}/common.sh"
 
@@ -98,11 +101,10 @@ function install_rust() {
   # These directories contain metadata and files required by
   # `rustup` (toolchain files, components, etc.) and `cargo`
   # (crates, etc.).
-  export RUSTUP_HOME='/usr/rust/rustup'
-  export CARGO_HOME='/usr/rust/cargo/home'
-  export CARGO_TARGET='/usr/rust/cargo/target'
+  export RUSTUP_HOME="${DATA_DIR}/rustup/home"
+  export CARGO_HOME="${DATA_DIR}/cargo/home"
 
-  mkdir -p "${RUSTUP_HOME}" "${CARGO_HOME}" "${CARGO_TARGET}"
+  mkdir -p "${RUSTUP_HOME}" "${CARGO_HOME}"
 
   # These variables are used when acquiring and updating `rustup`.
   export RUSTUP_DIST_SERVER
@@ -173,8 +175,11 @@ function install_rust() {
   rustup completions bash       >/usr/share/bash-completion/completions/rustup
   rustup completions bash cargo >/usr/share/bash-completion/completions/cargo
 
-  log 'trace' 'Adjusting permissions for /usr/rust'
-  chmod -R 777 /usr/rust
+  log 'debug' 'Installing prettifier for LLDB'
+  cp "${CURRENT_DIR}/prettifier_for_lldb.py" "${DATA_DIR}/"
+
+  log 'trace' "Adjusting permissions for '${DATA_DIR}'"
+  chmod -R 777 "${DATA_DIR}"
 
   return 0
 }
@@ -207,10 +212,10 @@ function install_mold() {
   return 0
 }
 
-function setup_post_create_command() {
-  log 'info' 'Setting up postCreateCommand script'
+function setup_post_start_command() {
+  log 'info' 'Setting up postStartCommand script'
 
-  local PSC='/opt/devcontainer/features/ghcr_io/georglauterbach/rust/post_start_command.sh'
+  local PSC="${DATA_DIR}/post_start_command.sh"
   readonly PSC
 
   mkdir --parents "$(dirname "${PSC}")"
@@ -228,7 +233,7 @@ function main() {
   install_rust
   install_mold
 
-  setup_post_create_command
+  setup_post_start_command
 }
 
 main "${@}"

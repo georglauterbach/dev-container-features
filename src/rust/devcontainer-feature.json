@@ -137,8 +137,9 @@
     }
   },
   "containerEnv": {
-    "RUSTUP_HOME": "/usr/rust/rustup",
-    "CARGO_HOME": "/usr/rust/cargo/home",
+    "RUSTUP_HOME": "/opt/devcontainer/features/ghcr_io/georglauterbach/rust/rustup/home",
+    "CARGO_HOME": "/opt/devcontainer/features/ghcr_io/georglauterbach/rust/cargo/home",
+    "RUST_PRETTIFIER_FOR_LLDB_FILE": "/opt/devcontainer/features/ghcr_io/georglauterbach/rust/prettifier_for_lldb.py",
     "CARGO_TARGET_DIR": "${containerWorkspaceFolder}/target",
     "PATH": "/usr/rust/cargo/home/bin:${PATH}"
   },
