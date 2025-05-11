@@ -29,7 +29,7 @@ Work efficiently and effortlessly with the Rust programming language
 | system.packages.additional-packages | A list of additional packages to install via the system's package manager. These packages are installed **prior** to Rust. | string | - |
 | system.packages.package-manager.set-proxies | Whether to add the proxy to the package manager configuration, if proxies were supplied | boolean | false |
 | linker.mold.install | Whether to install the linker [`mold`](https://github.com/rui314/mold) | boolean | false |
-| linker.mold.version | The version of the [`mold`](https://github.com/rui314/mold) linker to install | string | 2.38.1 |
+| linker.mold.version | The version of the [`mold`](https://github.com/rui314/mold) linker to install | string | 2.39.0 |
 | download-acquire-insecure | Whether to download files without checking certificates | boolean | true |
 | proxy.http.http.address | A URI for an HTTP proxy | string | - |
 | proxy.http.https.address | A URI for an HTTPS proxy | string | - |
@@ -66,8 +66,8 @@ This Development Container Feature installs [Rust](https://www.rust-lang.org/) v
 > ```jsonc
 >   "containerEnv": {
 >     // you could mount a volume to `${containerWorkspaceFolder}/.rust`
->     "RUSTUP_HOME": "${containerWorkspaceFolder}/.rust/rustup_home",
->     "CARGO_HOME": "${containerWorkspaceFolder}/.rust/cargo_home"
+>     "RUSTUP_HOME": "${containerWorkspaceFolder}/.rust/rustup/home",
+>     "CARGO_HOME": "${containerWorkspaceFolder}/.rust/cargo/home"
 >   }
 > ```
 >
