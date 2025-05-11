@@ -4,13 +4,13 @@ This Development Container Feature installs [Rust](https://www.rust-lang.org/) v
 
 ### Environment Variables Set by This Feature
 
-| Name               | Description                                                   | Value                                | Needs Overwrite |
-| :----------------- | :------------------------------------------------------------ | :----------------------------------- | :-------------- |
-| `RUSTUP_HOME`      | Directory path that `rustup` uses as its "home" directory     | `/opt/devcontainer/features/ghcr_io/georglauterbach/rust/rustup/home` | Yes |
-| `CARGO_HOME`       | Directory path that `Cargo` uses as its "home" directory      | `/opt/devcontainer/features/ghcr_io/georglauterbach/rust/cargo/home`  | Yes |
-| `CARGO_TARGET_DIR` | Directory that Cargo uses to place binaries & build artifacts | `${containerWorkspaceFolder}/target` | No |
-| `PATH`             | Extend `PATH` to include `rustup`, `cargo`, `rustc`, etc.     | `/usr/rust/cargo/home/bin:${PATH}`   | No |
-| `RUST_PRETTIFIER_FOR_LLDB_FILE` | Path to a LLDB prettifier file                   | `/opt/devcontainer/features/ghcr_io/georglauterbach/rust/prettifier_for_lldb.py` | No |
+| Name               | Description                                                   | Value                                                                            | Needs Overwrite |
+| :----------------- | :------------------------------------------------------------ | :------------------------------------------------------------------------------- | :-------------- |
+| `RUSTUP_HOME`      | Directory path that `rustup` uses as its "home" directory     | `/opt/devcontainer/features/ghcr_io/georglauterbach/rust/rustup/home`            | Yes             |
+| `CARGO_HOME`       | Directory path that `Cargo` uses as its "home" directory      | `/opt/devcontainer/features/ghcr_io/georglauterbach/rust/cargo/home`             | Yes             |
+| `CARGO_TARGET_DIR` | Directory that Cargo uses to place binaries & build artifacts | `${containerWorkspaceFolder}/target`                                             | No              |
+| `PATH`             | Extend `PATH` to include `rustup`, `cargo`, `rustc`, etc.     | `/opt/devcontainer/features/ghcr_io/georglauterbach/rust/cargo/home/bin:${PATH}` | No              |
+| `RUST_PRETTIFIER_FOR_LLDB_FILE` | Path to a LLDB prettifier file                   | `/opt/devcontainer/features/ghcr_io/georglauterbach/rust/prettifier_for_lldb.py` | No              |
 
 > [!IMPORTANT]
 >
