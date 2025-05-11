@@ -21,8 +21,8 @@ This Development Container Feature installs [Rust](https://www.rust-lang.org/) v
 > ```jsonc
 >   "containerEnv": {
 >     // you could mount a volume to `${containerWorkspaceFolder}/.rust`
->     "RUSTUP_HOME": "${containerWorkspaceFolder}/.rust/rustup_home",
->     "CARGO_HOME": "${containerWorkspaceFolder}/.rust/cargo_home"
+>     "RUSTUP_HOME": "${containerWorkspaceFolder}/.rust/rustup/home",
+>     "CARGO_HOME": "${containerWorkspaceFolder}/.rust/cargo/home"
 >   }
 > ```
 >
