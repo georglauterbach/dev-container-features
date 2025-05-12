@@ -87,9 +87,11 @@ Currently, this feature works on recent versions of Debian- and Ubuntu-based dis
 
 #### rust-analyzer & CodeLLDB
 
-This feature installs the excellent extensions [`rust-lang.rust-analyzer`](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer) (language server) and [`vadimcn.vscode-lldb`](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb) (native LLDB debugger). [Rust-analyzer](https://github.com/rust-lang/rust-analyzer) is, by default, configured to use [CodeLLDB](https://github.com/vadimcn/codelldb) as its debugger of choice.
+This feature installs the excellent extensions [`rust-lang.rust-analyzer`](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer) (language server) and [`vadimcn.vscode-lldb`](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb) (native LLDB debugger). [rust-analyzer](https://github.com/rust-lang/rust-analyzer) is, by default, configured to use [CodeLLDB](https://github.com/vadimcn/codelldb) as its debugger of choice.
 
-Tp enable pretty symbols in the debugger, you want to add the setting
+##### Proper Symbols
+
+To enable proper symbols in the debugger, add the setting
 
 ```jsonc
 "lldb.launch.preRunCommands": [
@@ -98,6 +100,23 @@ Tp enable pretty symbols in the debugger, you want to add the setting
 ```
 
 to the `devcontainer.json`'s IDE-specific settings (example shown is for VS Code). The symbol definitions are copied from [`cmrschwarz/rust-prettifier-for-lldb`](https://github.com/cmrschwarz/rust-prettifier-for-lldb).
+
+##### Using a Subdirectory
+
+If your code lives in a separate directory that is not the repository root, set
+
+```jsonc
+"lldb.launch.cwd": "${containerWorkspaceFolder}/<SUBDIRECTORY OF YOUR CODE>",
+"lldb.launch.relativePathBase": "${containerWorkspaceFolder}/<SUBDIRECTORY OF YOUR CODE>"
+```
+
+You should also create a symbolic link for a potential `rust-toolchain.toml` file via
+
+```bash
+ln -s "<SUBDIRECTORY OF YOUR CODE>/rust-toolchain.toml" 'rust-toolchain.toml'
+```
+
+This is currently required for the [`rust-lang.rust-analyzer`](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer) extension to work properly.
 
 #### Niche Scenarios
 
