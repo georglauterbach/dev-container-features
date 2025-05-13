@@ -3,9 +3,9 @@
 # shellcheck disable=SC2034
 readonly DATA_BASE_DIR='/opt/devcontainer/features/ghcr_io/georglauterbach'
 
-function value_is_true() {
-  declare -n __VAR=${1}
-  [[ ${__VAR,,} =~ ^(true|y(es)?)$ ]]
+function log() {
+  printf "%s %-5s %s: %s\n" \
+    "$(date +"%Y-%m-%dT%H:%M:%S.%6N%:z" || :)" "${1:-}" "${FUNCNAME[1]:-}" "${2:-}"
 }
 
 function is_in_path() {
@@ -41,4 +41,9 @@ function parse_linux_distribution() {
 	    log 'info' 'Linux distribution unknown'
 	    ;;
   esac
+}
+
+function value_is_true() {
+  declare -n __VAR=${1}
+  [[ ${__VAR,,} =~ ^(true|y(es)?)$ ]]
 }
