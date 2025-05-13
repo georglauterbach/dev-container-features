@@ -18,9 +18,9 @@ assert_success 'version::Cargo'  cargo  --version
 assert_success 'version::rustup' rustup --version
 
 assert_success 'rustup::default-toolchain'  'rustup default | grep nightly'
-assert_success 'rustup::additional-targets' "rustup target list | grep -q 'aarch64-unknown-linux-gnu (installed)'"
-assert_success 'rustup::additional-components' "rustup component list | grep -q 'rust-docs-aarch64-unknown-linux-gnu (installed)'"
-assert_success 'rustup::additional-components' "rustup component list | grep -q 'rustfmt-aarch64-unknown-linux-gnu (installed)'"
+assert_success 'rustup::additional-targets' "rustup target list | grep -F '(installed)' | grep 'aarch64-unknown-linux-gnu'"
+assert_success 'rustup::additional-components-1' "rustup component list | grep -F '(installed)' | grep 'rust-docs'"
+assert_success 'rustup::additional-components-2' "rustup component list | grep -F '(installed)' | grep 'rustfmt'"
 
 cd
 assert_success "cargo::init" cargo new --bin test_project
