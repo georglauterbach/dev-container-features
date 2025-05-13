@@ -247,7 +247,7 @@ function linker_install_mold() {
 function setup_post_start_command() {
   log 'info' 'Setting up postStartCommand script'
 
-  local SCRIPT_FILE="${CURRENT_DIR}/post_start_command.sh"
+  local SCRIPT_FILE="${DATA_DIR}/post_start_command.sh"
   readonly SCRIPT_FILE
 
   cp "${CURRENT_DIR}/post_start_command.sh" "${SCRIPT_FILE}"
