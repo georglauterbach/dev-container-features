@@ -1,7 +1,7 @@
 #! /usr/bin/env bash
 
 set -e
-source ../lib.sh
+source lib.sh
 
 file_exists "${DATA_BASE_DIR}/rust/rustup/home/rustup-init"
 

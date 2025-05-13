@@ -1,7 +1,7 @@
 #! /usr/bin/env bash
 
 set -e
-source ../lib.sh
+source lib.sh
 
 command_exists_not rustup
 command_exists_not rustc

@@ -1,7 +1,7 @@
 #! /usr/bin/env bash
 
 set -e
-source ../lib.sh
+source lib.sh
 
 assert_success whoami
 
