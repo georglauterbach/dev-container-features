@@ -1,7 +1,7 @@
 // ref: https://github.com/devcontainers/spec/blob/main/schemas/devContainerFeature.schema.json
 {
   "id": "rust",
-  "version": "7.0.3",
+  "version": "7.1.0",
   "name": "Development Container Feature - Rust",
   "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/rust",
   "description": "Work efficiently and effortlessly with the Rust programming language",
@@ -24,8 +24,8 @@
         "stable",
         "beta",
         "nightly",
-        "1.86.0",
-        "1.85.0"
+        "1.85.0",
+        "1.86.0"
       ],
       "default": "none"
     },
@@ -113,7 +113,7 @@
     "linker.mold.version": {
       "description": "The version of the [`mold`](https://github.com/rui314/mold) linker to install",
       "type": "string",
-      "default": "2.39.0"
+      "default": "2.39.1"
     },
     "download-acquire-insecure": {
       "description": "Whether to download files without checking certificates",

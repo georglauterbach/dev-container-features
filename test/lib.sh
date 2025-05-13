@@ -7,6 +7,9 @@
 # shellcheck source=/dev/null
 source dev-container-features-test-lib
 
+# shellcheck disable=SC2034
+readonly DATA_BASE_DIR='/opt/devcontainer/features/ghcr_io/georglauterbach'
+
 # -----------------------------------------------
 # ----  Assertions  -----------------------------
 # -----------------------------------------------

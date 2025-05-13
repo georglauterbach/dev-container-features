@@ -1,15 +1,13 @@
 #! /usr/bin/env bash
 
 set -e
-
-# shellcheck source=./lib.sh
-source lib.sh
+source ../lib.sh
 
 assert_success whoami
 
-dir_exists /opt/devcontainer/features/ghcr_io/georglauterbach/rust
-dir_exists /opt/devcontainer/features/ghcr_io/georglauterbach/rust/rustup/home
-dir_exists /opt/devcontainer/features/ghcr_io/georglauterbach/rust/cargo/home
+dir_exists "${DATA_BASE_DIR}/rust"
+dir_exists "${DATA_BASE_DIR}/rust/rustup/home"
+dir_exists "${DATA_BASE_DIR}/rust/cargo/home"
 
 command_exists rustup
 command_exists rustc
@@ -21,8 +19,8 @@ dir_exists  /usr/share/bash-completion/completions
 file_exists /usr/share/bash-completion/completions/rustup
 file_exists /usr/share/bash-completion/completions/cargo
 
-file_exists /opt/devcontainer/features/ghcr_io/georglauterbach/rust/rustup/home/rustup-init
-file_exists /opt/devcontainer/features/ghcr_io/georglauterbach/rust/cargo/home/env
-dir_exists  /opt/devcontainer/features/ghcr_io/georglauterbach/rust/cargo/home/bin
+file_exists "${DATA_BASE_DIR}/rust/rustup/home/rustup-init"
+file_exists "${DATA_BASE_DIR}/rust/cargo/home/env"
+dir_exists  "${DATA_BASE_DIR}/rust/cargo/home/bin"
 
 reportResults

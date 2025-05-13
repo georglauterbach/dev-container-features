@@ -1,13 +1,15 @@
 #! /usr/bin/env bash
 
-function log() {
-  printf "%s %-5s %s: %s\n" \
-    "$(date +"%Y-%m-%dT%H:%M:%S.%6N%:z" || :)" "${1:-}" "${FUNCNAME[1]:-}" "${2:-}"
-}
+# shellcheck disable=SC2034
+readonly DATA_BASE_DIR='/opt/devcontainer/features/ghcr_io/georglauterbach'
 
 function value_is_true() {
   declare -n __VAR=${1}
-  [[ ${__VAR} == 'true' ]]
+  [[ ${__VAR,,} =~ ^(true|y(es)?)$ ]]
+}
+
+function is_in_path() {
+  command -v "${1:?Command name is required}" &>/dev/null
 }
 
 function parse_linux_distribution() {
@@ -27,8 +29,8 @@ function parse_linux_distribution() {
       log 'info' "Distribution recognized as Debian-like"
       LINUX_DISTRIBUTION_NAME='debian'
 
-      export DEBIAN_FRONTEND=noninteractive
-      export DEBCONF_NONINTERACTIVE_SEEN=true
+      export DEBIAN_FRONTEND='noninteractive'
+      export DEBCONF_NONINTERACTIVE_SEEN='true'
       ;;
 
     ( '__unknown__' )

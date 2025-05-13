@@ -1,16 +1,24 @@
 #! /usr/bin/env bash
 
+# -----------------------------------------------
+# ----  Prologue  -------------------------------
+# -----------------------------------------------
+
 set -eE -u -o pipefail
 shopt -s inherit_errexit
 
 CURRENT_DIR="$(realpath -eL "$(dirname "${BASH_SOURCE[0]}")")"
 readonly CURRENT_DIR
 
-readonly DATA_DIR='/opt/devcontainer/features/ghcr_io/georglauterbach/rust'
-mkdir -p "${DATA_DIR}"
-
 # shellcheck source=./common.sh
 source "${CURRENT_DIR}/common.sh"
+
+readonly DATA_DIR="${DATA_BASE_DIR}/rust"
+mkdir -p "${DATA_DIR}"
+
+# -----------------------------------------------
+# ----  Argument Parsing  -----------------------
+# -----------------------------------------------
 
 function parse_dev_container_options() {
   log 'info' 'Parsing input from options'
@@ -42,12 +50,17 @@ function parse_dev_container_options() {
   return 0
 }
 
+# -----------------------------------------------
+# ----  Pre-Flight Checks  ----------------------
+# -----------------------------------------------
+
 function pre_flight_checks() {
-  log 'info' "Running pre-flight checks"
+  log 'info' 'Running pre-flight checks'
 
   case "${LINUX_DISTRIBUTION_NAME}" in
     ( 'debian' )
       if value_is_true SYSTEM_PACKAGES_PACKAGE_MANAGER_SET_PROXIES; then
+        log 'debug' 'Setting proxies for APT'
         local APT_CONFIG_FILE='/etc/apt/apt.conf' ; readonly APT_CONFIG_FILE
         mkdir --parents "$(dirname "${APT_CONFIG_FILE}")"
         if [[ -n ${https_proxy} ]]; then
@@ -58,7 +71,7 @@ function pre_flight_checks() {
       fi
 
       if value_is_true RUST_INSTALL_BASE_PACKAGES; then
-        log 'info' 'Updating APT package index and installing required base packages'
+        log 'debug' 'Updating APT package index and installing required base packages'
         apt-get --yes --quiet=2 --option=Dpkg::Use-Pty=0 update
         apt-get --yes --quiet=2 --option=Dpkg::Use-Pty=0 install --no-install-recommends \
           'build-essential' 'ca-certificates' 'curl'
@@ -70,6 +83,10 @@ function pre_flight_checks() {
 
   return 0
 }
+
+# -----------------------------------------------
+# ----  Actual Functionality  -------------------
+# -----------------------------------------------
 
 function install_additional_packages() {
   if [[ -n ${SYSTEM_PACKAGES_ADDITIONAL_PACKAGES} ]]; then
@@ -94,9 +111,13 @@ function install_additional_packages() {
   return 0
 }
 
-function install_rust() {
-  value_is_true RUST_INSTALL || return 0
+function install_rustup() {
+  if ! value_is_true RUST_INSTALL; then
+    log 'info' 'Not installing rustup'
+    return 0
+  fi
 
+  log 'info' 'Installing rustup'
   log 'debug' 'Setting installation environment variables'
   # These directories contain metadata and files required by
   # `rustup` (toolchain files, components, etc.) and `cargo`
@@ -118,6 +139,7 @@ function install_rust() {
   )
 
   if ! value_is_true RUST_RUSTUP_UPDATE_DEFAULT_TOOLCHAIN; then
+    # do not update any existing default toolchain after install
     log 'trace' 'Default toolchain will not be updated'
     RUSTUP_INSTALLER_ARGUMENTS+=('--no-update-default-toolchain')
   fi
@@ -151,8 +173,21 @@ function install_rust() {
   # This commands exports a new PATH with `${CARGO_HOME}/bin` as an additional entry
   # shellcheck source=/dev/null
   source "${CARGO_HOME}/env"
+}
+
+function additional_rust_setup() {
+  log 'info' 'Running additional setup steps now'
+
+  log 'debug' 'Installing prettifier for LLDB'
+  cp "${CURRENT_DIR}/prettifier_for_lldb.py" "${DATA_DIR}/prettifier_for_lldb.py"
+
+  if ! command -v rustup &>/dev/null; then
+    log 'warn' "Command 'rustup' could not be located but is required for the mojority of the additional setup steps"
+    return 0
+  fi
 
   if [[ ${RUST_RUSTUP_DEFAULT_TOOLCHAIN} != 'none' ]]; then
+    log 'debug' "Setting default toolchain to '${RUST_RUSTUP_DEFAULT_TOOLCHAIN}'"
     rustup default "${RUST_RUSTUP_DEFAULT_TOOLCHAIN}"
   fi
 
@@ -175,16 +210,13 @@ function install_rust() {
   rustup completions bash       >/usr/share/bash-completion/completions/rustup
   rustup completions bash cargo >/usr/share/bash-completion/completions/cargo
 
-  log 'debug' 'Installing prettifier for LLDB'
-  cp "${CURRENT_DIR}/prettifier_for_lldb.py" "${DATA_DIR}/"
-
   log 'trace' "Adjusting permissions for '${DATA_DIR}'"
   chmod -R 777 "${DATA_DIR}"
 
   return 0
 }
 
-function install_mold() {
+function linker_install_mold() {
   value_is_true LINKER_MOLD_INSTALL || return 0
   log 'info' "Installing linker 'mold'"
 
@@ -198,13 +230,13 @@ function install_mold() {
     DOWNLOAD_COMMAND=('wget')
     value_is_true DOWNLOAD_ACQUIRE_INSECURE && DOWNLOAD_COMMAND+=('--no-check-certificate')
   else
-    log 'error' "Neither 'curl' nor 'wget' found, but required"
+    log 'error' "Neither 'curl' nor 'wget' found but required for acquiring 'mold'"
     exit 1
   fi
 
   "${DOWNLOAD_COMMAND[@]}" \
     "https://github.com/rui314/mold/releases/download/v${LINKER_MOLD_VERSION}/${MOLD_DIR}.tar.gz" \
-    | tar xvz -C /tmp
+    | tar xz -C /tmp
 
   cp "/tmp/${MOLD_DIR}/"{bin/{mold,ld.mold},lib/mold/mold-wrapper.so} /usr/local/bin/
   rm -r "/tmp/${MOLD_DIR}"
@@ -215,12 +247,14 @@ function install_mold() {
 function setup_post_start_command() {
   log 'info' 'Setting up postStartCommand script'
 
-  local PSC="${DATA_DIR}/post_start_command.sh"
-  readonly PSC
+  local SCRIPT_FILE="${CURRENT_DIR}/post_start_command.sh"
+  readonly SCRIPT_FILE
 
-  cp "${CURRENT_DIR}/$(basename "${PSC}")" "${PSC}"
-  sed -i "s|RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE|${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE}|g" "${PSC}"
-  chmod +x "${PSC}"
+  cp "${CURRENT_DIR}/post_start_command.sh" "${SCRIPT_FILE}"
+  sed --in-place \
+    "s|RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE|${RUST_RUSTUP_DEFAULT_TOOLCHAIN_FILE}|g" \
+    "${SCRIPT_FILE}"
+  chmod +x "${SCRIPT_FILE}"
 }
 
 function main() {
@@ -229,8 +263,9 @@ function main() {
   pre_flight_checks
 
   install_additional_packages
-  install_rust
-  install_mold
+  install_rustup
+  additional_rust_setup
+  linker_install_mold
 
   setup_post_start_command
 }
