@@ -15,7 +15,7 @@ Use [`hermes`](https://github.com/georglauterbach/hermes) in your container
 
 | Options Id | Description | Type | Default Value |
 |-----|-----|-----|-----|
-| hermes.version | The released version of hermes to use | string | 9.0.1 |
+| hermes.version | The released version of hermes to use | string | 9.0.3 |
 | hermes.acquire-insecure | Whether to download `hermes` without checking certificates | boolean | false |
 | hermes.run | Whether to actually run `hermes` | boolean | true |
 | hermes.arguments | Additional arguments to supply to `hermes` after `hermes --verbose --non-interactive run` | string | --install-packages |
