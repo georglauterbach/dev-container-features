@@ -41,7 +41,7 @@ Work efficiently and effortlessly with the Rust programming language
 
 - `rust-lang.rust-analyzer`
 - `tamasfe.even-better-toml`
-- `vadimcn.vscode-lldb@1.11.4`
+- `vadimcn.vscode-lldb@1.11.5`
 
 ## About
 
