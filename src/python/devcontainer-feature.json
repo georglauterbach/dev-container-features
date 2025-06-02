@@ -1,7 +1,7 @@
 // ref: https://github.com/devcontainers/spec/blob/main/schemas/devContainerFeature.schema.json
 {
   "id": "python",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "name": "Development Container Feature - Python",
   "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/python",
   "description": "Work efficiently and effortlessly with Python",
@@ -17,12 +17,11 @@
       "default": "latest"
     },
     "uv.install.method": {
-      "description": "Defines the [method with which `uv` should be install](https://docs.astral.sh/uv/getting-started/installation/)",
+      "description": "Defines the [method with which `uv` should be installed](https://docs.astral.sh/uv/getting-started/installation/)",
       "type": "string",
       "enum": [
         "curl",
         "wget",
-        "pip",
         "pipx"
       ],
       "default": "curl"

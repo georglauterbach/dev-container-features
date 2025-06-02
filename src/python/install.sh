@@ -23,15 +23,15 @@ function parse_dev_container_options() {
 }
 
 function pre_flight_checks() {
-  if [[ ! ${UV_INSTALL_METHOD} =~ ^(curl|wget|pipx?)$ ]]; then
-    log 'error' "Installation method '${UV_INSTALL_METHOD}' for uv unknown"
+  if [[ ! ${UV_INSTALL_METHOD} =~ ^(curl|wget|pipx)$ ]]; then
+    log 'error' "Installation method '${UV_INSTALL_METHOD}' for uv unknown - use 'curl', 'wget' or 'pipx'"
     exit 1
   fi
 }
 
 function install_uv() {
   value_is_true UV_INSTALL || return 0
-  log 'info' "Installing UV"
+  log 'info' 'Installing UV'
 
   local INSTALLATION_URI
   if [[ -n ${UV_INSTALL_URI} ]]; then
@@ -48,19 +48,20 @@ function install_uv() {
       ;;
 
     ( 'wget' )
-      wget -qO- "https://astral.sh/uv/${UV_INSTALL_VERSION}/install.sh" | sh
+      wget -qO- "${INSTALLATION_URI}" | sh
       ;;
 
-    ( 'pip' | 'pipx' )
+    ( 'pipx' )
       if [[ ${UV_INSTALL_VERSION} == 'latest' ]]; then
-        "${UV_INSTALL_METHOD}" install uv
+        pipx install uv
       else
-        "${UV_INSTALL_METHOD}" install "uv==${UV_INSTALL_VERSION}"
+        pipx install "uv==${UV_INSTALL_VERSION}"
       fi
       ;;
 
     ( * )
       log 'error' "BUG! Installation method '${UV_INSTALL_METHOD}' unknown or not yet implemented"
+      exit 1
       ;;
   esac
 }
