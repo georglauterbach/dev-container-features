@@ -17,7 +17,7 @@ Work efficiently and effortlessly with Python
 |-----|-----|-----|-----|
 | uv.install | - | boolean | false |
 | uv.install.version | Which [version of `uv`](https://github.com/astral-sh/uv/releases) to install (use 'latest' to install the latest version) | string | latest |
-| uv.install.method | Defines the [method with which `uv` should be install](https://docs.astral.sh/uv/getting-started/installation/) | string | curl |
+| uv.install.method | Defines the [method with which `uv` should be installed](https://docs.astral.sh/uv/getting-started/installation/) | string | curl |
 | uv.install.uri | Custom URI to download the `uv` installation script from (takes precedence over `uv.install.version`) | string | - |
 | proxy.http.http.address | A URI for an HTTP proxy | string | - |
 | proxy.http.https.address | A URI for an HTTPS proxy | string | - |
