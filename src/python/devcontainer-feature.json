@@ -1,7 +1,7 @@
 // ref: https://github.com/devcontainers/spec/blob/main/schemas/devContainerFeature.schema.json
 {
   "id": "python",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "name": "Development Container Feature - Python",
   "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/python",
   "description": "Work efficiently and effortlessly with Python",
@@ -46,6 +46,9 @@
       "type": "string",
       "default": "localhost,127.0.0.1"
     }
+  },
+  "containerEnv": {
+    "PYTHONUNBUFFERED": "1"
   },
   "customizations": {
     "vscode": {
