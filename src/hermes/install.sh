@@ -31,8 +31,6 @@ function pre_flight_checks() {
 
   case "${LINUX_DISTRIBUTION_NAME}" in
     ( 'debian' )
-      log 'info' 'Distribution recognized as Debian-like'
-
       if ! apt-get --yes --quiet=2 --option=Dpkg::Use-Pty=0 update \
       || ! apt-get --yes --quiet=2 --option=Dpkg::Use-Pty=0 install \
         --no-install-recommends apt-utils ca-certificates curl dialog doas file locales tzdata; then
