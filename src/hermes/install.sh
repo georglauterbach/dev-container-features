@@ -76,7 +76,7 @@ function main() {
   parse_dev_container_options
   parse_linux_distribution
   pre_flight_checks
-  
+
   log 'info' "Acquiring 'hermes'"
 
   mkdir --parents "$(dirname "${HERMES_OUTPUT_FILE}")"
@@ -91,7 +91,7 @@ function main() {
     log 'info' 'Not running hermes'
     return 0
   fi
-  
+
   log 'info' 'Running hermes'
 
   # shellcheck disable=SC2086
@@ -110,11 +110,11 @@ function main() {
   if value_is_true HERMES_INIT_BASHRC_OVERWRITE; then
     log 'debug' 'Initializing hermes by overwriting .bashrc'
     # shellcheck disable=SC2016
-    echo -e '#! /usr/bin/env bash\n\nsource "${HOME}/.config/bash/90-hermes.sh"' >"${HOME}/.bashrc"
+    echo -e '#! /usr/bin/env bash\n\nsource "${HOME}/.config/bash/90-hermes.sh"' >"${_CONTAINER_USER_HOME}/.bashrc"
   else
     log 'debug' 'Initializing hermes by extending .bashrc'
     # shellcheck disable=SC2016
-    echo -e '\nsource "${HOME}/.config/bash/90-hermes.sh"' >>"${HOME}/.bashrc"
+    echo -e '\nsource "${HOME}/.config/bash/90-hermes.sh"' >>"${_CONTAINER_USER_HOME}/.bashrc"
   fi
 
   return 0
