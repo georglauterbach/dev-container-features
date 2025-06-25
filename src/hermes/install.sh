@@ -110,7 +110,7 @@ function main() {
   if value_is_true HERMES_INIT_BASHRC_OVERWRITE; then
     log 'debug' 'Initializing hermes by overwriting .bashrc'
     # shellcheck disable=SC2016
-    echo -e '\nsource "${HOME}/.config/bash/90-hermes.sh"' >"${HOME}/.bashrc"
+    echo -e '#! /usr/bin/env bash\n\nsource "${HOME}/.config/bash/90-hermes.sh"' >"${HOME}/.bashrc"
   else
     log 'debug' 'Initializing hermes by extending .bashrc'
     # shellcheck disable=SC2016
