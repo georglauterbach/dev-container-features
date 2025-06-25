@@ -19,6 +19,9 @@ function parse_dev_container_options() {
   readonly HERMES_RUN=${HERMES_RUN:?HERMES_RUN not set or null}
   readonly HERMES_ARGUMENTS=${HERMES_ARGUMENTS:?HERMES_ARGUMENTS not set or null}
 
+  readonly HERMES_INIT_BASHRC=${HERMES_INIT_BASHRC:?HERMES_INIT_BASHRC not set or null}
+  readonly HERMES_INIT_BASHRC_OVERWRITE=${HERMES_INIT_BASHRC_OVERWRITE:?HERMES_INIT_BASHRC_OVERWRITE not set or null}
+
   [[ -v http_proxy ]]  || export http_proxy=${PROXY_HTTP_HTTP_ADDRESS?PROXY_HTTP_HTTP_ADDRESS not set}
   [[ -v https_proxy ]] || export https_proxy=${PROXY_HTTP_HTTPS_ADDRESS?PROXY_HTTP_HTTPS_ADDRESS not set}
   [[ -v no_proxy ]]    || export no_proxy=${PROXY_HTTP_NO_PROXY_ADDRESS?PROXY_HTTP_NO_PROXY_ADDRESS not set}
@@ -69,8 +72,12 @@ function pre_flight_checks() {
   return 0
 }
 
-function acquire_hermes() {
-  log 'info' "Acquiring 'hermes' now"
+function main() {
+  parse_dev_container_options
+  parse_linux_distribution
+  pre_flight_checks
+  
+  log 'info' "Acquiring 'hermes'"
 
   mkdir --parents "$(dirname "${HERMES_OUTPUT_FILE}")"
   rm --recursive --force "${HERMES_OUTPUT_FILE}"
@@ -79,21 +86,35 @@ function acquire_hermes() {
     "https://github.com/georglauterbach/hermes/releases/download/${HERMES_VERSION}/hermes-${HERMES_VERSION}-$(uname -m)-unknown-linux-musl" >/command.sh
 
   chmod +x /usr/local/bin/hermes
-}
 
-function main() {
-  parse_dev_container_options
-  parse_linux_distribution
-  pre_flight_checks
-  acquire_hermes
-
-  if value_is_true HERMES_RUN; then
-    log 'info' 'Running hermes now'
-
-    # shellcheck disable=SC2086
-    su "--shell=$(command -v hermes)" -- "${_CONTAINER_USER}" --verbose --non-interactive run ${HERMES_ARGUMENTS}
-  else
+  if ! value_is_true HERMES_RUN; then
     log 'info' 'Not running hermes'
+    return 0
+  fi
+  
+  log 'info' 'Running hermes'
+
+  # shellcheck disable=SC2086
+  if ! su "--shell=$(command -v hermes)" -- "${_CONTAINER_USER}" --verbose --non-interactive run ${HERMES_ARGUMENTS}; then
+    log 'error' 'Running hermes failed'
+    return 1
+  fi
+
+  if ! value_is_true HERMES_INIT_BASHRC; then
+    log 'info' 'Not initializing hermes'
+    return 0
+  fi
+
+  log 'info' 'Initializing hermes'
+
+  if value_is_true HERMES_INIT_BASHRC_OVERWRITE; then
+    log 'debug' 'Initializing hermes by overwriting .bashrc'
+    # shellcheck disable=SC2016
+    echo -e '\nsource "${HOME}/.config/bash/90-hermes.sh"' >"${HOME}/.bashrc"
+  else
+    log 'debug' 'Initializing hermes by extending .bashrc'
+    # shellcheck disable=SC2016
+    echo -e '\nsource "${HOME}/.config/bash/90-hermes.sh"' >>"${HOME}/.bashrc"
   fi
 
   return 0
