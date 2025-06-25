@@ -17,7 +17,7 @@
       "default": false
     },
     "hermes.run": {
-      "description": "Whether to actually run _hermes",
+      "description": "Whether to actually run _hermes_",
       "type": "boolean",
       "default": true
     },
