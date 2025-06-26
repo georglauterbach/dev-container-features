@@ -17,7 +17,7 @@ Use [_hermes_](https://github.com/georglauterbach/hermes) in your container
 |-----|-----|-----|-----|
 | hermes.version | The released version of hermes to use | string | 10.0.1 |
 | hermes.acquire-insecure | Whether to download _hermes_ without checking certificates | boolean | false |
-| hermes.run | Whether to actually run _hermes | boolean | true |
+| hermes.run | Whether to actually run _hermes_ | boolean | true |
 | hermes.arguments | Additional arguments to supply to _hermes_ after `hermes --verbose --non-interactive run` | string | --install-packages |
 | hermes.init.bashrc | If `hermes.run` is `true`, whether to add _hermes_ to the default Bash setup in `$[HOME}/.bashrc` | boolean | true |
 | hermes.init.bashrc-overwrite | When `hermes.init.bashrc` is `true`, whether to completely overwrite the file `${HOME}/.bashrc` to only run _hermes_ | boolean | true |
