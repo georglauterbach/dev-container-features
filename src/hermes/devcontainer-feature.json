@@ -9,7 +9,7 @@
     "hermes.version": {
       "description": "The released version of hermes to use",
       "type": "string",
-      "default": "10.0.2"
+      "default": "10.0.3"
     },
     "hermes.acquire-insecure": {
       "description": "Whether to download _hermes_ without checking certificates",
