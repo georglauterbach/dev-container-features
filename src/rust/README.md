@@ -7,7 +7,7 @@ Work efficiently and effortlessly with the Rust programming language
 
 ```json
 "features": {
-    "ghcr.io/georglauterbach/dev-container-features/rust:7": {}
+    "ghcr.io/georglauterbach/dev-container-features/rust:8": {}
 }
 ```
 
