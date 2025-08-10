@@ -13,6 +13,8 @@ readonly CURRENT_DIR
 # shellcheck source=./common.sh
 source "${CURRENT_DIR}/common.sh"
 
+source /etc/os-release
+
 readonly DATA_DIR="${DATA_BASE_DIR}/rust"
 mkdir -p "${DATA_DIR}"
 
@@ -145,7 +147,12 @@ function install_rustup() {
   fi
 
   if [[ -z ${RUST_RUSTUP_RUSTUP_INIT_HOST_TRIPLE} ]]; then
-    RUST_RUSTUP_RUSTUP_INIT_HOST_TRIPLE="$(uname -m)-unknown-linux-gnu"
+    RUST_RUSTUP_RUSTUP_INIT_HOST_TRIPLE="$(uname -m)-unknown-linux-"
+    if [[ ${ID} == 'alpine' ]]; then
+      RUST_RUSTUP_RUSTUP_INIT_HOST_TRIPLE+='musl'
+    else
+      RUST_RUSTUP_RUSTUP_INIT_HOST_TRIPLE+='gnu'
+    fi
     log 'debug' "Host triple set to '${RUST_RUSTUP_RUSTUP_INIT_HOST_TRIPLE}'"
   fi
 
@@ -182,7 +189,7 @@ function additional_rust_setup() {
   cp "${CURRENT_DIR}/prettifier_for_lldb.py" "${DATA_DIR}/prettifier_for_lldb.py"
 
   if ! command -v rustup &>/dev/null; then
-    log 'warn' "Command 'rustup' could not be located but is required for the mojority of the additional setup steps"
+    log 'warn' "Command 'rustup' could not be located but is required for the majority of the additional setup steps"
     return 0
   fi
 

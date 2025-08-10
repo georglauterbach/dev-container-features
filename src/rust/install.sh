@@ -5,7 +5,7 @@ set -e
 . /etc/os-release
 
 if [ "${ID}" = "alpine" ]; then
-  apk add --no-cache bash coreutils gcompat libgcc
+  apk add --no-cache bash coreutils gcompat
 fi
 
 exec /bin/bash "$(dirname "${0}")/install_actual.sh" "${@}"
