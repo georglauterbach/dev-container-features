@@ -34,7 +34,7 @@ jobs:
           - rust
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install latest devcontainer CLI
         run: npm install -g @devcontainers/cli
@@ -54,7 +54,7 @@ jobs:
           - rust
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install latest devcontainer CLI
         run: npm install -g @devcontainers/cli
