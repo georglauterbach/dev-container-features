@@ -21,23 +21,11 @@ function value_is_true() {
 function parse_dev_container_options() {
   log 'info' 'Parsing input from options'
 
-  readonly HERMES_RUN=${HERMES_RUN:?HERMES_RUN not set or null}
   readonly HERMES_INIT_BASHRC=${HERMES_INIT_BASHRC:?HERMES_INIT_BASHRC not set or null}
   readonly HERMES_INIT_BASHRC_OVERWRITE=${HERMES_INIT_BASHRC_OVERWRITE:?HERMES_INIT_BASHRC_OVERWRITE not set or null}
 }
 
-function main() {
-  parse_dev_container_options
-
-  cp "${CURRENT_DIR}/hermes" /usr/local/bin/
-
-  if value_is_true HERMES_RUN; then
-    log 'info' 'Running hermes'
-    hermes
-  else
-    log 'info' 'Not running hermes'
-  fi
-
+function initialize_bashrc() {
   if ! value_is_true HERMES_INIT_BASHRC; then
     log 'info' 'Not initializing hermes'
     return 0
@@ -58,6 +46,15 @@ EOF
 source "${HOME}/.config/bash/90-hermes.sh"
 EOF
   fi
+}
+
+function main() {
+  parse_dev_container_options
+
+  cp "${CURRENT_DIR}/hermes" /usr/local/bin/
+  chmod +x /usr/local/bin/hermes
+
+  initialize_bashrc
 
   return 0
 }
