@@ -1,36 +1,18 @@
 // ref: https://github.com/devcontainers/spec/blob/main/schemas/devContainerFeature.schema.json
 {
   "id": "hermes",
-  "version": "0.5.4",
+  "version": "11.0.0",
   "name": "Development Container Feature - hermes",
   "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/hermes",
   "description": "Use [_hermes_](https://github.com/georglauterbach/hermes) in your container",
   "options": {
-    "hermes.version": {
-      "description": "The released version of hermes to use",
-      "type": "string",
-      "default": "10.0.3"
-    },
-    "hermes.acquire-insecure": {
-      "description": "Whether to download _hermes_ without checking certificates",
-      "type": "boolean",
-      "default": false
-    },
     "hermes.run": {
       "description": "Whether to actually run _hermes_",
       "type": "boolean",
       "default": true
     },
-    "hermes.arguments": {
-      "description": "Additional arguments to supply to _hermes_ after `hermes --verbose --non-interactive run`",
-      "type": "string",
-      "default": "--install-packages",
-      "proposals": [
-        ""
-      ]
-    },
     "hermes.init.bashrc": {
-      "description": "If `hermes.run` is `true`, whether to add _hermes_ to the default Bash setup in `$[HOME}/.bashrc`",
+      "description": "Whether to add _hermes_ to the default Bash setup in `$[HOME}/.bashrc`",
       "type": "boolean",
       "default": true
     },
@@ -38,21 +20,6 @@
       "description": "When `hermes.init.bashrc` is `true`, whether to completely overwrite the file `${HOME}/.bashrc` to only run _hermes_",
       "type": "boolean",
       "default": true
-    },
-    "proxy.http.http.address": {
-      "description": "A URI for an HTTP proxy",
-      "type": "string",
-      "default": ""
-    },
-    "proxy.http.https.address": {
-      "description": "A URI for an HTTPS proxy",
-      "type": "string",
-      "default": ""
-    },
-    "proxy.http.no-proxy.address": {
-      "description": "A list of URIs to not proxy",
-      "type": "string",
-      "default": "localhost,127.0.0.1"
     }
   }
 }
