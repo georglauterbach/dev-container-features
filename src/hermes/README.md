@@ -15,7 +15,6 @@ Use [_hermes_](https://github.com/georglauterbach/hermes) in your container
 
 | Options Id | Description | Type | Default Value |
 |-----|-----|-----|-----|
-| hermes.run | Whether to actually run _hermes_ | boolean | true |
 | hermes.init.bashrc | Whether to add _hermes_ to the default Bash setup in `$[HOME}/.bashrc` | boolean | true |
 | hermes.init.bashrc-overwrite | When `hermes.init.bashrc` is `true`, whether to completely overwrite the file `${HOME}/.bashrc` to only run _hermes_ | boolean | true |
 
