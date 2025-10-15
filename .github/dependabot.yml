@@ -7,7 +7,7 @@ updates:
     target-branch: main
     rebase-strategy: auto
     schedule:
-      interval: weekly
+      interval: monthly
     reviewers:
       - georglauterbach
     assignees:

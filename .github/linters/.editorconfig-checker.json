@@ -1,0 +1,22 @@
+{
+  "Verbose": false,
+  "Debug": false,
+  "IgnoreDefaults": false,
+  "SpacesAftertabs": true,
+  "NoColor": false,
+  "Exclude": [
+    "\\.sources$",
+    "code/Cargo\\.lock$",
+    "data/examples/git/gitconfig$"
+  ],
+  "AllowedContentTypes": [],
+  "PassedFiles": [],
+  "Disable": {
+    "EndOfLine": false,
+    "Indentation": false,
+    "InsertFinalNewline": false,
+    "TrimTrailingWhitespace": false,
+    "IndentSize": false,
+    "MaxLineLength": true
+  }
+}

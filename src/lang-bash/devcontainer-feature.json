@@ -1,14 +1,13 @@
 // ref: https://github.com/devcontainers/spec/blob/main/schemas/devContainerFeature.schema.json
 {
-  "id": "bash",
-  "version": "0.3.0",
-  "name": "Development Container Feature - Bash",
-  "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/bash",
+  "id": "lang-bash",
+  "version": "0.1.0",
+  "name": "Programming Language | Bash",
+  "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/lang-bash",
   "description": "Work efficiently and effortlessly with Bash",
   "customizations": {
     "vscode": {
       "extensions": [
-        "editorconfig.editorconfig",
         "mads-hartmann.bash-ide-vscode",
         "timonwong.shellcheck"
       ],

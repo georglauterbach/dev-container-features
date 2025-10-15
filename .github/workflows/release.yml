@@ -11,25 +11,29 @@ defaults:
     shell: bash
 
 permissions:
-  contents: read
+  contents: write
+  pull-requests: write
   packages: write
 
 jobs:
   deploy:
     if: ${{ github.ref == 'refs/heads/main' }}
-    runs-on: ubuntu-22.04
-    permissions:
-      contents: write
-      pull-requests: write
-      packages: write
+    runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+
+      - name: Acquire hermes
+        run: |
+          cd src/hermes
+          wget https://github.com/georglauterbach/hermes/releases/download/v11.0.0/hermes-v11.0.0-aarch64-unknown-linux-musl
+          wget https://github.com/georglauterbach/hermes/releases/download/v11.0.0/hermes-v11.0.0-x86_64-unknown-linux-musl
 
       - name: Publish Features
         uses: devcontainers/action@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           publish-features: 'true'
           base-path-to-features: ./src
@@ -39,27 +43,23 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          set -eE -o pipefail
-          shopt -s inherit_errexit
-
-          echo "Setting up git"
+          echo 'Setting up git'
           git config --global user.email github-actions[bot]@users.noreply.github.com
           git config --global user.name github-actions[bot]
           git config pull.rebase false
 
-          echo "Creating new branch"
+          echo 'Creating new branch'
           BRANCH=automated-documentation-update-${GITHUB_RUN_ID}
           git checkout -b "${BRANCH}"
 
-          echo "Commiting changes"
+          echo 'Committing changes'
           git add */**/README.md
           if git commit -m 'Automated documentation update [skip ci]'; then
-            echo "Changes committed"
-            echo "Pushing changes to remote"
+            echo -e 'Changes committed\nPushing changes to remote'
             git push origin "${BRANCH}"
             MESSAGE='Automated documentation update'
             echo "Creating pull request"
             gh pr create --title "${MESSAGE}" --body "${MESSAGE}"
           else
-            echo "No changes present - nothing to commit and push"
+            echo 'No changes present - nothing to commit and push'
           fi

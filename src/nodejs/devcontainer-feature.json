@@ -2,9 +2,9 @@
 {
   "id": "nodejs",
   "version": "0.1.0",
-  "name": "Development Container Feature - NodeJS",
+  "name": "NodeJS",
   "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/nodejs",
-  "description": "Installs NodeJS",
+  "description": "Install NodeJS",
   "options": {
     "version": {
       "description": "Version of NodeJS to install",
@@ -16,10 +16,10 @@
       "type": "string",
       "default": "x64"
     },
-    "url": {
+    "uri": {
       "description": "Non-default mirror for the `tar.xz`/`tar.gz` archive that contains NodeJS files. You can specify the version directly or use the string `<<VERSION>>` which is replaced by `node.version`",
       "type": "string",
-      "default": "https://nodejs.org/dist/latest/node-v<<VERSION>>-linux-<<ARCHITECTURE>>.tar.gz"
+      "default": "https://nodejs.org/dist/v<<VERSION>>/node-v<<VERSION>>-linux-<<ARCHITECTURE>>.tar.xz"
     },
     "proxy.http.http.address": {
       "description": "A URI for an HTTP proxy",

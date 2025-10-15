@@ -3,25 +3,10 @@ version: '0.2'
 ignorePaths: []
 dictionaryDefinitions: []
 dictionaries: []
-words:
-  - lldb
-  - miri
-  - riscv
-  - rustc
-  - rustup
-  - tzdata
-  - uefi
-ignoreWords:
-  - debconf
-  - doas
-  - errorlens
-  - georglauterbach
-  - msvc
-  - multiarch
-  - noninteractive
-  - nopass
-  - seccomp
-  - tamasfe
-  - usernamehw
-  - vadimcn
 import: []
+
+words: []
+
+ignoreWords:
+  - devcontainers
+  - georglauterbach

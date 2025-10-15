@@ -1,37 +1,27 @@
-#! /usr/bin/env bash
+#! /bin/sh
 
 # shellcheck disable=SC2154
 
-set -eE -u -o pipefail
-shopt -s inherit_errexit
+set -e -u
 
-CURRENT_DIR="$(realpath -eL "$(dirname "${BASH_SOURCE[0]}")")"
-readonly CURRENT_DIR
-
-function log() {
-  printf "%s %-5s %s: %s\n" \
-    "$(date +"%Y-%m-%dT%H:%M:%S.%6N%:z" || :)" "${1:-}" "${FUNCNAME[1]:-}" "${2:-}"
+log() {
+  printf "%s %-5s: %s\n" "$(date +"%Y-%m-%dT%H:%M:%S.%6N%:z" || :)" "${1:-}" "${2:-}"
 }
 
-function value_is_true() {
-  declare -n __VAR=${1}
-  [[ ${__VAR} == 'true' ]]
-}
-
-function parse_dev_container_options() {
+parse_dev_container_options() {
   log 'info' 'Parsing input from options'
 
-  readonly HERMES_INIT_BASHRC=${HERMES_INIT_BASHRC:?HERMES_INIT_BASHRC not set or null}
-  readonly HERMES_INIT_BASHRC_OVERWRITE=${HERMES_INIT_BASHRC_OVERWRITE:?HERMES_INIT_BASHRC_OVERWRITE not set or null}
+  readonly INIT_BASHRC="${INIT_BASHRC:?INIT_BASHRC not set or null}"
+  readonly INIT_BASHRC_OVERWRITE="${INIT_BASHRC_OVERWRITE:?INIT_BASHRC_OVERWRITE not set or null}"
 }
 
-function initialize_bashrc() {
-  if ! value_is_true HERMES_INIT_BASHRC; then
+initialize_bashrc() {
+  if [ "${HERMES_INIT_BASHRC}" = 'false' ]; then
     log 'info' 'Not initializing hermes'
     return 0
   fi
 
-  if value_is_true HERMES_INIT_BASHRC_OVERWRITE; then
+  if [ "${HERMES_INIT_BASHRC_OVERWRITE}" = 'true' ]; then
     log 'info' 'Initializing hermes by overwriting .bashrc'
     cat >"${_REMOTE_USER_HOME}/.bashrc" <<"EOF"
 #! /usr/bin/env bash
@@ -48,15 +38,12 @@ EOF
   fi
 }
 
-function main() {
+main() {
   parse_dev_container_options
-
-  cp "${CURRENT_DIR}/hermes" /usr/local/bin/
-  chmod +x /usr/local/bin/hermes
-
   initialize_bashrc
 
-  return 0
+  mkdir --parents /usr/local/bin/
+  mv "hermes-v11.0.0-$(uname --machine)-unknown-linux-musl" /usr/local/bin/hermes
 }
 
 main "${@}"
