@@ -5,7 +5,9 @@ dictionaryDefinitions: []
 dictionaries: []
 import: []
 
-words: []
+words:
+  - debuggee
+  - Rustup
 
 ignoreWords:
   - devcontainers

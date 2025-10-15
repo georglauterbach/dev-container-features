@@ -2,10 +2,10 @@
   "Verbose": false,
   "Debug": false,
   "IgnoreDefaults": false,
-  "SpacesAftertabs": true,
+  "SpacesAfterTabs": true,
   "NoColor": false,
   "Exclude": [
-    "old/**"
+    "old/*"
   ],
   "AllowedContentTypes": [],
   "PassedFiles": [],

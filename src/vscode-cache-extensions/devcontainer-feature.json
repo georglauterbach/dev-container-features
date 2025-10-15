@@ -7,7 +7,7 @@
   "description": "Prevent superfluous (re-)installations of VS Code extensions upon container restarts",
   "mounts": [
     {
-      "source": "dev_containers.features.ghcr_io.georglauterbach.vscode-cache-extensions.${devcontainerId}",
+      "source": "dev_containers.features.ghcr_io.georglauterbach.vscode_cache_extensions.${devcontainerId}",
       "target": "/usr/local/share/dev_containers/features/ghcr_io/georglauterbach/vscode_cache_extensions/data",
       "type": "volume"
     }

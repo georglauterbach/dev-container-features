@@ -1,0 +1,74 @@
+// ref: https://github.com/devcontainers/spec/blob/main/schemas/devContainerFeature.schema.json
+{
+  "id": "rust",
+  "version": "0.1.0",
+  "name": "Programming Language | Rust",
+  "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/rust",
+  "description": "Work efficiently and effortlessly with Rust",
+  "options": {
+    "generate-shell-completion": {
+      "description": "Whether to generate shell completion for Rustup and Cargo",
+      "type": "boolean",
+      "default": true
+    },
+    "rustup-disable-auto-self-update": {
+      "description": "Whether to disable Rustup's self-update feature",
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "containerEnv": {
+    // https://rust-lang.github.io/rustup/environment-variables.html
+    "RUSTUP_HOME": "/usr/local/share/dev_containers/features/ghcr_io/georglauterbach/lang_rust/toolchains/rustup/home",
+    // https://doc.rust-lang.org/cargo/reference/environment-variables.html#environment-variables-cargo-reads
+    "CARGO_HOME": "/usr/local/share/dev_containers/features/ghcr_io/georglauterbach/lang_rust/toolchains/cargo/home",
+    "DEV_CONTAINER_FEATURE_GHCR_IO_GEORGLAUTERBACH_LANG_RUST_LLDB_PRETTIFIER": "/usr/local/share/dev_containers/features/ghcr_io/georglauterbach/lang_rust/lldb_prettifier.py"
+  },
+  "mounts": [
+    {
+      // persist the default locations for toolchain information
+      "type": "volume",
+      "source": "dev_containers.features.ghcr_io.georglauterbach.lang_rust",
+      "target": "/usr/local/share/dev_containers/features/ghcr_io/georglauterbach/lang_rust/toolchains"
+    }
+  ],
+  // ensure Rustup's and Cargo's home directories have the correct permissions
+  "onCreateCommand": "/usr/local/share/dev_containers/features/ghcr_io/georglauterbach/lang_rust/lifecycle_hooks/on_create_command.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        // Rust's official LSP (https://rust-analyzer.github.io/)
+        "rust-lang.rust-analyzer",
+        // TOML language support
+        "tamasfe.even-better-toml",
+        // LLVM-based debugger (LLDB)
+        "vadimcn.vscode-lldb@1.11.6"
+      ],
+      "settings": {
+        // TODO
+        "files.readonlyInclude": {
+          "target": true,
+          "code/target": true
+        },
+        // TODO
+        "files.watcherExclude": {
+          "target": true,
+          "code/target": true
+        },
+        // TODO
+        "files.exclude": {
+          "target": true,
+          "code/target": true
+        },
+        // TODO
+        "lldb.launch.sourceLanguages": [
+          "rust"
+        ]
+      }
+    }
+  },
+  // enable proper debugging by allowing the debuggee to be `ptrace`d
+  "capAdd": [
+    "SYS_PTRACE"
+  ]
+}

@@ -1,4 +1,4 @@
-# copied on 11 May 2025 from
+# copied on 15 Oct 2025 from
 # https://github.com/cmrschwarz/rust-prettifier-for-lldb/blob/main/rust_prettifier_for_lldb.py
 
 # rust-prettifier-for-lldb, Christian Schwarz, 2024
