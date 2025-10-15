@@ -1,6 +1,7 @@
+---
 name: Release
 
-on:
+on: # yamllint disable-line rule:truthy
   workflow_dispatch:
   push:
     branches: [ main ]
@@ -34,6 +35,8 @@ jobs:
 
       - name: Publish Features
         uses: devcontainers/action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           publish-features: 'true'
           base-path-to-features: ./src

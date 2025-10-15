@@ -23,8 +23,8 @@ Work efficiently and effortlessly with the Rust programming language
 | rust.rustup.profile | Defines the [profile](https://rust-lang.github.io/rustup/concepts/profiles.html) that will be used by `rustup` during the installation | string | minimal |
 | rust.rustup.additional-targets | A list of [additional targets](https://rust-lang.github.io/rustup/cross-compilation.html) that will be installed by `rustup` | string | - |
 | rust.rustup.additional-components | A list of [additional components](https://rust-lang.github.io/rustup/concepts/components.html) that ill be installed by `rustup` (ref: [release-component-target-matrix](https://rust-lang.github.io/rustup-components-history/)) | string | - |
-| rust.rustup.dist-server | The URI for downloading static resources related to Rust ([ref](https://rust-lang.github.io/rustup/environment-variables.html)) | string | https://static.rust-lang.org |
-| rust.rustup.update-root | The URI for downloading self-update ([ref](https://rust-lang.github.io/rustup/environment-variables.html)) | string | https://static.rust-lang.org/rustup |
+| rust.rustup.dist-server | The URI for downloading static resources related to Rust ([ref](https://rust-lang.github.io/rustup/environment-variables.html)) | string | <https://static.rust-lang.org> |
+| rust.rustup.update-root | The URI for downloading self-update ([ref](https://rust-lang.github.io/rustup/environment-variables.html)) | string | <https://static.rust-lang.org/rustup> |
 | rust.rustup.rustup-init.host-triple | The [host triple](https://wiki.osdev.org/Target_Triplet) (including the architecture) of the system that you want to bootstrap Rust on | string | - |
 | system.packages.additional-packages | A list of additional packages to install via the system's package manager. These packages are installed **prior** to Rust. | string | - |
 | system.packages.package-manager.set-proxies | Whether to add the proxy to the package manager configuration, if proxies were supplied | boolean | false |

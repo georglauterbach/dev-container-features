@@ -36,9 +36,9 @@ parse_linux_distribution() {
       log 'warn' "Could not parse distribution from '/etc/os-release'"
       ;;
 
-	  ( * )
-	    log 'info' 'Linux distribution unknown'
-	    ;;
+    ( * )
+      log 'info' 'Linux distribution unknown'
+      ;;
   esac
 }
 
