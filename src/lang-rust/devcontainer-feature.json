@@ -1,6 +1,6 @@
 // ref: https://github.com/devcontainers/spec/blob/main/schemas/devContainerFeature.schema.json
 {
-  "id": "rust",
+  "id": "lang-rust",
   "version": "0.1.0",
   "name": "Programming Language | Rust",
   "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/rust",
