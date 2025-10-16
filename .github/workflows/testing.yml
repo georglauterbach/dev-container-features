@@ -9,7 +9,7 @@ on: # yamllint disable-line rule:truthy
       - test/**
       - .github/workflows
   push:
-    branches: [main]
+    branches: [ main ]
     paths:
       - src/**
       - test/**

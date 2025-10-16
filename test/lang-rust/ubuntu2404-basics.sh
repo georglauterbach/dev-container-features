@@ -5,8 +5,6 @@ shopt -s inherit_errexit
 
 source lib.sh
 
-file_exists "${DATA_BASE_DIR}/rust/rustup/home/rustup-init"
-
 command_exists_not rustup
 command_exists_not rustc
 command_exists_not cargo
