@@ -1,12 +1,12 @@
 // ref: https://github.com/devcontainers/spec/blob/main/schemas/devContainerFeature.schema.json
 {
   "id": "lang-rust",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "name": "Programming Language | Rust",
   "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/rust",
   "description": "Work efficiently and effortlessly with Rust",
   "options": {
-    "generate-shell-completion": {
+    "generate-shell-completions": {
       "description": "Whether to generate shell completion for Rustup and Cargo",
       "type": "boolean",
       "default": true
