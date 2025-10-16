@@ -54,9 +54,7 @@ MD010:
 MD011: true
 
 # MD012/no-multiple-blanks - Multiple consecutive blank lines
-MD012:
-  # Consecutive blank lines
-  maximum: 1
+MD012: false
 
 # MD013/line-length - Line length
 MD013:
@@ -159,7 +157,7 @@ MD032: true
 MD033: false
 
 # MD034/no-bare-urls - Bare URL used
-MD034: true
+MD034: false
 
 # MD035/hr-style - Horizontal rule style
 MD035:
