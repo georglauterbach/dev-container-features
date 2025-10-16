@@ -24,7 +24,7 @@ permissions:
 
 jobs:
   auto-generated:
-    name: Auto-Generated
+    name: Run Auto-Generated
     runs-on: ubuntu-latest
 
     strategy:
@@ -53,7 +53,7 @@ jobs:
           .
 
   scenarios:
-    name: Scenarios
+    name: Run Scenarios
     runs-on: ubuntu-latest
 
     strategy:
