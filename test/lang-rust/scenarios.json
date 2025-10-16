@@ -1,30 +1,8 @@
 {
-  "10-basic": {
+  "ubuntu2404-basics": {
     "image": "docker.io/ubuntu:24.04",
     "features": {
-      "rust": {
-        "rust.rustup.default-toolchain": "nightly",
-        "rust.rustup.profile": "default",
-        "rust.rustup.additional-targets": "aarch64-unknown-linux-gnu",
-        "rust.rustup.additional-components": "rust-docs,rustfmt"
-      }
-    }
-  },
-  "20-no-install": {
-    "image": "docker.io/ubuntu:24.04",
-    "features": {
-      "rust": {
-        "rust.install": false
-      }
-    }
-  },
-  "60-mold": {
-    "image": "docker.io/ubuntu:24.04",
-    "features": {
-      "rust": {
-        "linker.mold.install": true,
-        "linker.mold.version": "2.39.0"
-      }
+      "lang-rust": {}
     }
   }
 }

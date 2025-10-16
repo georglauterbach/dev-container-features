@@ -1,15 +1,19 @@
-#! /usr/bin/env bash
+#! /bin/sh
 
-set -e
-source lib.sh
+set -e -u
+. lib.sh
+
+file_exists "${DATA_BASE_DIR}/rust/rustup/home/rustup-init"
 
 command_exists_not rustup
 command_exists_not rustc
 command_exists_not cargo
 
+dir_exists_not  /usr/share/bash-completion/completions
 file_exists_not /usr/share/bash-completion/completions/rustup
 file_exists_not /usr/share/bash-completion/completions/cargo
 
-file_exists "${DATA_BASE_DIR}/rust/prettifier_for_lldb.py"
+cd
+assert_failure "cargo::init" cargo new --bin test_project
 
 reportResults

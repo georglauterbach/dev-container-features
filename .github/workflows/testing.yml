@@ -9,7 +9,7 @@ on: # yamllint disable-line rule:truthy
       - test/**
       - .github/workflows
   push:
-    branches: [ main ]
+    branches: [main]
     paths:
       - src/**
       - test/**
@@ -31,7 +31,6 @@ jobs:
       matrix:
         baseImage:
           - ubuntu:24.04
-          - ghcr.io/georglauterbach/dev-container-base:2.1.0
         feature:
           - lang-rust
 
@@ -61,7 +60,6 @@ jobs:
       matrix:
         baseImage:
           - ubuntu:24.04
-          - ghcr.io/georglauterbach/dev-container-base:2.1.0
         feature:
           - lang-rust
 
