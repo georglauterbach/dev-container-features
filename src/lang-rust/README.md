@@ -15,7 +15,7 @@ Work efficiently and effortlessly with Rust
 
 | Options Id | Description | Type | Default Value |
 |-----|-----|-----|-----|
-| generate-shell-completion | Whether to generate shell completion for Rustup and Cargo | boolean | true |
+| generate-shell-completions | Whether to generate shell completion for Rustup and Cargo | boolean | true |
 | rustup-disable-auto-self-update | Whether to disable Rustup's self-update feature | boolean | true |
 
 ## Customizations
