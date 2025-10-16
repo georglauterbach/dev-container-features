@@ -8,7 +8,9 @@ import: []
 
 words:
   - debuggee
+  - LLDB
   - Rustup
+  - trixie
 
 ignoreWords:
   - devcontainers

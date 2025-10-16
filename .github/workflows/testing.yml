@@ -31,6 +31,7 @@ jobs:
       matrix:
         baseImage:
           - ubuntu:24.04
+          - rust:1.90.0-slim-trixie
         feature:
           - lang-rust
 
@@ -60,6 +61,7 @@ jobs:
       matrix:
         baseImage:
           - ubuntu:24.04
+          - rust:1.90.0-slim-trixie
         feature:
           - lang-rust
 
