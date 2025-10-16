@@ -5,7 +5,7 @@
   "SpacesAfterTabs": true,
   "NoColor": false,
   "Exclude": [
-    "old/*"
+    "src/lang-rust/lldb_prettifier\\.py$"
   ],
   "AllowedContentTypes": [],
   "PassedFiles": [],

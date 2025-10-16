@@ -47,8 +47,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo 'Setting up git'
-          git config --global user.email github-actions[bot]@users.noreply.github.com
-          git config --global user.name github-actions[bot]
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git config --global user.name 'github-actions[bot]'
           git config pull.rebase false
 
           echo 'Creating new branch'
@@ -56,7 +56,7 @@ jobs:
           git checkout -b "${BRANCH}"
 
           echo 'Committing changes'
-          git add */**/README.md
+          git add ./src/**/README.md
           if git commit -m 'Automated documentation update [skip ci]'; then
             echo -e 'Changes committed\nPushing changes to remote'
             git push origin "${BRANCH}"
