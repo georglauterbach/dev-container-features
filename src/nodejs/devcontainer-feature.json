@@ -1,7 +1,7 @@
 // ref: https://github.com/devcontainers/spec/blob/main/schemas/devContainerFeature.schema.json
 {
   "id": "nodejs",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "name": "NodeJS",
   "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/nodejs",
   "description": "Install NodeJS",
@@ -9,7 +9,7 @@
     "version": {
       "description": "Version of NodeJS to install",
       "type": "string",
-      "default": "23.11.0"
+      "default": "25.0.0"
     },
     "architecture": {
       "description": "Architecture of NodeJS to install",
