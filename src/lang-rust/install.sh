@@ -49,7 +49,7 @@ rustup_adjustments() {
 copy_lldb_prettifiers() {
   log 'info' 'Copying prettifier for LLDB'
   cp "lldb_prettifier.py" "${FEATURE_SHARE_DIR}/"
-  chmod 777 "${FEATURE_SHARE_DIR}/prettifier_for_lldb.py"
+  chmod 777 "${FEATURE_SHARE_DIR}/lldb_prettifier.py"
 }
 
 main() {

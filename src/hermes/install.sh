@@ -16,12 +16,12 @@ parse_dev_container_options() {
 }
 
 initialize_bashrc() {
-  if [ "${HERMES_INIT_BASHRC}" = 'false' ]; then
+  if [ "${INIT_BASHRC}" = 'false' ]; then
     log 'info' 'Not initializing hermes'
     return 0
   fi
 
-  if [ "${HERMES_INIT_BASHRC_OVERWRITE}" = 'true' ]; then
+  if [ "${INIT_BASHRC_OVERWRITE}" = 'true' ]; then
     log 'info' 'Initializing hermes by overwriting .bashrc'
     cat >"${_REMOTE_USER_HOME}/.bashrc" <<"EOF"
 #! /usr/bin/env bash
@@ -43,7 +43,7 @@ main() {
   initialize_bashrc
 
   mkdir --parents /usr/local/bin/
-  mv "hermes-v11.1.0-$(uname --machine)-unknown-linux-musl" /usr/local/bin/hermes
+  mv "hermes-v11.1.1-$(uname --machine)-unknown-linux-musl" /usr/local/bin/hermes
 }
 
 main "${@}"
