@@ -6,7 +6,6 @@
   ],
   "shellcheck.run": "onSave",
   "shellcheck.customArgs": [
-    "--shell=sh",
     "--severity=style",
     "--extended-analysis=true",
     "--source-path=SCRIPTDIR",

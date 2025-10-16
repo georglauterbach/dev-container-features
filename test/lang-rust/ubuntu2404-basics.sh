@@ -1,7 +1,9 @@
-#! /bin/sh
+#! /bin/bash
 
-set -e -u
-. lib.sh
+set -eE -u -o pipefail
+shopt -s inherit_errexit
+
+source lib.sh
 
 file_exists "${DATA_BASE_DIR}/rust/rustup/home/rustup-init"
 

@@ -1,7 +1,9 @@
-#! /bin/sh
+#! /bin/bash
 
-set -e -u
-. lib.sh
+set -eE -u -o pipefail
+shopt -s inherit_errexit
+
+source lib.sh
 
 assert_success :
 
