@@ -17,8 +17,8 @@ parse_dev_container_options() {
 }
 
 copy_lifecycle_hook_scripts() {
-  mkdir --parents /usr/local/share/dev_containers/features/ghcr_io/georglauterbach/lang_rust/lifecycle_hooks
-  cp on_create_command.sh /usr/local/share/dev_containers/features/ghcr_io/georglauterbach/lang_rust/lifecycle_hooks/on_create_command.sh
+  mkdir --parents "${FEATURE_SHARE_DIR}/lifecycle_hooks"
+  cp data/on_create_command.sh "${FEATURE_SHARE_DIR}/lifecycle_hooks/on_create_command.sh"
 }
 
 rustup_adjustments() {
@@ -48,7 +48,7 @@ rustup_adjustments() {
 
 copy_lldb_prettifiers() {
   log 'info' 'Copying prettifier for LLDB'
-  cp "lldb_prettifier.py" "${FEATURE_SHARE_DIR}/"
+  cp "data/lldb_prettifier.py.txt" "${FEATURE_SHARE_DIR}/lldb_prettifier.py"
   chmod 777 "${FEATURE_SHARE_DIR}/lldb_prettifier.py"
 }
 

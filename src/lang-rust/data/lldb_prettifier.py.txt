@@ -1,6 +1,9 @@
 # copied on 15 Oct 2025 from
 # https://github.com/cmrschwarz/rust-prettifier-for-lldb/blob/main/rust_prettifier_for_lldb.py
 
+# this file is saved as .py.txt to not have GitHub index it as Python to
+# not give the impression this repository contains mainly Python code
+
 # rust-prettifier-for-lldb, Christian Schwarz, 2024
 
 # This file is based on by vadimcn/codelldb by Vadim Chugunov
