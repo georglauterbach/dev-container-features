@@ -26,14 +26,17 @@ initialize_bashrc() {
     cat >"${_REMOTE_USER_HOME}/.bashrc" <<"EOF"
 #! /usr/bin/env bash
 
-source "${HOME}/.config/bash/90-hermes.sh"
+if [[ -f ${HOME}/.config/bash/90-hermes.sh ]]; then
+  source "${HOME}/.config/bash/90-hermes.sh"
+fi
 EOF
   else
     log 'info' 'Initializing hermes by extending .bashrc'
     cat >>"${_REMOTE_USER_HOME}/.bashrc" <<"EOF"
-#! /usr/bin/env bash
 
-source "${HOME}/.config/bash/90-hermes.sh"
+if [[ -f ${HOME}/.config/bash/90-hermes.sh ]]; then
+  source "${HOME}/.config/bash/90-hermes.sh"
+fi
 EOF
   fi
 }
