@@ -1,7 +1,7 @@
 // ref: https://github.com/devcontainers/spec/blob/main/schemas/devContainerFeature.schema.json
 {
   "id": "hermes",
-  "version": "11.1.1",
+  "version": "11.1.2",
   "name": "hermes",
   "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/hermes",
   "description": "https://github.com/georglauterbach/hermes in a Development Container",
@@ -12,9 +12,9 @@
       "default": true
     },
     "init.bashrc-overwrite": {
-      "description": "When `hermes.init.bashrc` is `true`, whether to completely overwrite the file `${HOME}/.bashrc` to only run _hermes_",
+      "description": "When `init.bashrc` is `true`, whether to completely overwrite the file `${HOME}/.bashrc` instead of appending",
       "type": "boolean",
-      "default": true
+      "default": false
     }
   }
 }

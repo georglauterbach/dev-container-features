@@ -46,7 +46,7 @@ main() {
   initialize_bashrc
 
   mkdir --parents /usr/local/bin/
-  mv "hermes-v11.1.1-$(uname --machine)-unknown-linux-musl" /usr/local/bin/hermes
+  mv "hermes-v11.1.2-$(uname --machine)-unknown-linux-musl" /usr/local/bin/hermes
 }
 
 main "${@}"

@@ -16,7 +16,7 @@ https://github.com/georglauterbach/hermes in a Development Container
 | Options Id | Description | Type | Default Value |
 |-----|-----|-----|-----|
 | init.bashrc | Whether to add _hermes_ to the default Bash setup in `$[HOME}/.bashrc` | boolean | true |
-| init.bashrc-overwrite | When `hermes.init.bashrc` is `true`, whether to completely overwrite the file `${HOME}/.bashrc` to only run _hermes_ | boolean | true |
+| init.bashrc-overwrite | When `init.bashrc` is `true`, whether to completely overwrite the file `${HOME}/.bashrc` instead of appending | boolean | false |
 
 
 
