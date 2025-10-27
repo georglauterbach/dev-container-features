@@ -5,6 +5,7 @@ set -e -u
 FEATURE_SHARE_DIR=/usr/local/share/dev_containers/features/ghcr_io/georglauterbach/lang_rust
 readonly FEATURE_SHARE_DIR
 
+# update directory permissions
 update_directory() {
   ENV_NAME=${1:?"(bug) environment variable name required"}
   ENV_VALUE=$(eval "echo \"\$${ENV_NAME}\"")
@@ -21,12 +22,13 @@ update_directory() {
   else
     printf "  -> creating directory: "
 
-    if mkdir --parents "${ENV_VALUE}" 2>/dev/null \
-    || sudo mkdir --parents "${ENV_VALUE}"; then
+    if mkdir --parents "${ENV_VALUE}"                   2>/dev/null \
+    || sudo mkdir --parents "${ENV_VALUE}"              2>/dev/null \
+    || su - root sh -c "mkdir --parents '${ENV_VALUE}'" 2>/dev/null
+    then
       echo 'done'
     else
-      echo 'failed'
-      return 1
+      echo "FAILED ('sudo' missing or 'su' with 'root' failed)"
     fi
   fi
 
@@ -39,12 +41,13 @@ update_directory() {
   }; then
     printf "  -> updating permissions: "
 
-    if chown --recursive "$(id -u):$(id -g)" "${ENV_VALUE}" 2>/dev/null \
-    || sudo chown --recursive "$(id -u):$(id -g)" "${ENV_VALUE}"; then
+    if chown --recursive "$(id -u):$(id -g)" "${ENV_VALUE}"                   2>/dev/null \
+    || sudo chown --recursive "$(id -u):$(id -g)" "${ENV_VALUE}"              2>/dev/null \
+    || su - root sh -c "chown --recursive '$(id -u):$(id -g)' '${ENV_VALUE}'" 2>/dev/null
+    then
       echo 'done'
     else
-      echo 'failed'
-      return 1
+      echo "FAILED ('sudo' missing or 'su' with 'root' failed)"
     fi
   else
     echo "  -> directory already has proper permissions"
