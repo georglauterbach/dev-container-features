@@ -1,20 +1,8 @@
 // ref: https://github.com/devcontainers/spec/blob/main/schemas/devContainerFeature.schema.json
 {
   "id": "hermes",
-  "version": "11.1.2",
+  "version": "11.2.3",
   "name": "hermes",
   "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/hermes",
-  "description": "https://github.com/georglauterbach/hermes in a Development Container",
-  "options": {
-    "init.bashrc": {
-      "description": "Whether to add _hermes_ to the default Bash setup in `$[HOME}/.bashrc`",
-      "type": "boolean",
-      "default": true
-    },
-    "init.bashrc-overwrite": {
-      "description": "When `init.bashrc` is `true`, whether to completely overwrite the file `${HOME}/.bashrc` instead of appending",
-      "type": "boolean",
-      "default": false
-    }
-  }
+  "description": "https://github.com/georglauterbach/hermes in a Development Container"
 }

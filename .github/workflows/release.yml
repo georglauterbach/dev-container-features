@@ -31,8 +31,8 @@ jobs:
       - name: Acquire hermes
         run: |
           cd src/hermes
-          wget --quiet https://github.com/georglauterbach/hermes/releases/download/v11.1.2/hermes-v11.1.2-aarch64-unknown-linux-musl
-          wget --quiet https://github.com/georglauterbach/hermes/releases/download/v11.1.2/hermes-v11.1.2-x86_64-unknown-linux-musl
+          wget --quiet https://github.com/georglauterbach/hermes/releases/download/v11.2.3/hermes-v11.2.3-aarch64-unknown-linux-musl
+          wget --quiet https://github.com/georglauterbach/hermes/releases/download/v11.2.3/hermes-v11.2.3-x86_64-unknown-linux-musl
 
       - name: Publish Features
         uses: devcontainers/action@v1
