@@ -15,10 +15,10 @@ main() {
   parse_dev_container_options
 
   cp shellcheck.conf "${FEATURE_SHARE_DIR}"
+  cp libbash "${FEATURE_SHARE_DIR}"
 
   if "${COPY_LIBBASH}"; then
     mkdir --parents /usr/local/lib
-    cp libbash "${FEATURE_SHARE_DIR}"
     cp libbash /usr/local/lib/
   fi
 
