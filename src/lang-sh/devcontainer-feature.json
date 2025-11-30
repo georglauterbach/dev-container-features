@@ -2,7 +2,7 @@
 // cSpell: ignore timonwong
 {
   "id": "lang-sh",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "name": "Programming Language | Bash",
   "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/lang-sh",
   "description": "Work efficiently and effortlessly with Bash",
