@@ -11,7 +11,11 @@ Work efficiently and effortlessly with Bash
 }
 ```
 
+## Options
 
+| Options Id | Description | Type | Default Value |
+|-----|-----|-----|-----|
+| copy-libbash | whether to copy [`libbash`](https://github.com/georglauterbach/libbash) v9.0.0 to `/usr/local/lib/` | boolean | true |
 
 ## Customizations
 
@@ -20,6 +24,14 @@ Work efficiently and effortlessly with Bash
 - `mads-hartmann.bash-ide-vscode`
 - `timonwong.shellcheck`
 
+## Notes
+
+### Extensions
+
+| Areas                 | Extension                                                                                                            |
+| :-------------------- | :------------------------------------------------------------------------------------------------------------------- |
+| Bash Language Server  | [`mads-hartmann.bash-ide-vscode`](https://marketplace.visualstudio.com/items?itemName=mads-hartmann.bash-ide-vscode) |
+| Shell Linter          | [`timonwong.shellcheck`](https://marketplace.visualstudio.com/items?itemName=timonwong.shellcheck)                   |
 
 
 ---
