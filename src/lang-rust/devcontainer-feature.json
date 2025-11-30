@@ -45,20 +45,20 @@
         "vadimcn.vscode-lldb@1.11.8"
       ],
       "settings": {
-        // Mark the directory for build-artifacts as read-only
+        // mark the directory for build-artifacts as read-only
         // and apply the same in the subdirectory `code/`
         "files.readonlyInclude": {
           "target": true,
           "code/target": true
         },
-        // Exclude the directory for build-artifacts from the
+        // exclude the directory for build-artifacts from the
         // VS explorer watcher and apply the same in the
         // subdirectory `code/`
         "files.watcherExclude": {
           "target": true,
           "code/target": true
         },
-        // Tell LLDB that we debug Rust
+        // tell LLDB that we debug Rust
         "lldb.launch.sourceLanguages": [
           "rust"
         ]

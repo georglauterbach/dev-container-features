@@ -1,7 +1,8 @@
 // ref: https://github.com/devcontainers/spec/blob/main/schemas/devContainerFeature.schema.json
+// cSpell: ignore timonwong
 {
   "id": "lang-bash",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "name": "Programming Language | Bash",
   "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/lang-bash",
   "description": "Work efficiently and effortlessly with Bash",
@@ -12,12 +13,18 @@
         "timonwong.shellcheck"
       ],
       "settings": {
+        // disable the ShellCheck integration of 'mads-hartmann.bash-ide-vscode'
+        // to not clash with 'timonwong.shellcheck'
+        "bashIde.shellcheckPath": "",
+        // use file-relative path resolution for 'source' statements
         "shellcheck.useWorkspaceRootAsCwd": false,
+        // disable needlessly aggressive lints
         "shellcheck.exclude": [
-          "2310",
-          "2312"
+          "2310" // functions invoked in `if` with `set -e`
         ],
+        // run ShellCheck when the editor is saved
         "shellcheck.run": "onSave",
+        // supply custom arguments to make the most use of ShellCheck
         "shellcheck.customArgs": [
           "--shell=bash",
           "--severity=style",

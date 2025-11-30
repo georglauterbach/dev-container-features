@@ -3,15 +3,27 @@ version: '0.2'
 
 ignorePaths: []
 dictionaryDefinitions: []
-dictionaries: []
 import: []
 
+dictionaries:
+  - en_US
+  - bash
+
 words:
-  - debuggee
-  - LLDB
-  - Rustup
-  - trixie
+  - debuggee # the program being debugged
 
 ignoreWords:
-  - devcontainers
+  # names
   - georglauterbach
+  - Georg
+  - Lauterbach
+
+  # proper nouns
+  - LLDB
+  - rustup
+  - shellcheck
+  - trixie
+
+  # multiple words written as one
+  - devcontainers
+  - libbash
