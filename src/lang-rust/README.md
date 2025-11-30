@@ -30,11 +30,11 @@ Work efficiently and effortlessly with Rust
 
 ### Extensions
 
-| Areas                 | Extension |
-| :-------------------- | :-------- |
-| Rust Language Server  | [`rust-lang.rust-analyzer`](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer) |
+| Areas                 | Extension                                                                                                  |
+| :-------------------- | :--------------------------------------------------------------------------------------------------------- |
+| Rust Language Server  | [`rust-lang.rust-analyzer`](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)   |
 | TOML Language Support | [`tamasfe.even-better-toml`](https://marketplace.visualstudio.com/items?itemName=tamasfe.even-better-toml) |
-| Debugger              | [`vadimcn.vscode-lldb`](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb) |
+| Debugger              | [`vadimcn.vscode-lldb`](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb)           |
 
 ### Debugger
 
