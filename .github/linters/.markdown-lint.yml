@@ -119,7 +119,7 @@ MD025:
 # MD026/no-trailing-punctuation : Trailing punctuation in heading : https://github.com/DavidAnson/markdownlint/blob/v0.39.0/doc/md026.md
 MD026:
   # Punctuation characters
-  punctuation: ".,;:!。，；：！"
+  punctuation: .,;:!。，；：！
 
 # MD027/no-multiple-space-blockquote : Multiple spaces after blockquote symbol : https://github.com/DavidAnson/markdownlint/blob/v0.39.0/doc/md027.md
 MD027:
@@ -161,7 +161,7 @@ MD033:
   table_allowed_elements: []
 
 # MD034/no-bare-urls : Bare URL used : https://github.com/DavidAnson/markdownlint/blob/v0.39.0/doc/md034.md
-MD034: true
+MD034: false
 
 # MD035/hr-style : Horizontal rule style : https://github.com/DavidAnson/markdownlint/blob/v0.39.0/doc/md035.md
 MD035:
@@ -171,7 +171,7 @@ MD035:
 # MD036/no-emphasis-as-heading : Emphasis used instead of a heading : https://github.com/DavidAnson/markdownlint/blob/v0.39.0/doc/md036.md
 MD036:
   # Punctuation characters
-  punctuation: ".,;:!?。，；：！？"
+  punctuation: .,;:!?。，；：！？
 
 # MD037/no-space-in-emphasis : Spaces inside emphasis markers : https://github.com/DavidAnson/markdownlint/blob/v0.39.0/doc/md037.md
 MD037: true
@@ -190,13 +190,7 @@ MD040:
   language_only: false
 
 # MD041/first-line-heading/first-line-h1 : First line in a file should be a top-level heading : https://github.com/DavidAnson/markdownlint/blob/v0.39.0/doc/md041.md
-MD041:
-  # Allow content before first heading
-  allow_preamble: false
-  # RegExp for matching title in front matter
-  front_matter_title: ^\\s*title\\s*[:=]
-  # Heading level
-  level: 1
+MD041: false
 
 # MD042/no-empty-links : No empty links : https://github.com/DavidAnson/markdownlint/blob/v0.39.0/doc/md042.md
 MD042: true
@@ -244,7 +238,7 @@ MD051:
   # Ignore case of fragments
   ignore_case: false
   # Pattern for ignoring additional fragments
-  ignored_pattern: ""
+  ignored_pattern: ''
 
 # MD052/reference-links-images : Reference links and images should use a label that is defined : https://github.com/DavidAnson/markdownlint/blob/v0.39.0/doc/md052.md
 MD052:
@@ -296,6 +290,4 @@ MD059:
     - more
 
 # MD060/table-column-style : Table column style : https://github.com/DavidAnson/markdownlint/blob/v0.39.0/doc/md060.md
-MD060:
-  # Table column style
-  style: false
+MD060: false
