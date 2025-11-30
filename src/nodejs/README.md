@@ -17,7 +17,7 @@ Install NodeJS
 |-----|-----|-----|-----|
 | version | Version of NodeJS to install | string | 25.0.0 |
 | architecture | Architecture of NodeJS to install | string | x64 |
-| uri | Non-default mirror for the `tar.xz`/`tar.gz` archive that contains NodeJS files. You can specify the version directly or use the string `<<VERSION>>` which is replaced by `node.version` | string | https://nodejs.org/dist/v<<VERSION>>/node-v<<VERSION>>-linux-<<ARCHITECTURE>>.tar.xz |
+| uri | Non-default mirror for the `tar.xz`/`tar.gz` archive that contains NodeJS files. You can specify the version directly or use the string `{{VERSION}}` which is replaced by `node.version` | string | https://nodejs.org/dist/v{{VERSION}}/node-v{{VERSION}}-linux-{{ARCHITECTURE}}.tar.xz |
 | proxy.http.http.address | A URI for an HTTP proxy | string | - |
 | proxy.http.https.address | A URI for an HTTPS proxy | string | - |
 | proxy.http.no-proxy.address | A list of URIs to not proxy | string | localhost,127.0.0.1 |

@@ -1,5 +1,6 @@
 {
   "shellcheck.customArgs": [
-    "--rcfile=.shellcheckrc"
-  ]
+    "--rcfile=.shellcheckrc",
+    "--external-sources"
+  ],
 }

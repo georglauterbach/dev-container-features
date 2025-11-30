@@ -34,7 +34,8 @@
         "shellcheck.run": "onSave",
         // supply custom arguments to make the most use of ShellCheck
         "shellcheck.customArgs": [
-          "--rcfile=/usr/local/share/dev_containers/features/ghcr_io/georglauterbach/lang_bash/shellcheck.conf"
+          "--rcfile=/usr/local/share/dev_containers/features/ghcr_io/georglauterbach/lang_bash/shellcheck.conf",
+          "--external-sources"
         ]
       }
     }
