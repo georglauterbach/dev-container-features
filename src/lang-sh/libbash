@@ -52,6 +52,8 @@ function __libbash__main() {
     LIBBASH_LOADED_MODULES+=("${MODULE}")
   done
 
+  export LIBBASH_VERSION=9.0.1
+
   # ! this has to come last
   if [[ ${LIBBASH_LOADED_MODULES[*]} != *log* ]]; then
     function log() {
@@ -67,7 +69,6 @@ function __libbash__main() {
     return 0
   fi
 
-  export LIBBASH_VERSION=9.0.0
   log 'trace' "Finished 'libbash ${LIBBASH_VERSION}' initialization"
 }
 
