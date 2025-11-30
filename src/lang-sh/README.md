@@ -1,5 +1,5 @@
 
-# Programming Language | Bash (lang-bash)
+# Programming Language | Bash (lang-sh)
 
 Work efficiently and effortlessly with Bash
 
@@ -7,7 +7,7 @@ Work efficiently and effortlessly with Bash
 
 ```json
 "features": {
-    "ghcr.io/georglauterbach/dev-container-features/lang-bash:0": {}
+    "ghcr.io/georglauterbach/dev-container-features/lang-sh:0": {}
 }
 ```
 
@@ -24,4 +24,4 @@ Work efficiently and effortlessly with Bash
 
 ---
 
-_Note: This file was auto-generated from the [devcontainer-feature.json](https://github.com/georglauterbach/dev-container-features/blob/main/src/lang-bash/devcontainer-feature.json).  Add additional notes to a `NOTES.md`._
+_Note: This file was auto-generated from the [devcontainer-feature.json](https://github.com/georglauterbach/dev-container-features/blob/main/src/lang-sh/devcontainer-feature.json).  Add additional notes to a `NOTES.md`._
