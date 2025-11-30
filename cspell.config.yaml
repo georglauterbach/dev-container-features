@@ -25,5 +25,6 @@ ignoreWords:
   - trixie
 
   # multiple words written as one
+  - cooldown
   - devcontainers
   - libbash

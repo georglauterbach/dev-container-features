@@ -17,9 +17,9 @@
       "default": "x64"
     },
     "uri": {
-      "description": "Non-default mirror for the `tar.xz`/`tar.gz` archive that contains NodeJS files. You can specify the version directly or use the string `<<VERSION>>` which is replaced by `node.version`",
+      "description": "Non-default mirror for the `tar.xz`/`tar.gz` archive that contains NodeJS files. You can specify the version directly or use the string `{{VERSION}}` which is replaced by `node.version`",
       "type": "string",
-      "default": "https://nodejs.org/dist/v<<VERSION>>/node-v<<VERSION>>-linux-<<ARCHITECTURE>>.tar.xz"
+      "default": "https://nodejs.org/dist/v{{VERSION}}/node-v{{VERSION}}-linux-{{ARCHITECTURE}}.tar.xz"
     },
     "proxy.http.http.address": {
       "description": "A URI for an HTTP proxy",

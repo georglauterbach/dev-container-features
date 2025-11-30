@@ -1,15 +1,6 @@
 {
-  "shellcheck.useWorkspaceRootAsCwd": false,
-  "shellcheck.exclude": [
-    "2310",
-    "2312"
-  ],
-  "shellcheck.run": "onSave",
   "shellcheck.customArgs": [
-    "--severity=style",
-    "--extended-analysis=true",
-    "--source-path=SCRIPTDIR",
-    "--external-sources",
-    "--color=auto"
-  ]
+    "--rcfile=.shellcheckrc",
+    "--external-sources"
+  ],
 }

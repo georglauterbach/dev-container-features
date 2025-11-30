@@ -57,8 +57,8 @@ parse_dev_container_options() {
 
 install_node() {
   DOWNLOAD_URL=$(printf '%s' "${URI}" | sed \
-    -e "s|<<VERSION>>|${VERSION}|g" \
-    -e "s|<<ARCHITECTURE>>|${ARCHITECTURE}|g")
+    -e "s|{{VERSION}}|${VERSION}|g" \
+    -e "s|{{ARCHITECTURE}}|${ARCHITECTURE}|g")
   FILE_NAME=$(basename "${DOWNLOAD_URL}")
   readonly DOWNLOAD_URL FILE_NAME
 
