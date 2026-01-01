@@ -21,7 +21,7 @@ fi
 # `updateRemoteUserUID: true` in some cases, which would result in
 # a UID mismatch; hence, we need `777` as the permissions.
 for LOOP_VAR in "stable," "insiders,-insiders"; do
-  PERSISTENCE_DIR="${CACHE_MOUNT_POINT}/$(printf '%s' "${LOOP_VAR}" | cut -d , - 1)"
+  PERSISTENCE_DIR="${CACHE_MOUNT_POINT}/$(printf '%s' "${LOOP_VAR}" | cut -d , -f 1)"
   TMP_STORAGE_DIR="${_REMOTE_USER_HOME}/.vscode-server$(printf '%s' "${LOOP_VAR}" | cut --delimiter=, --fields=2)"
 
   # shellcheck disable=SC2174
