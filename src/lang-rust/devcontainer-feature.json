@@ -1,7 +1,7 @@
 // ref: https://github.com/devcontainers/spec/blob/main/schemas/devContainerFeature.schema.json
 {
   "id": "lang-rust",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "name": "Programming Language | Rust",
   "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/rust",
   "description": "Work efficiently and effortlessly with Rust",
@@ -42,7 +42,7 @@
         // TOML language support
         "tamasfe.even-better-toml",
         // LLVM-based debugger (LLDB)
-        "vadimcn.vscode-lldb@1.11.8"
+        "vadimcn.vscode-lldb@1.12.1"
       ],
       "settings": {
         // mark the directory for build-artifacts as read-only
