@@ -5,13 +5,11 @@
   "version": "0.2.3",
   "name": "Programming Language | Bash",
   "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/lang-sh",
-  "description": "Work efficiently and effortlessly with Bash",
-  "options": {
-    "copy-libbash": {
-      "description": "whether to copy [`libbash`](https://github.com/georglauterbach/libbash) v9.0.0 to `/usr/local/lib/`",
-      "type": "boolean",
-      "default": true
-    }
+  "description": "Work efficiently and effortlessly with shell scripts",
+  "containerEnv": {
+    // can be used to easily source 'libbash' by running
+    // 'source "${DEV_CONTAINER_FEATURE_LANG_SH_SHARED_DIR}/libbash" [<LIBBASH ARGUMENTS>...]'
+    "DEV_CONTAINER_FEATURE_LANG_SH_SHARED_DIR": "/usr/local/share/dev_containers/features/ghcr_io/georglauterbach/lang_bash"
   },
   "customizations": {
     "vscode": {

@@ -31,7 +31,7 @@ rustup_adjustments() {
 
   if [ "${GENERATE_SHELL_COMPLETIONS}" = 'true' ]; then
     log 'info' 'Generating completions for rustup and Cargo'
-    mkdir  --parents               /usr/share/bash-completion/completions
+    mkdir  -p                      /usr/share/bash-completion/completions
     rustup completions bash       >/usr/share/bash-completion/completions/rustup
     rustup completions bash cargo >/usr/share/bash-completion/completions/cargo
   else
@@ -55,7 +55,7 @@ copy_lldb_prettifiers() {
 main() {
   parse_dev_container_options
 
-  mkdir --parents "${FEATURE_SHARE_DIR}"
+  mkdir -p "${FEATURE_SHARE_DIR}"
 
   copy_lifecycle_hook_scripts
   rustup_adjustments

@@ -1,8 +1,5 @@
 #! /bin/sh
 
-# This script uses the short flags (e.g., "-f") for commands instead of the
-# long flags (e.g. "--force") to work on Alpine and other distributions.
-
 # shellcheck disable=SC2154
 
 set -e -u

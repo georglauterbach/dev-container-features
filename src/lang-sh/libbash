@@ -1,19 +1,29 @@
 #! /usr/bin/env bash
 
-# libbash - a collection of useful functions for your Bash scripts
+# libbash 10.0.0 - a collection of useful functions for your Bash scripts
 #
 # Copyright (C) Georg Lauterbach
 # GitHub: https://github.com/georglauterbach/libbash
+#
+# Underscored functions are not unset when libbash has been loaded
+# successfully. They are required by other functions in libbash.
+
+# cSpell: ignore Georg Lauterbach
 
 # shellcheck disable=SC2329
 
-# ### The Start of `libbash`
+# Ensure this script is available as a whole (e.g., when downloaded)
+# and do not execute it otherwise.
+{
+
+# ### Initialization
 #
 # This function calls the initialization routines for `libbash`
 # in proper order.
-function __libbash__main() {
+function libbash__main() {
   if [[ ${BASH_VERSINFO[0]} -lt 5 ]]; then
     __libbash__show_error "libbash only supports Bash version >= 5.0.0"
+    libbash__finish --clean
     return 1
   fi
 
@@ -22,166 +32,179 @@ function __libbash__main() {
   SCRIPT='libbash init'
   LOG_LEVEL=${LOG_LEVEL:-info}
 
-  LIBBASH_DIRECTORY="$(realpath -eL "$(dirname "${BASH_SOURCE[0]}")")"
-  LIBBASH_LOADED_MODULES=()
+  LIBBASH__DIRECTORY=$(realpath -eL "$(dirname "${BASH_SOURCE[0]}")")
+  LIBBASH__EXIT_IN_INTERACTIVE_MODE=${LIBBASH__EXIT_IN_INTERACTIVE_MODE:-false}
+  LIBBASH__LOADED_MODULES=()
+  LIBBASH__VERSION=10.0.0
 
   # ! export all variables here first, even if not
   # ! all modules are sourced to satisfy shellcheck
   # ! in applications that use `libbash`
-  export SCRIPT LOG_LEVEL CRI
-  export LIBBASH_DIRECTORY LIBBASH_LOADED_MODULES
+  export LIBBASH__DIRECTORY
+  export LIBBASH__EXIT_IN_INTERACTIVE_MODE
+  export LIBBASH__LOADED_MODULES
+  export LIBBASH__VERSION
+  export LIBBASH__IS_LOADED=false
 
-  local MODULE MODULE_LOAD_FUNCTION
-  for MODULE in "${@}"; do
-    MODULE_LOAD_FUNCTION="__libbash__load_module_${MODULE}"
-
-    if [[ ${LIBBASH_LOADED_MODULES[*]} =~ ${MODULE} ]]; then
-      __libbash__exit_with_error_and_callstack "module '${MODULE}' loaded more than once" 2
-    fi
-
-    if [[ $(type -t "${MODULE_LOAD_FUNCTION}") != 'function' ]]; then
-      __libbash__exit_with_error_and_callstack "module '${MODULE}' does not exist" 3
-    fi
-
-
-    if ! "${MODULE_LOAD_FUNCTION}"; then
-      __libbash__exit_with_error_and_callstack "module '${MODULE}' failed to load" 4
-    fi
-
-    unset "${MODULE_LOAD_FUNCTION}"
-    LIBBASH_LOADED_MODULES+=("${MODULE}")
-  done
-
-  export LIBBASH_VERSION=9.0.1
-
-  # ! this has to come last
-  if [[ ${LIBBASH_LOADED_MODULES[*]} != *log* ]]; then
-    function log() {
-      if [[ ${1:-} != 'error' ]]; then
-        __libbash__exit_with_error_and_callstack \
-          "log module not loaded but 'log' called with log level other than 'error' (arguments: ${*})"
-        return 1
-      fi
-
-      shift 1
-      __libbash__show_error "${*}"
-    } ; export -f log
+  if [[ ${1:-} =~ ^(--)?version$ ]]; then
+    echo "libbash ${LIBBASH__VERSION}"
+    libbash__finish --clean
     return 0
   fi
 
-  log 'trace' "Finished 'libbash ${LIBBASH_VERSION}' initialization"
+  local MODULE MODULE_LOAD_FUNCTION
+  for MODULE in "${@}"; do
+    MODULE_LOAD_FUNCTION="libbash__load_module_${MODULE}"
+
+    if [[ ${LIBBASH__LOADED_MODULES[*]} =~ ${MODULE} ]]; then
+      __libbash__show_error "module '${MODULE}' loaded more than once"
+      libbash__finish --clean
+      return 2
+    fi
+
+    if [[ $(type -t "${MODULE_LOAD_FUNCTION}") != 'function' ]]; then
+      __libbash__show_error "module '${MODULE}' does not exist"
+      libbash__finish --clean
+      return 3
+    fi
+
+    if ! "${MODULE_LOAD_FUNCTION}"; then
+      __libbash__show_error "module '${MODULE}' failed to load"
+      libbash__finish --clean
+      return 4
+    fi
+
+    unset "${MODULE_LOAD_FUNCTION}"
+    LIBBASH__LOADED_MODULES+=("${MODULE}")
+  done
+
+  [[ ${LIBBASH__LOADED_MODULES[*]} == *log* ]] || function log() { : ; }
+  export -f log
+
+  LIBBASH__IS_LOADED=true
+  libbash__finish 0
+  log 'trace' "Finished 'libbash ${LIBBASH__VERSION}' initialization"
 }
 
-if [[ ! -v LIBBASH__IS_LOADED ]]; then
-  # ### Show an Error
-  #
-  # Indicates an error has happened in `libbash`. Used to display
-  # errors even when the log module is not (or has not yet been)
-  # loaded.
-  #
-  # #### Attention
-  #
-  # Underscored functions are not unset at the end of the sourcing
-  # process, but they should only be used by `libbash` modules, not
-  # by applications / other libraries using `libbash`.
-  function __libbash__show_error() {
-    printf "%s \e[91mERROR\e[0m %s: %s\n" \
-      "$(date +"%Y-%m-%dT%H:%M:%S.%6N%:z" || :)" "${SCRIPT:-$(basename "${0}")}" "${*}" >&2
-  }
-  export -f __libbash__show_error
-  readonly -f __libbash__show_error
+# ### Cleanup
+#
+# When `libbash__main` has finished (successfully or unsuccessfully),
+# we need to clean up left-over environment variables and functions.
+#
+# #### Arguments
+#
+# $1 :: Either '--clean' or the exit code (optional, default=1)
+# $2 :: If '--clean' is in $1, the exit code (optional)
+function libbash__finish() {
+  if [[ -v __LIBBASH_SCRIPT_TMP ]]; then
+    SCRIPT=${__LIBBASH_SCRIPT_TMP}
+    unset __LIBBASH_SCRIPT_TMP
+  else
+    SCRIPT='prompt or outside of function'
+  fi
 
-  # ### Exit With Conditions
-  #
-  # This function will exit when not running interactively or when
-  # 'LIBBASH_EXIT_IN_INTERACTIVE_MODE' is set to '1'.
-  #
-  # #### Attention
-  #
-  # Underscored functions are not unset at the end of the sourcing
-  # process, but they should only be used by `libbash` modules, not
-  # by applications / other libraries using `libbash`.
-  function __libbash__exit_checked() {
-    local CODE=${1:-1}
-    if [[ ${-} != *i* ]] \
-    || [[ ${LIBBASH_EXIT_IN_INTERACTIVE_MODE:-0} -eq 1 ]] \
-    || [[ ${*} == *--force* ]]; then
-      if [[ ${CODE} =~ ^[0-9]$ ]]; then
-        exit "${CODE}"
-      else
-        log 'error' "Supplied non-number code ('${CODE}') to __libbash__exit_checked"
-        exit 1
-      fi
-    else
-      if [[ ${CODE} =~ ^[0-9]$ ]]; then
-        return "${CODE}"
-      else
-        log 'error' "Supplied non-number code ('${CODE}') to __libbash__exit_checked"
-        return 1
-      fi
-    fi
-  }
-  export -f __libbash__exit_checked
-  readonly -f __libbash__exit_checked
+  if [[ ${1:-} == '--clean' ]]; then
+    shift 1
 
-  # ### Provides Call Stack Information
-  #
-  # This function prints the call stack to identify where an error
-  # originated.
-  #
-  # This function will only print a call stack if the stack is
-  # deeper than 2, because otherwise the error did not originate
-  # in a function but at global scope.
-  function __libbash__show_call_stack() {
-    local STACK_DEPTH CUTOFF=1
-    [[ ${*} == *--internal* ]] && CUTOFF=2
-    [[ ${#FUNCNAME[@]} -gt ${CUTOFF} ]] || return 0
+    unset LIBBASH__DIRECTORY
+    unset LIBBASH__EXIT_IN_INTERACTIVE_MODE
+    unset LIBBASH__LOADED_MODULES
+    unset LIBBASH__VERSION
 
-    STACK_DEPTH=$(( ${#FUNCNAME[@]} - CUTOFF ))
+    unset -f libbash__debug
+    unset -f libbash__show_call_stack
 
-    printf '\ncall stack (most recent call first):\n' >&2
-    for FUNCTION in "${FUNCNAME[@]:${CUTOFF}:${STACK_DEPTH}}"; do
-      printf "  %s\n" "${FUNCTION}" >&2
-    done
+    unset -f __libbash__show_error
+    unset -f __libbash__exit_checked
+  fi
 
-    printf '\n' >&2
-  }
-  export -f __libbash__show_call_stack
-  readonly -f __libbash__show_call_stack
+  unset -f libbash__main
+  unset -f libbash__finish
 
-  # ### Show an Error and Exit
-  #
-  # Display
-  function __libbash__exit_with_error_and_callstack() {
-    __libbash__show_error "${1:-Error message not supplied (this is a bug in libbash)}"
-    __libbash__show_call_stack --internal
-    __libbash__exit_checked "${2:-1}"
-  }
-  export -f __libbash__exit_with_error_and_callstack
-  readonly -f __libbash__exit_with_error_and_callstack
+  if [[ ${1:-1} -gt 0 ]]; then
+    LIBBASH__IS_LOADED=false
+  fi
 
-  # ### Provide Debug Information
-  #
-  # Shows some debug information that `libbash` has collected.
-  function libbash__debug() {
-    if [[ ! -v __LIBBASH__IS_LOADED_LOG ]]; then
-      __libbash__exit_with_error_and_callstack "Debug functionality requires the log module to be loaded and log level set to 'debug' or 'trace'"
-      return 1
-    fi
+  return 0
+}
 
-    log 'debug' "Showing 'libbash' debug information"
-    log 'debug' "  -> version: ${LIBBASH_VERSION}"
-    log 'debug' "  -> Loaded modules: ${LIBBASH_LOADED_MODULES[*]}"
-  }
-  export -f libbash__debug
+# ### Provide Debug Information
+#
+# Shows some debug information that `libbash` has collected.
+function libbash__debug() {
+  if ! ${__LIBBASH__LOG_IS_LOADED:-false}; then
+    __libbash__show_error "Debug functionality requires the log module to be loaded and 'LOG_LEVEL' set to 'debug' or 'trace'"
+    return 1
+  fi
 
-  export LIBBASH_EXIT_IN_INTERACTIVE_MODE=${LIBBASH_EXIT_IN_INTERACTIVE_MODE:-0}
-  export LIBBASH__IS_LOADED=1
-  readonly LIBBASH__IS_LOADED
-fi # if ! ${LIBBASH__IS_LOADED:-false}
+  log 'debug' "Showing 'libbash' debug information"
+  log 'debug' "  -> version: ${LIBBASH__VERSION}"
+  log 'debug' "  -> loaded modules: ${LIBBASH__LOADED_MODULES[*]}"
+  log 'debug' "  -> exit in interactive mode: ${LIBBASH__EXIT_IN_INTERACTIVE_MODE}"
+}
+export -f libbash__debug
+
+# ### Provides Call Stack Information
+#
+# This function prints the call stack to identify where an error
+# originated.
+#
+# This function will only print a call stack if the stack is
+# deeper than 2, because otherwise the error did not originate
+# in a function but at global scope.
+function libbash__show_call_stack() {
+  local STACK_DEPTH CUTOFF=${1:-1}
+  [[ ${#FUNCNAME[@]} -gt ${CUTOFF} ]] || return 0
+
+  STACK_DEPTH=$(( ${#FUNCNAME[@]} - CUTOFF ))
+
+  printf '\ncall stack (most recent call first):\n' >&2
+  for FUNCTION in "${FUNCNAME[@]:${CUTOFF}:${STACK_DEPTH}}"; do
+    printf "  %s\n" "${FUNCTION}" >&2
+  done
+
+  printf '\n' >&2
+}
+export -f libbash__show_call_stack
+
+# ### Show an Error
+#
+# Indicates an error has happened in `libbash`. Used to display
+# errors even when the log module is not (or has not yet been)
+# loaded.
+function __libbash__show_error() {
+  printf "%s \e[91mERROR\e[0m %s: %s\n" \
+    "$(date +"%Y-%m-%dT%H:%M:%S.%6N%:z" || :)" "${SCRIPT:-$(basename "${0}")}" "${*}" >&2
+}
+export -f __libbash__show_error
+
+# ### Exit With Conditions
+#
+# This function will exit when not running interactively or when
+# 'LIBBASH__EXIT_IN_INTERACTIVE_MODE' is set to 'true'.
+#
+# #### Arguments
+#
+# $1 :: the return code (optional, default=1)
+function __libbash__exit_checked() {
+  local CODE=${1:-1}
+  local METHOD='return'
+
+  if [[ ${-} != *i* ]] || ${LIBBASH__EXIT_IN_INTERACTIVE_MODE:-false}; then
+    METHOD='exit'
+  fi
+
+  if [[ ${CODE} =~ ^[0-9]$ ]]; then
+    "${METHOD}" "${CODE}"
+  else
+    __libbash__show_error "Supplied non-number code ('${CODE}') to __libbash__exit_checked"
+    "${METHOD}" 1
+  fi
+}
+export -f __libbash__exit_checked
 
 # Load the 'cri' module
-function __libbash__load_module_cri() {
+function libbash__load_module_cri() {
   # ### Checks Whether Docker or Podman is Installed
   #
   # Checks whether `docker` or `podman` is in `${PATH}` and
@@ -191,15 +214,14 @@ function __libbash__load_module_cri() {
     command -v 'docker' &>/dev/null && export CRI='docker' && return 0
     command -v 'podman' &>/dev/null && export CRI='podman' && return 0
 
-    log 'error' \
-      'Could not identify Container Runtime.' \
-      "Is 'docker' or 'podman' in \${PATH}?"
+    __libbash__show_error "Could not identify Container Runtime. Is 'docker' or 'podman' in \${PATH}?"
     return 1
-  } ; export -f setup_container_runtime
+  }
+  export -f setup_container_runtime
 }
 
 # Load the 'log' module
-function __libbash__load_module_log() {
+function libbash__load_module_log() {
   export LIBBASH__LOG_COLOR_RESET='\e[0m'
   export LIBBASH__LOG_COLOR_TRACE='\e[92m'
   export LIBBASH__LOG_COLOR_DEBUG='\e[36m'
@@ -207,10 +229,7 @@ function __libbash__load_module_log() {
   export LIBBASH__LOG_COLOR_WARN='\e[93m'
   export LIBBASH__LOG_COLOR_ERROR='\e[91m'
 
-  if [[ ! -v __LIBBASH__IS_LOADED_LOG ]]; then
-    export __LIBBASH__IS_LOADED_LOG=1
-    readonly __LIBBASH__IS_LOADED_LOG
-  fi
+  export __LIBBASH__LOG_IS_LOADED=true
 
   # ### The Logging Functions
   #
@@ -258,15 +277,12 @@ function __libbash__load_module_log() {
 
     if [[ -z ${1+set} ]]; then
       log 'warn' "'log' called without log level"
-      __libbash__show_call_stack
       return 0
     elif [[ ! ${1} =~ ^(error|warn|info|debug|trace)$ ]]; then
       log 'warn' "'log' called with unknown log level (use 'error', 'warn', 'info', 'debug', or 'trace')"
-      __libbash__show_call_stack
       return 0
     elif [[ -z ${2+set} ]]; then
       log 'warn' "'log' called without message"
-      __libbash__show_call_stack
       return 0
     fi
 
@@ -292,11 +308,11 @@ function __libbash__load_module_log() {
     fi
 
     return 0
-  } ; export -f log
+  }
 }
 
 # Load the 'errors' module
-function __libbash__load_module_errors() {
+function libbash__load_module_errors() {
   # cSpell: ignore gsub
 
   # Call `log_unexpected_error` with additional information
@@ -321,7 +337,8 @@ function __libbash__load_module_errors() {
   function remove_newlines() {
     local STRING=${1:-unknown}
     echo "${STRING//$'\n'/ }"
-  } ; export -f remove_newlines
+  }
+  export -f remove_newlines
 
   # ### Expand a String
   #
@@ -353,14 +370,15 @@ function __libbash__load_module_errors() {
     STRING_TO_ESCAPE=${STRING_TO_ESCAPE//\$\(/\\$\(}
 
     eval "cat <<${DELIMITER}"$'\n'"${STRING_TO_ESCAPE}"$'\n'"${DELIMITER}"
-  } ; export -f apply_shell_expansion
+  }
+  export -f apply_shell_expansion
 
   # ### Log the Error Event
   #
   # This function is called when an unhandled error signal is thrown.
   # It prints information about the error (where it originated, etc.)
-  # and also calls `__libbash__show_call_stack` to possibly print a
-  # call stack if `__libbash__show_call_stack` deems it useful.
+  # and also calls `libbash__show_call_stack` to possibly print a
+  # call stack if `libbash__show_call_stack` deems it useful.
   #
   # #### Explanations
   #
@@ -399,13 +417,14 @@ function __libbash__load_module_errors() {
     exit code:  ${4:-unknown}"
 
     __libbash__show_error "${MESSAGE}"
-    __libbash__show_call_stack --internal
+    libbash__show_call_stack 2
     return 0
-  } ; export -f log_unexpected_error
+  }
+  export -f log_unexpected_error
 }
 
 # Load the 'utils' module
-function __libbash__load_module_utils() {
+function libbash__load_module_utils() {
   # cSpell: ignore mawk
 
   # ### Split a String with a Delimiter Into an Array
@@ -439,7 +458,8 @@ function __libbash__load_module_utils() {
 
     readarray -t -d '' "${ARRAY_NAME}" \
       < <(printf '%s' "${STRING_TO_SPLIT}" | sed "s|${DELIMITER}|\x0|g")
-  } ; export -f split_into_array
+  }
+  export -f split_into_array
 
   # ### Check If a Line Is a Comment or Blank
   #
@@ -454,7 +474,8 @@ function __libbash__load_module_utils() {
     local COMMENT_SYMBOL
     COMMENT_SYMBOL=${2:-#}
     grep -qE "^\s*$|^\s*${COMMENT_SYMBOL}" <<< "${1:-}"
-  } ; export -f line_is_comment_or_blank
+  }
+  export -f line_is_comment_or_blank
 
   # ### Escape All But Backslashes
   #
@@ -469,29 +490,30 @@ function __libbash__load_module_utils() {
   # $2 :: character that must be escaped
   function escape() {
     [[ ${2} =~ .*\\.* ]] && {
-      log 'error' \
+      __libbash__show_error \
         "Escape character is not allowed to be or contain a backslash"\
         "(use 'escape_backslash')"
       return 1
     }
 
     parameter_is_not_empty "${1}" || {
-      log 'error' 'No string to be escaped provided'
+      __libbash__show_error 'No string to be escaped provided'
       return 1
     }
 
     parameter_is_not_empty "${2}" || {
-      log 'error' 'No escape character(s) provided'
+      __libbash__show_error 'No escape character(s) provided'
       return 1
     }
 
     [[ ${#2} -ge 2 ]] && {
-      log 'error' 'More than two parameters provided'
+      __libbash__show_error 'More than two parameters provided'
       return 1
     }
 
     printf '%s' "${1//${2}/\\${2}}"
-  } ; export -f escape
+  }
+  export -f escape
 
   # ### Escape Backslashes Only
   #
@@ -504,12 +526,14 @@ function __libbash__load_module_utils() {
   function escape_backslash() {
     # shellcheck disable=SC1003
     printf '%s' "${1//'\'/'\\'}"
-  } ; export -f escape_backslash
+  }
+  export -f escape_backslash
 
   # ### Exit Without Error
   #
   # Just a wrapper around `exit 0`.
-  function exit_success() { exit 0 ; } ; export -f exit_success
+  function exit_success() { exit 0 ; }
+  export -f exit_success
 
   # ### Exit With Error
   #
@@ -525,20 +549,21 @@ function __libbash__load_module_utils() {
     shift 1
 
     if [[ ! ${CODE} =~ ^[0-9]+$ ]]; then
-      log 'error' "'exit_failure' was called with non-number exit code"
-      __libbash__show_call_stack
+      __libbash__show_error "'exit_failure' was called with non-number exit code"
+      libbash__show_call_stack
       exit 1
     fi
 
     if [[ ${CODE} -eq 0 ]] || [[ ${CODE} -ge 127 ]]; then
-      log 'error' "'exit_failure' was called with exit code 0 or >127"
-      __libbash__show_call_stack
+      __libbash__show_error "'exit_failure' was called with exit code 0 or >127"
+      libbash__show_call_stack
       exit 1
     fi
 
-    parameter_is_not_empty "${1:-}" && log 'error' "${1}"
+    parameter_is_not_empty "${1:-}" && __libbash__show_error "${1}"
     exit "${CODE}"
-  } ; export -f exit_failure
+  }
+  export -f exit_failure
 
   # ### Exit Without Error
   #
@@ -546,7 +571,8 @@ function __libbash__load_module_utils() {
   # used at the very end of a function is it relies on Bash
   # settings the return code of the last command as the exit
   # code of the function.
-  function return_success() { return 0 ; } ; export -f return_success
+  function return_success() { return 0 ; }
+  export -f return_success
 
   # ### Exit With Error
   #
@@ -560,20 +586,21 @@ function __libbash__load_module_utils() {
   # $1 :: message (optional, default='')
   function return_failure() {
     if [[ ! ${1:-1} =~ ^[0-9]+$ ]]; then
-      log 'error' "'return_failure' was called with non-number exit code"
-      __libbash__show_call_stack
+      __libbash__show_error "'return_failure' was called with non-number exit code"
+      libbash__show_call_stack
       exit 1
     fi
 
     if [[ ${1:-1} -eq 0 ]] || [[ ${1:-1} -ge 128 ]]; then
-      log 'error' "'return_failure' was called with exit code 0 or >127"
-      __libbash__show_call_stack
+      __libbash__show_error "'return_failure' was called with exit code 0 or >127"
+      libbash__show_call_stack
       exit 1
     fi
 
-    parameter_is_not_empty "${*}" && log 'error' "${*}"
+    parameter_is_not_empty "${*}" && __libbash__show_error "${*}"
     return "${1:-1}"
-  } ; export -f  return_failure
+  }
+  export -f  return_failure
 
   # ### Exit with Error and Show the Callstack
   #
@@ -585,10 +612,11 @@ function __libbash__load_module_utils() {
   #
   # Same as `exit_failure`.
   function exit_failure_show_callstack() {
-    parameter_is_not_empty "${2:-}" && log 'error' "${2}"
-    __libbash__show_call_stack
+    parameter_is_not_empty "${2:-}" && __libbash__show_error "${2}"
+    libbash__show_call_stack
     exit_failure "${1:-}"
-  } ; export -f exit_failure_show_callstack
+  }
+  export -f exit_failure_show_callstack
 
   # ### Check if Variable is Set
   #
@@ -599,7 +627,8 @@ function __libbash__load_module_utils() {
   # $1 :: the variable's name
   function var_is_set() {
     [[ -v ${1:-__UNSET__} ]]
-  } ; export -f var_is_set
+  }
+  export -f var_is_set
 
   # ### Check if Variable is Set and Not Empty
   #
@@ -611,7 +640,8 @@ function __libbash__load_module_utils() {
   # $1 :: the variable's name
   function var_is_set_and_not_empty() {
     var_is_set "${1}" && [[ -n ${!1:-} ]]
-  } ; export -f var_is_set_and_not_empty
+  }
+  export -f var_is_set_and_not_empty
 
   # ### Tell Whether a Parameter to a Function is Set and Not Empty
   #
@@ -632,7 +662,8 @@ function __libbash__load_module_utils() {
   # ```
   function parameter_is_not_empty() {
     [[ -n ${1:-} ]]
-  } ; export -f parameter_is_not_empty
+  }
+  export -f parameter_is_not_empty
 
   # ### Ask a Question
   #
@@ -645,12 +676,12 @@ function __libbash__load_module_utils() {
   # $2 :: variable name to store the result in
   function ask_question() {
     parameter_is_not_empty "${1}" || {
-      log 'error' 'No question provided'
+      __libbash__show_error 'No question provided'
       return 1
     }
 
     parameter_is_not_empty "${2}" || {
-      log 'error' 'No variable to store result in provided'
+      __libbash__show_error 'No variable to store result in provided'
       return 1
     }
 
@@ -659,7 +690,8 @@ function __libbash__load_module_utils() {
 
     # shellcheck disable=SC2034
     read -r -p "${QUESTION} " VARIABLE_TO_STORE_ANSWER_IN
-  } ; export -f ask_question
+  }
+  export -f ask_question
 
   # ### Ask a Question - Special Case
   #
@@ -674,7 +706,7 @@ function __libbash__load_module_utils() {
   # $2 :: default (optional, default=no)
   function ask_yes_no_question() {
     parameter_is_not_empty "${1}" || {
-      log 'error' 'No question provided'
+      __libbash__show_error 'No question provided'
       return 1
     }
 
@@ -697,7 +729,8 @@ function __libbash__load_module_utils() {
     fi
 
     [[ ${ANSWER,,} =~ ${YES_REGEXP} ]]
-  } ; export -f ask_yes_no_question
+  }
+  export -f ask_yes_no_question
 
   # ### Is a Program in ${PATH}?
   #
@@ -710,12 +743,13 @@ function __libbash__load_module_utils() {
   # $1 :: executable to check
   function is_in_path() {
     parameter_is_not_empty "${1}" || {
-      log 'error' 'No name for an executable provided'
+      __libbash__show_error 'No name for an executable provided'
       return 1
     }
 
     command -v "${1}" &>/dev/null
-  } ; export -f is_in_path
+  }
+  export -f is_in_path
 
   # ### Is a Program Not in ${PATH}?
   #
@@ -728,7 +762,8 @@ function __libbash__load_module_utils() {
   # $1 :: executable to check
   function is_not_in_path() {
     ! is_in_path "${1}"
-  } ; export -f is_not_in_path
+  }
+  export -f is_not_in_path
 
   # ### Check Whether a Directory is Empty
   #
@@ -741,12 +776,13 @@ function __libbash__load_module_utils() {
   # $1 :: directory to check
   function dir_is_empty() {
     parameter_is_not_empty "${1}" || {
-      log 'error' 'No name for an executable provided'
+      __libbash__show_error 'No name for an executable provided'
       return 1
     }
 
     [[ -n $(find "${1}" -maxdepth 0 -empty) ]]
-  } ; export -f dir_is_empty
+  }
+  export -f dir_is_empty
 
   # ### Check Whether a Directory is Not Empty
   #
@@ -759,7 +795,8 @@ function __libbash__load_module_utils() {
   # $1 :: directory to check
   function dir_is_not_empty() {
     ! dir_is_empty "${1}"
-  } ; export -f dir_is_not_empty
+  }
+  export -f dir_is_not_empty
 
   # ### Checks Whether a Variable Evaluates to True
   #
@@ -773,27 +810,10 @@ function __libbash__load_module_utils() {
   function value_is_true() {
     declare -n __VAR=${1}
     [[ ${__VAR,,} =~ ^(true|y(es)?)$ ]]
-  } ; export -f value_is_true
+  }
+  export -f value_is_true
 }
 
-# Independently of whether we finished initialization successfully or not,
-# we want to clean up. This function performs exactly this functionality.
-function __libbash__post_init() {
-  unset __libbash__main
-  unset __libbash__post_init
+libbash__main "${@}"
 
-  if [[ -v __LIBBASH_SCRIPT_TMP ]]; then
-    SCRIPT=${__LIBBASH_SCRIPT_TMP}
-    unset __LIBBASH_SCRIPT_TMP
-  else
-    SCRIPT='prompt or outside of function'
-  fi
 }
-
-if __libbash__main "${@}"; then
-  __libbash__post_init
-else
-  __LIBBASH__RETURN_CODE_INIT=${?}
-  __libbash__post_init
-  ( exit "${__LIBBASH__RETURN_CODE_INIT}" ; )
-fi
