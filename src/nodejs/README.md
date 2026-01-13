@@ -21,7 +21,6 @@ Install NodeJS
 | proxy.http.http.address | A URI for an HTTP proxy | string | - |
 | proxy.http.https.address | A URI for an HTTPS proxy | string | - |
 | proxy.http.no-proxy.address | A list of URIs to not proxy | string | localhost,127.0.0.1 |
-| acquire_insecure | Whether to download NodeJS without checking certificates | boolean | false |
 
 
 
