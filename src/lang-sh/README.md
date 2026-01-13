@@ -1,7 +1,7 @@
 
 # Programming Language | Bash (lang-sh)
 
-Work efficiently and effortlessly with Bash
+Work efficiently and effortlessly with shell scripts
 
 ## Example Usage
 
@@ -11,11 +11,7 @@ Work efficiently and effortlessly with Bash
 }
 ```
 
-## Options
 
-| Options Id | Description | Type | Default Value |
-|-----|-----|-----|-----|
-| copy-libbash | whether to copy [`libbash`](https://github.com/georglauterbach/libbash) v9.0.0 to `/usr/local/lib/` | boolean | true |
 
 ## Customizations
 
