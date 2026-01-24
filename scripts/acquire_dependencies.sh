@@ -2,7 +2,7 @@
 
 set -e -u
 
-if [ ! -d .github ] || [ ! -d .devcontainer ] || [ ! -d .devcontainer/features ]; then
+if [ ! -d .github ] || [ ! -d src ] || [ ! -d test ]; then
   echo 'Execute this script from the repository root' >&2
   exit 1
 fi
