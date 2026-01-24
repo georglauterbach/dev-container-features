@@ -1,18 +1,27 @@
 
 # hermes (hermes)
 
-https://github.com/georglauterbach/hermes in a Development Container
+This Feature installs [_hermes_](https://github.com/georglauterbach/hermes].
 
 ## Example Usage
 
 ```json
 "features": {
-    "ghcr.io/georglauterbach/dev-container-features/hermes:11": {}
+    "ghcr.io/georglauterbach/dev-container-features/hermes:12": {}
 }
 ```
 
 
 
+## Enabling _hermes_ Inside Your Container
+
+Add
+
+```bash
+[[ -f ${HOME}/.config/bash/90-hermes.sh ]] && source "${HOME}/.config/bash/90-hermes.sh"
+```
+
+to your Bash setup (e.g., `${HOME}/.bashrc`) to enable _hermes_. This could be achived by adding a `postCreateCommand` to your Development Container definition.
 
 
 ---

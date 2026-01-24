@@ -1,7 +1,7 @@
 
 # Programming Language | Bash (lang-sh)
 
-Work efficiently and effortlessly with shell scripts
+This Feature allows you to work efficiently and effortlessly with shell (scripts).
 
 ## Example Usage
 
@@ -20,14 +20,6 @@ Work efficiently and effortlessly with shell scripts
 - `mads-hartmann.bash-ide-vscode`
 - `timonwong.shellcheck`
 
-## Notes
-
-### Extensions
-
-| Areas                 | Extension                                                                                                            |
-| :-------------------- | :------------------------------------------------------------------------------------------------------------------- |
-| Bash Language Server  | [`mads-hartmann.bash-ide-vscode`](https://marketplace.visualstudio.com/items?itemName=mads-hartmann.bash-ide-vscode) |
-| Shell Linter          | [`timonwong.shellcheck`](https://marketplace.visualstudio.com/items?itemName=timonwong.shellcheck)                   |
 
 
 ---
