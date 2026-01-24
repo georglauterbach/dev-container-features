@@ -1,7 +1,7 @@
 
 # Programming Language | Rust (lang-rust)
 
-Work efficiently and effortlessly with Rust
+This Feature allows you to work efficiently and effortlessly with Rust.
 
 ## Example Usage
 
@@ -23,18 +23,10 @@ Work efficiently and effortlessly with Rust
 ### VS Code Extensions
 
 - `rust-lang.rust-analyzer`
-- `tamasfe.even-better-toml`
+- `tombi-toml.tombi`
 - `vadimcn.vscode-lldb@1.12.1`
 
-## Notes
-
-### Extensions
-
-| Areas                 | Extension                                                                                                  |
-| :-------------------- | :--------------------------------------------------------------------------------------------------------- |
-| Rust Language Server  | [`rust-lang.rust-analyzer`](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)   |
-| TOML Language Support | [`tamasfe.even-better-toml`](https://marketplace.visualstudio.com/items?itemName=tamasfe.even-better-toml) |
-| Debugger              | [`vadimcn.vscode-lldb`](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb)           |
+## Extended Description
 
 ### Debugger
 

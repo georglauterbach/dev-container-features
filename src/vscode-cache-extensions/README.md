@@ -1,7 +1,7 @@
 
 # VS Code | Cache Extensions (vscode-cache-extensions)
 
-Prevent superfluous (re-)installations of VS Code extensions upon container restarts
+This Fearure prevents superfluous (re-)installations of VS Code extensions upon container restarts.
 
 ## Example Usage
 
