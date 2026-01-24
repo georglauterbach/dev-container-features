@@ -1,10 +1,9 @@
-// ref: https://github.com/devcontainers/spec/blob/main/schemas/devContainerFeature.schema.json
 {
   "id": "lang-rust",
-  "version": "0.1.8",
+  "version": "0.2.0",
   "name": "Programming Language | Rust",
   "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/rust",
-  "description": "Work efficiently and effortlessly with Rust",
+  "description": "This Feature allows you to work efficiently and effortlessly with Rust.",
   "options": {
     "generate-shell-completions": {
       "description": "Whether to generate shell completion for Rustup and Cargo",
@@ -37,11 +36,11 @@
   "customizations": {
     "vscode": {
       "extensions": [
-        // Rust's official LSP (https://rust-analyzer.github.io/)
+        // Rust's official language server (https://rust-analyzer.github.io/)
         "rust-lang.rust-analyzer",
-        // TOML language support
-        "tamasfe.even-better-toml",
-        // LLVM-based debugger (LLDB)
+        // TOML language server
+        "tombi-toml.tombi",
+        // LLVM-based debugger (= LLDB)
         "vadimcn.vscode-lldb@1.12.1"
       ],
       "settings": {
