@@ -19,7 +19,6 @@ permissions:
 jobs:
   deployment:
     name: Deployment
-    if: ${{ github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
 
     steps:
@@ -28,11 +27,8 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Acquire hermes
-        run: |
-          cd src/hermes
-          wget --quiet https://github.com/georglauterbach/hermes/releases/download/v11.2.3/hermes-v11.2.3-aarch64-unknown-linux-musl
-          wget --quiet https://github.com/georglauterbach/hermes/releases/download/v11.2.3/hermes-v11.2.3-x86_64-unknown-linux-musl
+      - name: Acquire Dependencies
+        run: sh ./scripts/acquire_dependencies.sh
 
       - name: Publish Features
         uses: devcontainers/action@v1

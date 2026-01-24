@@ -28,3 +28,6 @@ ignoreWords:
   - cooldown
   - devcontainers
   - libbash
+
+  # IDE extensions
+  - tombi
