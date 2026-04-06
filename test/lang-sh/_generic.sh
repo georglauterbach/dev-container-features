@@ -4,7 +4,7 @@ FAILED=false
 
 # shellcheck disable=SC2329
 assert_failure() {
-  printf '   ├ %-40s ' "${1:?Name of the test required}"
+  printf '   ├ %-45s ' "${1:?Name of the test required}"
   shift 1
   "${@}" >/dev/null && { printf '❌ \e[31mFAILED\e[0m\n' ; FAILED=true ; return 0 ; }
   printf '✅ \e[32mPASSED\e[0m\n'
@@ -12,7 +12,7 @@ assert_failure() {
 
 # shellcheck disable=SC2329
 assert_success() {
-  printf '   ├ %-40s ' "${1:?Name of the test required}"
+  printf '   ├ %-45s ' "${1:?Name of the test required}"
   shift 1
   "${@}" >/dev/null && { printf '✅ \e[32mPASSED\e[0m\n' ; return 0 ; }
   printf '❌ \e[31mFAILED\e[0m\n'

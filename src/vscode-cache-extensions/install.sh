@@ -19,7 +19,7 @@ fi
 # a UID mismatch; hence, we need `777` as the permissions.
 for LOOP_VAR in "stable," "insiders,-insiders"; do
   PERSISTENCE_DIR="${CACHE_MOUNT_POINT}/$(printf '%s' "${LOOP_VAR}" | cut -d , -f 1)"
-  TMP_STORAGE_DIR="${_REMOTE_USER_HOME}/.vscode-server$(printf '%s' "${LOOP_VAR}" | cut --delimiter=, --fields=2)"
+  TMP_STORAGE_DIR="${_REMOTE_USER_HOME}/.vscode-server$(printf '%s' "${LOOP_VAR}" | cut -d , -f 2)"
 
   # shellcheck disable=SC2174
   mkdir -m 777 -p "${PERSISTENCE_DIR}" "${TMP_STORAGE_DIR}"
