@@ -2,19 +2,19 @@
   "alpine_3-23": {
     "image": "docker.io/alpine:3.23",
     "features": {
-      "hermes": {}
+      "lang-rust": {}
     }
   },
   "ubuntu_24-04": {
     "image": "docker.io/ubuntu:24.04",
     "features": {
-      "hermes": {}
+      "lang-rust": {}
     }
   },
   "ubuntu_26-04": {
     "image": "docker.io/ubuntu:26.04",
     "features": {
-      "hermes": {}
+      "lang-rust": {}
     }
   }
 }
