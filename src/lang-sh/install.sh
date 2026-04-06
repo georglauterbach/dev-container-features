@@ -2,12 +2,12 @@
 
 set -e -u
 
-FEATURE_SHARED_DIR=/usr/local/share/dev_containers/features/ghcr_io/georglauterbach/lang_sh
-readonly FEATURE_SHARED_DIR
+DCF_LANG_SH_DIR=/usr/local/share/dev_containers/features/ghcr.io/georglauterbach/lang_sh
+readonly DCF_LANG_SH_DIR
 
-mkdir -p           "${FEATURE_SHARED_DIR}"
-cp shellcheck.conf "${FEATURE_SHARED_DIR}"
-cp libbash         "${FEATURE_SHARED_DIR}"
+mkdir -p           "${DCF_LANG_SH_DIR}"
+cp shellcheck.conf "${DCF_LANG_SH_DIR}"
+cp libbash         "${DCF_LANG_SH_DIR}"
 
-mkdir -p      /usr/local/bin/
-cp shellcheck /usr/local/bin/
+mkdir -p           /usr/local/bin/
+cp shellcheck      /usr/local/bin/

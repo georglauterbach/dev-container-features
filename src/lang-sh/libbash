@@ -1,12 +1,22 @@
 #! /usr/bin/env bash
 
-# libbash 10.0.0 - a collection of useful functions for your Bash scripts
+# libbash 12.0.0 - a collection of useful functions for your Bash scripts
 #
 # Copyright (C) Georg Lauterbach
 # GitHub: https://github.com/georglauterbach/libbash
 #
-# Underscored functions are not unset when libbash has been loaded
-# successfully. They are required by other functions in libbash.
+# ---
+#
+# `libbash` loads functions from modules with the following naming convention:
+# A function from the `utils` modules called `exit_checked` is loaded as
+# `libbash::utils::exit_checked`. Certain modules (especially `errors`) export
+# functions like `libbash::errors::__apply_shell_expansion__`. Functions whose
+# names begin and end with `__` are not supposed to be used nor altered by you.
+# They are used internally by `libbash`. You can get a list of all functions
+# loaded by `libbash` by running `declare -F | grep libbash`.
+#
+# `libbash` also loads environment variables. You can get a list of all
+# environment variables loaded by `libbash` by running `env | grep -i ^LIBBASH__`.
 
 # cSpell: ignore Georg Lauterbach
 
@@ -20,10 +30,10 @@
 #
 # This function calls the initialization routines for `libbash`
 # in proper order.
-function libbash__main() {
+function libbash::__main__() {
   if [[ ${BASH_VERSINFO[0]} -lt 5 ]]; then
-    __libbash__show_error "libbash only supports Bash version >= 5.0.0"
-    libbash__finish --clean
+    libbash::debug::show_error "libbash only supports Bash version >= 5.0.0"
+    libbash::__finish_loading__ --clean
     return 1
   fi
 
@@ -35,7 +45,7 @@ function libbash__main() {
   LIBBASH__DIRECTORY=$(realpath -eL "$(dirname "${BASH_SOURCE[0]}")")
   LIBBASH__EXIT_IN_INTERACTIVE_MODE=${LIBBASH__EXIT_IN_INTERACTIVE_MODE:-false}
   LIBBASH__LOADED_MODULES=()
-  LIBBASH__VERSION=10.0.0
+  LIBBASH__VERSION=11.0.0
 
   # ! export all variables here first, even if not
   # ! all modules are sourced to satisfy shellcheck
@@ -48,29 +58,29 @@ function libbash__main() {
 
   if [[ ${1:-} =~ ^(--)?version$ ]]; then
     echo "libbash ${LIBBASH__VERSION}"
-    libbash__finish --clean
+    libbash::__finish_loading__ --clean
     return 0
   fi
 
   local MODULE MODULE_LOAD_FUNCTION
   for MODULE in "${@}"; do
-    MODULE_LOAD_FUNCTION="libbash__load_module_${MODULE}"
+    MODULE_LOAD_FUNCTION=libbash::__load_module__::${MODULE}
 
     if [[ ${LIBBASH__LOADED_MODULES[*]} =~ ${MODULE} ]]; then
-      __libbash__show_error "module '${MODULE}' loaded more than once"
-      libbash__finish --clean
+      libbash::debug::show_error "module '${MODULE}' loaded more than once"
+      libbash::__finish_loading__ --clean
       return 2
     fi
 
     if [[ $(type -t "${MODULE_LOAD_FUNCTION}") != 'function' ]]; then
-      __libbash__show_error "module '${MODULE}' does not exist"
-      libbash__finish --clean
+      libbash::debug::show_error "module '${MODULE}' does not exist"
+      libbash::__finish_loading__ --clean
       return 3
     fi
 
     if ! "${MODULE_LOAD_FUNCTION}"; then
-      __libbash__show_error "module '${MODULE}' failed to load"
-      libbash__finish --clean
+      libbash::debug::show_error "module '${MODULE}' failed to load"
+      libbash::__finish_loading__ --clean
       return 4
     fi
 
@@ -78,24 +88,24 @@ function libbash__main() {
     LIBBASH__LOADED_MODULES+=("${MODULE}")
   done
 
-  [[ ${LIBBASH__LOADED_MODULES[*]} == *log* ]] || function log() { : ; }
-  export -f log
+  [[ ${LIBBASH__LOADED_MODULES[*]} == *log* ]] || function libbash::log::log() { : ; }
+  export -f libbash::log::log
 
   LIBBASH__IS_LOADED=true
-  libbash__finish 0
-  log 'trace' "Finished 'libbash ${LIBBASH__VERSION}' initialization"
+  libbash::__finish_loading__ 0
+  libbash::log::log 'trace' "Finished 'libbash ${LIBBASH__VERSION}' initialization"
 }
 
 # ### Cleanup
 #
-# When `libbash__main` has finished (successfully or unsuccessfully),
+# When `libbash::__main__` has finished (successfully or unsuccessfully),
 # we need to clean up left-over environment variables and functions.
 #
 # #### Arguments
 #
 # $1 :: Either '--clean' or the exit code (optional, default=1)
 # $2 :: If '--clean' is in $1, the exit code (optional)
-function libbash__finish() {
+function libbash::__finish_loading__() {
   if [[ -v __LIBBASH_SCRIPT_TMP ]]; then
     SCRIPT=${__LIBBASH_SCRIPT_TMP}
     unset __LIBBASH_SCRIPT_TMP
@@ -109,17 +119,18 @@ function libbash__finish() {
     unset LIBBASH__DIRECTORY
     unset LIBBASH__EXIT_IN_INTERACTIVE_MODE
     unset LIBBASH__LOADED_MODULES
+    unset LIBBASH__LOG__IS_LOADED
     unset LIBBASH__VERSION
 
-    unset -f libbash__debug
-    unset -f libbash__show_call_stack
+    unset -f libbash::debug
+    unset -f libbash::debug::show_call_stack
 
-    unset -f __libbash__show_error
-    unset -f __libbash__exit_checked
+    unset -f libbash::debug::show_error
+    unset -f libbash::utils::exit_checked
   fi
 
-  unset -f libbash__main
-  unset -f libbash__finish
+  unset -f libbash::__main__
+  unset -f libbash::__finish_loading__
 
   if [[ ${1:-1} -gt 0 ]]; then
     LIBBASH__IS_LOADED=false
@@ -131,18 +142,18 @@ function libbash__finish() {
 # ### Provide Debug Information
 #
 # Shows some debug information that `libbash` has collected.
-function libbash__debug() {
-  if ! ${__LIBBASH__LOG_IS_LOADED:-false}; then
-    __libbash__show_error "Debug functionality requires the log module to be loaded and 'LOG_LEVEL' set to 'debug' or 'trace'"
+function libbash::debug::print_libbash_debug_information() {
+  if ! ${LIBBASH__LOG__IS_LOADED:-false}; then
+    libbash::debug::show_error "Debug functionality requires the log module to be loaded and 'LOG_LEVEL' set to 'debug' or 'trace'"
     return 1
   fi
 
-  log 'debug' "Showing 'libbash' debug information"
-  log 'debug' "  -> version: ${LIBBASH__VERSION}"
-  log 'debug' "  -> loaded modules: ${LIBBASH__LOADED_MODULES[*]}"
-  log 'debug' "  -> exit in interactive mode: ${LIBBASH__EXIT_IN_INTERACTIVE_MODE}"
+  libbash::log::log 'debug' "Showing 'libbash' debug information"
+  libbash::log::log 'debug' "  -> version: ${LIBBASH__VERSION}"
+  libbash::log::log 'debug' "  -> loaded modules: ${LIBBASH__LOADED_MODULES[*]}"
+  libbash::log::log 'debug' "  -> exit in interactive mode: ${LIBBASH__EXIT_IN_INTERACTIVE_MODE}"
 }
-export -f libbash__debug
+export -f libbash::debug::print_libbash_debug_information
 
 # ### Provides Call Stack Information
 #
@@ -152,7 +163,7 @@ export -f libbash__debug
 # This function will only print a call stack if the stack is
 # deeper than 2, because otherwise the error did not originate
 # in a function but at global scope.
-function libbash__show_call_stack() {
+function libbash::debug::show_call_stack() {
   local STACK_DEPTH CUTOFF=${1:-1}
   [[ ${#FUNCNAME[@]} -gt ${CUTOFF} ]] || return 0
 
@@ -165,71 +176,43 @@ function libbash__show_call_stack() {
 
   printf '\n' >&2
 }
-export -f libbash__show_call_stack
+export -f libbash::debug::show_call_stack
 
 # ### Show an Error
 #
 # Indicates an error has happened in `libbash`. Used to display
 # errors even when the log module is not (or has not yet been)
 # loaded.
-function __libbash__show_error() {
+function libbash::debug::show_error() {
   printf "%s \e[91mERROR\e[0m %s: %s\n" \
     "$(date +"%Y-%m-%dT%H:%M:%S.%6N%:z" || :)" "${SCRIPT:-$(basename "${0}")}" "${*}" >&2
 }
-export -f __libbash__show_error
-
-# ### Exit With Conditions
-#
-# This function will exit when not running interactively or when
-# 'LIBBASH__EXIT_IN_INTERACTIVE_MODE' is set to 'true'.
-#
-# #### Arguments
-#
-# $1 :: the return code (optional, default=1)
-function __libbash__exit_checked() {
-  local CODE=${1:-1}
-  local METHOD='return'
-
-  if [[ ${-} != *i* ]] || ${LIBBASH__EXIT_IN_INTERACTIVE_MODE:-false}; then
-    METHOD='exit'
-  fi
-
-  if [[ ${CODE} =~ ^[0-9]$ ]]; then
-    "${METHOD}" "${CODE}"
-  else
-    __libbash__show_error "Supplied non-number code ('${CODE}') to __libbash__exit_checked"
-    "${METHOD}" 1
-  fi
-}
-export -f __libbash__exit_checked
-
-# Load the 'cri' module
-function libbash__load_module_cri() {
-  # ### Checks Whether Docker or Podman is Installed
-  #
-  # Checks whether `docker` or `podman` is in `${PATH}` and
-  # sets the `CRI` variable accordingly. Docker is chosen
-  # first if both Docker and Podman are installed.
-  function setup_container_runtime() {
-    command -v 'docker' &>/dev/null && export CRI='docker' && return 0
-    command -v 'podman' &>/dev/null && export CRI='podman' && return 0
-
-    __libbash__show_error "Could not identify Container Runtime. Is 'docker' or 'podman' in \${PATH}?"
-    return 1
-  }
-  export -f setup_container_runtime
-}
+export -f libbash::debug::show_error
 
 # Load the 'log' module
-function libbash__load_module_log() {
-  export LIBBASH__LOG_COLOR_RESET='\e[0m'
-  export LIBBASH__LOG_COLOR_TRACE='\e[92m'
-  export LIBBASH__LOG_COLOR_DEBUG='\e[36m'
-  export LIBBASH__LOG_COLOR_INFO='\e[34m'
-  export LIBBASH__LOG_COLOR_WARN='\e[93m'
-  export LIBBASH__LOG_COLOR_ERROR='\e[91m'
+function libbash::__load_module__::log() {
+  export LIBBASH__LOG__COLOR_RESET='\e[0m'
+  export LIBBASH__LOG__COLOR_TRACE='\e[92m'
+  export LIBBASH__LOG__COLOR_DEBUG='\e[36m'
+  export LIBBASH__LOG__COLOR_INFO='\e[34m'
+  export LIBBASH__LOG__COLOR_WARN='\e[93m'
+  export LIBBASH__LOG__COLOR_ERROR='\e[91m'
 
-  export __LIBBASH__LOG_IS_LOADED=true
+  export LIBBASH__LOG__IS_LOADED=true
+
+  # ### The Actual Logger
+  #
+  # This function is used by `log` to print the messages.
+  function libbash::log::__log_generic__() {
+    local LEVEL=${1:?libbash bug: log level message format must be provided to libbash::log::__log_generic__}
+    local COLOR="LIBBASH__LOG__COLOR_${LEVEL^^}"
+    shift 1
+
+    # shellcheck disable=SC2059
+    printf "%s ${!COLOR}%-5s${LIBBASH__LOG__COLOR_RESET} %s: %s\n" \
+      "$(date +"%Y-%m-%dT%H:%M:%S.%6N%:z" || :)" "${LEVEL^^}" "${SCRIPT:-$(basename "${0}")}" "${*}"
+  }
+  export -f libbash::log::__log_generic__
 
   # ### The Logging Functions
   #
@@ -237,89 +220,77 @@ function libbash__load_module_log() {
   # expect from a log function: you provide the log level as the
   # first argument and the message in the consecutive ones. The
   # default log level is 'info'. The global log level is defined
-  # in the
+  # in the `LOG_LEVEL` variables. The global variable `SCRIPT`
+  # defines a prefix of the message that is being logged.
   #
   # #### Log Level
   #
   # The provided log level, as well as the environment variable
-  # `LOG_LEVEL`, Can be one of
+  # `LOG_LEVEL`, can be one of
   #
-  #   meaning - what to log
-  #   -------------------------------------------------
-  #   trace   - log trace information
-  #   debug   - log debug information
-  #   info    - log informational output
-  #   warn    - log warnings
-  #   error   - log critical errors and aborts
+  # - trace (log all messages)
+  # - debug
+  # - info
+  # - warn
+  # - error
+  # - off (log no messages)
   #
-  # where a higher level includes the level below. The
-  # default log level is 'info' (2).
+  # The default log level is 'info'.
   #
   # #### Return Codes
   #
-  # This function is infallible. Hence, it always returns with
-  # return code 0, even when issues appeared.
+  # This function is infallible.
   #
   # #### Arguments
   #
-  # $1 :: log level
-  # $2 :: message (strictly speaking optional, no default / empty string)
-  function log() {
-    function __log_generic() {
-      local LEVEL=${1:?libbash bug: log level message format must be provided to __log_generic}
-      local COLOR="LIBBASH__LOG_COLOR_${LEVEL^^}"
-      shift 1
-
-      # shellcheck disable=SC2059
-      printf "%s ${!COLOR}%-5s${LIBBASH__LOG_COLOR_RESET} %s: %s\n" \
-        "$(date +"%Y-%m-%dT%H:%M:%S.%6N%:z" || :)" "${LEVEL^^}" "${SCRIPT:-$(basename "${0}")}" "${*}"
-    }
+  # $1     :: log level
+  # ${@:1} :: message
+  function libbash::log::log() {
+    [[ ${LOG_LEVEL:-} == off ]] && return 0
 
     if [[ -z ${1+set} ]]; then
-      log 'warn' "'log' called without log level"
+      libbash::log::log 'warn' "'log' called without log level"
       return 0
     elif [[ ! ${1} =~ ^(error|warn|info|debug|trace)$ ]]; then
-      log 'warn' "'log' called with unknown log level (use 'error', 'warn', 'info', 'debug', or 'trace')"
+      libbash::log::log 'warn' "'log' called with unknown log level (use 'error', 'warn', 'info', 'debug', or 'trace')"
       return 0
     elif [[ -z ${2+set} ]]; then
-      log 'warn' "'log' called without message"
+      libbash::log::log 'warn' "'log' called without message"
       return 0
     fi
 
-    local MESSAGE_LOG_LEVEL="${1}"
+    local MESSAGE_LOG_LEVEL=${1}
     shift 1
 
-    # ! scoping of dictionaries beyond `source` / in the global namespace is
-    # ! even more horrendous that normal scoping in Bash - hence, we avoid it
-    declare -A LOG_LEVEL_MAPPING=( ["error"]="0" ["warn"]="1" ["info"]="2" ["debug"]="3" ["trace"]="4" )
-
+    # Scoping of dictionaries beyond `source` / in the global namespace is
+    # even more horrendous that normal scoping in Bash - hence, we avoid it
+    # and put the dictionary here.
+    declare -A LOG_LEVEL_MAPPING=([off]=0 [error]=1 [warn]=2 [info]=3 [debug]=4 [trace]=5 )
     if [[ -z ${LOG_LEVEL_MAPPING[${LOG_LEVEL:=info}]:-} ]]; then
       local OLD_LOG_LEVEL=${LOG_LEVEL}
       export LOG_LEVEL='debug'
-      log 'warn' "Log level '${OLD_LOG_LEVEL}' unknown - resetting to log level '${LOG_LEVEL}'"
+      libbash::log::log 'warn' "Log level '${OLD_LOG_LEVEL}' unknown - resetting to log level '${LOG_LEVEL}'"
     fi
 
     [[ ${LOG_LEVEL_MAPPING[${LOG_LEVEL}]} -lt ${LOG_LEVEL_MAPPING[${MESSAGE_LOG_LEVEL}]} ]] && return 0
 
     if [[ ${LOG_LEVEL_MAPPING[${MESSAGE_LOG_LEVEL}]} -lt 2 ]]; then
-      __log_generic "${MESSAGE_LOG_LEVEL}" "${*}" >&2
+      libbash::log::__log_generic__ "${MESSAGE_LOG_LEVEL}" "${*}" >&2
     else
-      __log_generic "${MESSAGE_LOG_LEVEL}" "${*}"
+      libbash::log::__log_generic__ "${MESSAGE_LOG_LEVEL}" "${*}"
     fi
-
-    return 0
   }
 }
 
 # Load the 'errors' module
-function libbash__load_module_errors() {
+function libbash::__load_module__::errors() {
   # cSpell: ignore gsub
 
-  # Call `log_unexpected_error` with additional information
+  # Call `libbash::errors::__log_unexpected_error__` with additional information
   # when the ERR trap is triggered.
   set -E -o pipefail
   shopt -s inherit_errexit
-  trap 'log_unexpected_error "${FUNCNAME[0]:-}" "${BASH_COMMAND:-}" "${LINENO:-}" "${?:-}"' ERR
+  trap 'libbash::errors::__log_unexpected_error__ "${FUNCNAME[0]:-}" "${BASH_COMMAND:-}" "${LINENO:-}" "${?:-}"' ERR
 
   # ### Remove Newlines from a String
   #
@@ -328,17 +299,17 @@ function libbash__load_module_errors() {
   #
   # #### Arguments
   #
-  # $1 :: The string to escape (optional, default=unknown)
+  # $1 :: The string to libbash::utils::escape (optional, default=unknown)
   #
   # #### Return Codes
   #
   # This function is infallible. Hence, it always returns with
   # return code 0.
-  function remove_newlines() {
+  function libbash::errors::__remove_newlines__() {
     local STRING=${1:-unknown}
     echo "${STRING//$'\n'/ }"
   }
-  export -f remove_newlines
+  export -f libbash::errors::__remove_newlines__
 
   # ### Expand a String
   #
@@ -350,9 +321,9 @@ function libbash__load_module_errors() {
   #
   # #### Attention
   #
-  # This function uses `eval` to escape the string in the end.
+  # This function uses `eval` to libbash::utils::escape the string in the end.
   # While considerable effort has been put into proper escaping,
-  # no one can guarantee that all pitfalls and escape hatches
+  # no one can guarantee that all pitfalls and libbash::utils::escape hatches
   # have been eliminated that could lead to arbitrary code execution
   # with the `eval` at the end.
   #
@@ -363,22 +334,22 @@ function libbash__load_module_errors() {
   #
   # StackOverflow
   #   - https://stackoverflow.com/a/20316582
-  function apply_shell_expansion() {
-    local DELIMITER="__apply_shell_expansion_delimiter__"
+  function libbash::errors::__apply_shell_expansion__() {
+    local DELIMITER="__libbash::errors::__apply_shell_expansion___delimiter__"
     local STRING_TO_ESCAPE=${1:-unknown}
-    STRING_TO_ESCAPE=$(remove_newlines "${STRING_TO_ESCAPE}")
+    STRING_TO_ESCAPE=$(libbash::errors::__remove_newlines__ "${STRING_TO_ESCAPE}")
     STRING_TO_ESCAPE=${STRING_TO_ESCAPE//\$\(/\\$\(}
 
     eval "cat <<${DELIMITER}"$'\n'"${STRING_TO_ESCAPE}"$'\n'"${DELIMITER}"
   }
-  export -f apply_shell_expansion
+  export -f libbash::errors::__apply_shell_expansion__
 
   # ### Log the Error Event
   #
   # This function is called when an unhandled error signal is thrown.
   # It prints information about the error (where it originated, etc.)
-  # and also calls `libbash__show_call_stack` to possibly print a
-  # call stack if `libbash__show_call_stack` deems it useful.
+  # and also calls `libbash::debug::show_call_stack` to possibly print a
+  # call stack if `libbash::debug::show_call_stack` deems it useful.
   #
   # #### Explanations
   #
@@ -397,7 +368,7 @@ function libbash__load_module_errors() {
   # process, but they should only be used by `libbash` modules, not
   # by applications / other libraries using `libbash`.
   #
-  # Please also not the "Attention" section of `apply_shell_expansion`.
+  # Please also not the "Attention" section of `libbash::errors::__apply_shell_expansion__`.
   #
   # #### Arguments
   #
@@ -405,27 +376,53 @@ function libbash__load_module_errors() {
   # $2 :: The command that caused the error
   # $3 :: The line number in which $2 was executed
   # $4 :: The return code of $2
-  function log_unexpected_error() {
+  function libbash::errors::__log_unexpected_error__() {
     # shellcheck disable=SC2155
     local MESSAGE="unexpected error occurred:
     script:     ${SCRIPT:-"${0}"}
     function:   ${1:-prompt or outside of function}
     command:
-      plain:    $(remove_newlines "${2:-unknown}")
-      expanded: $(apply_shell_expansion "${2:-unknown}")
+      plain:    $(libbash::errors::__remove_newlines__ "${2:-unknown}")
+      expanded: $(libbash::errors::__apply_shell_expansion__ "${2:-unknown}")
     line:       ${3:-unknown}
     exit code:  ${4:-unknown}"
 
-    __libbash__show_error "${MESSAGE}"
-    libbash__show_call_stack 2
+    libbash::debug::show_error "${MESSAGE}"
+    libbash::debug::show_call_stack 2
     return 0
   }
-  export -f log_unexpected_error
+  export -f libbash::errors::__log_unexpected_error__
 }
 
 # Load the 'utils' module
-function libbash__load_module_utils() {
+function libbash::__load_module__::utils() {
   # cSpell: ignore mawk
+
+  # ### Exit With Conditions
+  #
+  # This function will call `exit` when not running interactively
+  # or when 'LIBBASH__EXIT_IN_INTERACTIVE_MODE' is set to 'true'.
+  # Otherwise, it calls `return`.
+  #
+  # #### Arguments
+  #
+  # $1 :: the return code (optional, default=1)
+  function libbash::utils::exit_checked() {
+    local CODE=${1:-1}
+    local METHOD='return'
+
+    if [[ ${-} != *i* ]] || ${LIBBASH__EXIT_IN_INTERACTIVE_MODE:-false}; then
+      METHOD='exit'
+    fi
+
+    if [[ ${CODE} =~ ^[0-9]$ ]]; then
+      "${METHOD}" "${CODE}"
+    else
+      libbash::debug::show_error "Supplied non-number code ('${CODE}') to libbash::utils::exit_checked"
+      "${METHOD}" 1
+    fi
+  }
+  export -f libbash::utils::exit_checked
 
   # ### Split a String with a Delimiter Into an Array
   #
@@ -447,7 +444,7 @@ function libbash__load_module_utils() {
   #
   # Backslash (`\`) does not work as a delimiter because the escaping logic
   # is simple and just removes backslashes.
-  function split_into_array() {
+  function libbash::utils::split_into_array() {
     local ARRAY_NAME=${1:?array name is required}
     local STRING_TO_SPLIT=${2:?string to split is required}
     local DELIMITER=${3:-':'}
@@ -459,7 +456,7 @@ function libbash__load_module_utils() {
     readarray -t -d '' "${ARRAY_NAME}" \
       < <(printf '%s' "${STRING_TO_SPLIT}" | sed "s|${DELIMITER}|\x0|g")
   }
-  export -f split_into_array
+  export -f libbash::utils::split_into_array
 
   # ### Check If a Line Is a Comment or Blank
   #
@@ -470,50 +467,50 @@ function libbash__load_module_utils() {
   #
   # $1 :: line to be checked
   # $2 :: comment symbol (optional, default=#)
-  function line_is_comment_or_blank() {
+  function libbash::utils::line_is_comment_or_blank() {
     local COMMENT_SYMBOL
     COMMENT_SYMBOL=${2:-#}
     grep -qE "^\s*$|^\s*${COMMENT_SYMBOL}" <<< "${1:-}"
   }
-  export -f line_is_comment_or_blank
+  export -f libbash::utils::line_is_comment_or_blank
 
   # ### Escape All But Backslashes
   #
-  # Takes a string and an escape character and
+  # Takes a string and an libbash::utils::escape character and
   # puts backslashes in front. Does not accept
-  # backslashes as escape character. The escape
+  # backslashes as libbash::utils::escape character. The libbash::utils::escape
   # character must be a single character.
   #
   # #### Arguments
   #
-  # $1 :: string to be escaped
-  # $2 :: character that must be escaped
-  function escape() {
+  # $1 :: string to be libbash::utils::escaped
+  # $2 :: character that must be libbash::utils::escaped
+  function libbash::utils::escape() {
     [[ ${2} =~ .*\\.* ]] && {
-      __libbash__show_error \
+      libbash::debug::show_error \
         "Escape character is not allowed to be or contain a backslash"\
-        "(use 'escape_backslash')"
+        "(use 'libbash::utils::escape_backslash')"
       return 1
     }
 
-    parameter_is_not_empty "${1}" || {
-      __libbash__show_error 'No string to be escaped provided'
+    libbash::utils::parameter_is_not_empty "${1}" || {
+      libbash::debug::show_error 'No string to be libbash::utils::escaped provided'
       return 1
     }
 
-    parameter_is_not_empty "${2}" || {
-      __libbash__show_error 'No escape character(s) provided'
+    libbash::utils::parameter_is_not_empty "${2}" || {
+      libbash::debug::show_error 'No libbash::utils::escape character(s) provided'
       return 1
     }
 
     [[ ${#2} -ge 2 ]] && {
-      __libbash__show_error 'More than two parameters provided'
+      libbash::debug::show_error 'More than two parameters provided'
       return 1
     }
 
     printf '%s' "${1//${2}/\\${2}}"
   }
-  export -f escape
+  export -f libbash::utils::escape
 
   # ### Escape Backslashes Only
   #
@@ -522,18 +519,18 @@ function libbash__load_module_utils() {
   #
   # #### Arguments
   #
-  # $1 :: string to be escaped
-  function escape_backslash() {
+  # $1 :: string to be libbash::utils::escaped
+  function libbash::utils::escape_backslash() {
     # shellcheck disable=SC1003
     printf '%s' "${1//'\'/'\\'}"
   }
-  export -f escape_backslash
+  export -f libbash::utils::escape_backslash
 
   # ### Exit Without Error
   #
   # Just a wrapper around `exit 0`.
-  function exit_success() { exit 0 ; }
-  export -f exit_success
+  function libbash::utils::exit_success() { exit 0 ; }
+  export -f libbash::utils::exit_success
 
   # ### Exit With Error
   #
@@ -544,26 +541,26 @@ function libbash__load_module_utils() {
   #
   # $1 :: exit code (optional, default=1)
   # $2 :: message (optional, default='' (no output is printed))
-  function exit_failure() {
+  function libbash::utils::exit_failure() {
     local CODE=${1:-1}
     shift 1
 
     if [[ ! ${CODE} =~ ^[0-9]+$ ]]; then
-      __libbash__show_error "'exit_failure' was called with non-number exit code"
-      libbash__show_call_stack
+      libbash::debug::show_error "'libbash::utils::exit_failure' was called with non-number exit code"
+      libbash::debug::show_call_stack
       exit 1
     fi
 
     if [[ ${CODE} -eq 0 ]] || [[ ${CODE} -ge 127 ]]; then
-      __libbash__show_error "'exit_failure' was called with exit code 0 or >127"
-      libbash__show_call_stack
+      libbash::debug::show_error "'libbash::utils::exit_failure' was called with exit code 0 or >127"
+      libbash::debug::show_call_stack
       exit 1
     fi
 
-    parameter_is_not_empty "${1:-}" && __libbash__show_error "${1}"
+    libbash::utils::parameter_is_not_empty "${1:-}" && libbash::debug::show_error "${1}"
     exit "${CODE}"
   }
-  export -f exit_failure
+  export -f libbash::utils::exit_failure
 
   # ### Exit Without Error
   #
@@ -571,8 +568,8 @@ function libbash__load_module_utils() {
   # used at the very end of a function is it relies on Bash
   # settings the return code of the last command as the exit
   # code of the function.
-  function return_success() { return 0 ; }
-  export -f return_success
+  function libbash::utils::return_success() { return 0 ; }
+  export -f libbash::utils::return_success
 
   # ### Exit With Error
   #
@@ -584,23 +581,23 @@ function libbash__load_module_utils() {
   # #### Arguments
   #
   # $1 :: message (optional, default='')
-  function return_failure() {
+  function libbash::utils::return_failure() {
     if [[ ! ${1:-1} =~ ^[0-9]+$ ]]; then
-      __libbash__show_error "'return_failure' was called with non-number exit code"
-      libbash__show_call_stack
+      libbash::debug::show_error "'libbash::utils::return_failure' was called with non-number exit code"
+      libbash::debug::show_call_stack
       exit 1
     fi
 
     if [[ ${1:-1} -eq 0 ]] || [[ ${1:-1} -ge 128 ]]; then
-      __libbash__show_error "'return_failure' was called with exit code 0 or >127"
-      libbash__show_call_stack
+      libbash::debug::show_error "'libbash::utils::return_failure' was called with exit code 0 or >127"
+      libbash::debug::show_call_stack
       exit 1
     fi
 
-    parameter_is_not_empty "${*}" && __libbash__show_error "${*}"
+    libbash::utils::parameter_is_not_empty "${*}" && libbash::debug::show_error "${*}"
     return "${1:-1}"
   }
-  export -f  return_failure
+  export -f  libbash::utils::return_failure
 
   # ### Exit with Error and Show the Callstack
   #
@@ -610,13 +607,13 @@ function libbash__load_module_utils() {
   #
   # #### Arguments
   #
-  # Same as `exit_failure`.
-  function exit_failure_show_callstack() {
-    parameter_is_not_empty "${2:-}" && __libbash__show_error "${2}"
-    libbash__show_call_stack
-    exit_failure "${1:-}"
+  # Same as `libbash::utils::exit_failure`.
+  function libbash::utils::exit_failure_show_callstack() {
+    libbash::utils::parameter_is_not_empty "${2:-}" && libbash::debug::show_error "${2}"
+    libbash::debug::show_call_stack
+    libbash::utils::exit_failure "${1:-}"
   }
-  export -f exit_failure_show_callstack
+  export -f libbash::utils::exit_failure_show_callstack
 
   # ### Check if Variable is Set
   #
@@ -625,10 +622,10 @@ function libbash__load_module_utils() {
   # #### Arguments
   #
   # $1 :: the variable's name
-  function var_is_set() {
+  function libbash::utils::var_is_set() {
     [[ -v ${1:-__UNSET__} ]]
   }
-  export -f var_is_set
+  export -f libbash::utils::var_is_set
 
   # ### Check if Variable is Set and Not Empty
   #
@@ -638,10 +635,10 @@ function libbash__load_module_utils() {
   # #### Arguments
   #
   # $1 :: the variable's name
-  function var_is_set_and_not_empty() {
-    var_is_set "${1}" && [[ -n ${!1:-} ]]
+  function libbash::utils::var_is_set_and_not_empty() {
+    libbash::utils::var_is_set "${1}" && [[ -n ${!1:-} ]]
   }
-  export -f var_is_set_and_not_empty
+  export -f libbash::utils::var_is_set_and_not_empty
 
   # ### Tell Whether a Parameter to a Function is Set and Not Empty
   #
@@ -656,14 +653,14 @@ function libbash__load_module_utils() {
   #
   # ```bash
   # function my_echo() {
-  #   parameter_is_not_empty "${1}"
+  #   libbash::utils::parameter_is_not_empty "${1}"
   #   echo "${1}"
   # }
   # ```
-  function parameter_is_not_empty() {
+  function libbash::utils::parameter_is_not_empty() {
     [[ -n ${1:-} ]]
   }
-  export -f parameter_is_not_empty
+  export -f libbash::utils::parameter_is_not_empty
 
   # ### Ask a Question
   #
@@ -674,14 +671,14 @@ function libbash__load_module_utils() {
   #
   # $1 :: question
   # $2 :: variable name to store the result in
-  function ask_question() {
-    parameter_is_not_empty "${1}" || {
-      __libbash__show_error 'No question provided'
+  function libbash::utils::ask_question() {
+    libbash::utils::parameter_is_not_empty "${1}" || {
+      libbash::debug::show_error 'No question provided'
       return 1
     }
 
-    parameter_is_not_empty "${2}" || {
-      __libbash__show_error 'No variable to store result in provided'
+    libbash::utils::parameter_is_not_empty "${2}" || {
+      libbash::debug::show_error 'No variable to store result in provided'
       return 1
     }
 
@@ -691,7 +688,7 @@ function libbash__load_module_utils() {
     # shellcheck disable=SC2034
     read -r -p "${QUESTION} " VARIABLE_TO_STORE_ANSWER_IN
   }
-  export -f ask_question
+  export -f libbash::utils::ask_question
 
   # ### Ask a Question - Special Case
   #
@@ -704,9 +701,9 @@ function libbash__load_module_utils() {
   #
   # $1 :: question
   # $2 :: default (optional, default=no)
-  function ask_yes_no_question() {
-    parameter_is_not_empty "${1}" || {
-      __libbash__show_error 'No question provided'
+  function libbash::utils::ask_yes_no_question() {
+    libbash::utils::parameter_is_not_empty "${1}" || {
+      libbash::debug::show_error 'No question provided'
       return 1
     }
 
@@ -720,7 +717,7 @@ function libbash__load_module_utils() {
       DEFAULT_STRING=' [y/N]'
     fi
 
-    ask_question "${1}${DEFAULT_STRING}" ANSWER
+    libbash::utils::ask_question "${1}${DEFAULT_STRING}" ANSWER
 
     if [[ ${DEFAULT} =~ ${YES_REGEXP} ]] && [[ -z ${ANSWER} ]]; then
       return 0
@@ -730,7 +727,7 @@ function libbash__load_module_utils() {
 
     [[ ${ANSWER,,} =~ ${YES_REGEXP} ]]
   }
-  export -f ask_yes_no_question
+  export -f libbash::utils::ask_yes_no_question
 
   # ### Is a Program in ${PATH}?
   #
@@ -741,15 +738,15 @@ function libbash__load_module_utils() {
   # #### Arguments
   #
   # $1 :: executable to check
-  function is_in_path() {
-    parameter_is_not_empty "${1}" || {
-      __libbash__show_error 'No name for an executable provided'
+  function libbash::utils::is_in_path() {
+    libbash::utils::parameter_is_not_empty "${1}" || {
+      libbash::debug::show_error 'No name for an executable provided'
       return 1
     }
 
     command -v "${1}" &>/dev/null
   }
-  export -f is_in_path
+  export -f libbash::utils::is_in_path
 
   # ### Is a Program Not in ${PATH}?
   #
@@ -760,10 +757,10 @@ function libbash__load_module_utils() {
   # #### Arguments
   #
   # $1 :: executable to check
-  function is_not_in_path() {
-    ! is_in_path "${1}"
+  function libbash::utils::is_not_in_path() {
+    ! libbash::utils::is_in_path "${1}"
   }
-  export -f is_not_in_path
+  export -f libbash::utils::is_not_in_path
 
   # ### Check Whether a Directory is Empty
   #
@@ -774,15 +771,15 @@ function libbash__load_module_utils() {
   # #### Arguments
   #
   # $1 :: directory to check
-  function dir_is_empty() {
-    parameter_is_not_empty "${1}" || {
-      __libbash__show_error 'No name for an executable provided'
+  function libbash::utils::dir_is_empty() {
+    libbash::utils::parameter_is_not_empty "${1}" || {
+      libbash::debug::show_error 'No name for an executable provided'
       return 1
     }
 
     [[ -n $(find "${1}" -maxdepth 0 -empty) ]]
   }
-  export -f dir_is_empty
+  export -f libbash::utils::dir_is_empty
 
   # ### Check Whether a Directory is Not Empty
   #
@@ -793,10 +790,10 @@ function libbash__load_module_utils() {
   # #### Arguments
   #
   # $1 :: directory to check
-  function dir_is_not_empty() {
-    ! dir_is_empty "${1}"
+  function libbash::utils::dir_is_not_empty() {
+    ! libbash::utils::dir_is_empty "${1}"
   }
-  export -f dir_is_not_empty
+  export -f libbash::utils::dir_is_not_empty
 
   # ### Checks Whether a Variable Evaluates to True
   #
@@ -807,13 +804,13 @@ function libbash__load_module_utils() {
   # #### Arguments
   #
   # $1 :: name of environment variable to check
-  function value_is_true() {
+  function libbash::utils::value_is_true() {
     declare -n __VAR=${1}
     [[ ${__VAR,,} =~ ^(true|y(es)?)$ ]]
   }
-  export -f value_is_true
+  export -f libbash::utils::value_is_true
 }
 
-libbash__main "${@}"
+libbash::__main__ "${@}"
 
 }
