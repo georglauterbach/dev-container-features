@@ -1,7 +1,7 @@
 
-# Programming Language | Bash (lang-sh)
+# Programming Language | Shell (lang-sh)
 
-This Feature allows you to work efficiently and effortlessly with shell (scripts).
+This Feature supports you with Shell (scripts).
 
 ## Example Usage
 
