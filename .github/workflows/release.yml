@@ -1,5 +1,5 @@
 ---
-name: Release
+name: Releasing
 
 on: # yamllint disable-line rule:truthy
   workflow_dispatch:
@@ -18,7 +18,7 @@ permissions:
 
 jobs:
   deployment:
-    name: Deployment
+    name: Deploy Features
     runs-on: ubuntu-latest
 
     steps:
