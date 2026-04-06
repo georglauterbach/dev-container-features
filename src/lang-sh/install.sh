@@ -10,4 +10,4 @@ cp shellcheck.conf "${DCF_LANG_SH_DIR}"
 cp libbash         "${DCF_LANG_SH_DIR}"
 
 mkdir -p           /usr/local/bin/
-cp shellcheck      /usr/local/bin/
+cp -n shellcheck   /usr/local/bin/
