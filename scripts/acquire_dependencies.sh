@@ -20,6 +20,7 @@ if [ -f "${HERMES_FILE}" ]; then
   rm "${HERMES_FILE}"
 fi
 
+mkdir --parents "$(dirname "${HERMES_FILE}")"
 wget --quiet --output-document="${HERMES_FILE}" \
   "https://github.com/georglauterbach/hermes/releases/download/v${HERMES_VERSION}/hermes-v${HERMES_VERSION}-${ARCHITECTURE}-unknown-linux-musl"
 chmod +x "${HERMES_FILE}"
@@ -28,6 +29,7 @@ if [ -f "${SHELLCHECK_FILE}" ]; then
   rm "${SHELLCHECK_FILE}"
 fi
 
+mkdir --parents "$(dirname "${SHELLCHECK_FILE}")"
 wget --quiet --output-document=- \
   "https://github.com/koalaman/shellcheck/releases/download/v${SHELLCHECK_VERSION}/shellcheck-v${SHELLCHECK_VERSION}.linux.${ARCHITECTURE}.tar.xz" \
     | tar xJf - "shellcheck-v${SHELLCHECK_VERSION}/shellcheck"
