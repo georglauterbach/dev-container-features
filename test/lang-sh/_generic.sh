@@ -30,6 +30,8 @@ report() {
   fi
 }
 
+trap report EXIT
+
 # -----------------------------------------------
 # ----  Basic Tests  ----------------------------
 # -----------------------------------------------
@@ -119,5 +121,3 @@ assert_failure 'SC2115: risky rm -rf pattern' shellcheck "${SC2115_SCRIPT}"
 
 assert_success 'shellcheck rcfile is usable' \
   shellcheck --rcfile="${DCF_LANG_SH_DIR}/shellcheck.conf" "${CLEAN_SCRIPT}"
-
-report

@@ -30,6 +30,8 @@ report() {
   fi
 }
 
+trap report EXIT
+
 readonly CACHE_MOUNT_POINT=/usr/local/share/dev_containers/features/ghcr_io/georglauterbach/vscode_cache_extensions/data
 
 assert_success 'mount point exists' test -d "${CACHE_MOUNT_POINT}"
@@ -48,5 +50,3 @@ assert_success 'insiders: symlink source directory is a symbolic link' \
   test -L "${HOME}/.vscode-server-insiders/extensions"
 assert_success 'insiders: symbolic link resolves to correct location' \
   test "$(readlink "${HOME}/.vscode-server-insiders/extensions")" = "${CACHE_MOUNT_POINT}/insiders"
-
-report
