@@ -1,9 +1,9 @@
 {
   "id": "lang-rust",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "name": "Programming Language | Rust",
-  "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/rust",
-  "description": "This Feature allows you to work efficiently and effortlessly with Rust.",
+  "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/lang-rust",
+  "description": "This Feature provides language support for Rust.",
   "options": {
     "generate-shell-completions": {
       "description": "Whether to generate shell completion for Rustup and Cargo",
@@ -21,7 +21,7 @@
     "RUSTUP_HOME": "/usr/local/share/dev_containers/features/ghcr_io/georglauterbach/lang_rust/toolchains/rustup/home",
     // https://doc.rust-lang.org/cargo/reference/environment-variables.html#environment-variables-cargo-reads
     "CARGO_HOME": "/usr/local/share/dev_containers/features/ghcr_io/georglauterbach/lang_rust/toolchains/cargo/home",
-    "DEV_CONTAINER_FEATURE_GHCR_IO_GEORGLAUTERBACH_LANG_RUST_LLDB_PRETTIFIER": "/usr/local/share/dev_containers/features/ghcr_io/georglauterbach/lang_rust/lldb_prettifier.py"
+    "DCF_LANG_RUST_DIR": "/usr/local/share/dev_containers/features/ghcr_io/georglauterbach/lang_rust"
   },
   "mounts": [
     {

@@ -16,5 +16,41 @@
     "features": {
       "lang-rust": {}
     }
+  },
+  "rust_1-94-1_base": {
+    "image": "docker.io/rust:1.94.1-slim",
+    "features": {
+      "lang-rust": {
+        "generate-shell-completions": false,
+        "rustup-disable-auto-self-update": false
+      }
+    }
+  },
+  "rust_1-94-1_part-01": {
+    "image": "docker.io/rust:1.94.1-slim",
+    "features": {
+      "lang-rust": {
+        "generate-shell-completions": false,
+        "rustup-disable-auto-self-update": true
+      }
+    }
+  },
+  "rust_1-94-1_part-02": {
+    "image": "docker.io/rust:1.94.1-slim",
+    "features": {
+      "lang-rust": {
+        "generate-shell-completions": true,
+        "rustup-disable-auto-self-update": false
+      }
+    }
+  },
+  "rust_1-94-1_full": {
+    "image": "docker.io/rust:1.94.1-slim",
+    "features": {
+      "lang-rust": {
+        "generate-shell-completions": true,
+        "rustup-disable-auto-self-update": true
+      }
+    }
   }
 }
