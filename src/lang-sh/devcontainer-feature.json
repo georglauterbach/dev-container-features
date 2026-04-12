@@ -13,7 +13,21 @@
   "customizations": {
     "vscode": {
       "extensions": [
+        // Shell language server
+        //
+        // REF https://en.wikipedia.org/wiki/Language_Server_Protocol
+        //     https://marketplace.visualstudio.com/items?itemName=mads-hartmann.bash-ide-vscode
         "mads-hartmann.bash-ide-vscode",
+        // Linter for shell code
+        //
+        // This extension relies on the `shellcheck` program
+        // to be installed. This Feature installs `shellcheck`
+        // and configures the IDE to use it properly.
+        //
+        // REF https://github.com/vscode-shellcheck/vscode-shellcheck
+        //     https://github.com/koalaman/shellcheck
+        //     https://www.sonarsource.com/resources/library/linter/
+        //     https://marketplace.visualstudio.com/items?itemName=timonwong.shellcheck
         "timonwong.shellcheck"
       ],
       "settings": {

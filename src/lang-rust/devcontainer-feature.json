@@ -36,11 +36,23 @@
   "customizations": {
     "vscode": {
       "extensions": [
-        // Rust's official language server (https://rust-analyzer.github.io/)
+        // Rust language server
+        //
+        // REF https://rust-analyzer.github.io/
+        //     https://en.wikipedia.org/wiki/Language_Server_Protocol
         "rust-lang.rust-analyzer",
         // TOML language server
+        //
+        // REF https://github.com/tombi-toml/tombi
+        //     https://en.wikipedia.org/wiki/Language_Server_Protocol
         "tombi-toml.tombi",
-        // LLVM-based debugger (= LLDB)
+        // LLVM-based debugger
+        //
+        // LLDB is newer than GDB and provides improved performance.
+        // Since Rust uses LLVM, LLDB is a natural fit.
+        //
+        // REF https://github.com/vadimcn/codelldb
+        //     https://lldb.llvm.org/
         "vadimcn.vscode-lldb@1.12.1"
       ],
       "settings": {
