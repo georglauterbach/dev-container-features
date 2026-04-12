@@ -25,8 +25,8 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
-      contents: read # Required to checkout the repository
-      pull-requests: write # Required for opening documentation update PRs
+      contents: write # Required to checkout the repository and opening a PR
+      pull-requests: write # Required for opening the documentation update PR
       packages: write # Required for publishing the artifacts
 
     steps:
