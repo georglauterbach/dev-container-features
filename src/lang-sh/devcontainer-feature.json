@@ -1,7 +1,7 @@
 // cSpell: ignore timonwong
 {
   "id": "lang-sh",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "name": "Programming Language | Shell",
   "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/lang-sh",
   "description": "This Feature provides language support for Shell.",
