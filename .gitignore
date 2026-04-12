@@ -19,5 +19,4 @@ tmp/
 # ----  Programs  -------------------------------
 # -----------------------------------------------
 
-src/hermes/hermes
-src/lang-sh/shellcheck
+tools/

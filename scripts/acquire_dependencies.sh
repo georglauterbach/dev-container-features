@@ -11,10 +11,10 @@ ARCHITECTURE="$(uname -m)"
 readonly ARCHITECTURE
 
 readonly HERMES_VERSION="${HERMES_VERSION:-12.3.2}"
-readonly HERMES_FILE=src/hermes/hermes
+readonly HERMES_FILE=src/hermes/tools/hermes
 
 readonly SHELLCHECK_VERSION="${SHELLCHECK_VERSION:-0.11.0}"
-readonly SHELLCHECK_FILE=src/lang-sh/shellcheck
+readonly SHELLCHECK_FILE=src/lang-sh/tools/shellcheck
 
 if [ -f "${HERMES_FILE}" ]; then
   rm "${HERMES_FILE}"

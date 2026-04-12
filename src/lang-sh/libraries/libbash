@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-# libbash 12.0.0 - a collection of useful functions for your Bash scripts
+# libbash 12.1.0 - a collection of useful functions for your Bash scripts
 #
 # Copyright (C) Georg Lauterbach
 # GitHub: https://github.com/georglauterbach/libbash
@@ -46,6 +46,7 @@ function libbash::__main__() {
   LIBBASH__EXIT_IN_INTERACTIVE_MODE=${LIBBASH__EXIT_IN_INTERACTIVE_MODE:-false}
   LIBBASH__LOADED_MODULES=()
   LIBBASH__VERSION=11.0.0
+  LIBBASH__LOG__DATE_FORMAT_SPECIFIER=%Y-%m-%dT%H:%M:%S%:z
 
   # ! export all variables here first, even if not
   # ! all modules are sourced to satisfy shellcheck
@@ -184,8 +185,10 @@ export -f libbash::debug::show_call_stack
 # errors even when the log module is not (or has not yet been)
 # loaded.
 function libbash::debug::show_error() {
-  printf "%s \e[91mERROR\e[0m %s: %s\n" \
-    "$(date +"%Y-%m-%dT%H:%M:%S.%6N%:z" || :)" "${SCRIPT:-$(basename "${0}")}" "${*}" >&2
+  printf "%s \e[91mERROR\e[0m %s: %s\n"                 \
+    "$(date +"${LIBBASH__LOG__DATE_FORMAT_SPECIFIER}" || :)" \
+    "${SCRIPT:-$(basename "${0}")}"                     \
+    "${*}" >&2
 }
 export -f libbash::debug::show_error
 
@@ -210,7 +213,10 @@ function libbash::__load_module__::log() {
 
     # shellcheck disable=SC2059
     printf "%s ${!COLOR}%-5s${LIBBASH__LOG__COLOR_RESET} %s: %s\n" \
-      "$(date +"%Y-%m-%dT%H:%M:%S.%6N%:z" || :)" "${LEVEL^^}" "${SCRIPT:-$(basename "${0}")}" "${*}"
+      "$(date +"${LIBBASH__LOG__DATE_FORMAT_SPECIFIER}" || :)"          \
+      "${LEVEL^^}"                                                 \
+      "${SCRIPT:-$(basename "${0}")}"                              \
+      "${*}"
   }
   export -f libbash::log::__log_generic__
 

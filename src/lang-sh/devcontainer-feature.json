@@ -4,7 +4,7 @@
   "version": "0.5.0",
   "name": "Programming Language | Shell",
   "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/lang-sh",
-  "description": "This Feature supports you with Shell (scripts).",
+  "description": "This Feature provides language support for Shell.",
   "containerEnv": {
     // can be used to easily source 'libbash' by running
     // 'source "${DCF_LANG_SH_DIR}/libbash" [<LIBBASH ARGUMENTS>...]'
