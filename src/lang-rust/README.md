@@ -38,7 +38,7 @@ To enable pretty printing in the debugger, add the setting
 
 ```jsonc
 "lldb.launch.preRunCommands": [
-  "command script import ${containerEnv:DCF_LANG_RUST_LLDB_PRETTIFIER}"
+  "command script import ${containerEnv:DCF_LANG_RUST_DIR}/lldb_prettifier.py"
 ]
 ```
 

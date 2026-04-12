@@ -1,6 +1,6 @@
 {
   "id": "lang-rust",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "name": "Programming Language | Rust",
   "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/lang-rust",
   "description": "This Feature provides language support for Rust.",

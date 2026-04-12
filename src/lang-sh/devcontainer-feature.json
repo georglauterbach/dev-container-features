@@ -1,14 +1,14 @@
 // cSpell: ignore timonwong
 {
   "id": "lang-sh",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "name": "Programming Language | Shell",
   "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/lang-sh",
   "description": "This Feature provides language support for Shell.",
   "containerEnv": {
     // can be used to easily source 'libbash' by running
     // 'source "${DCF_LANG_SH_DIR}/libbash" [<LIBBASH ARGUMENTS>...]'
-    "DCF_LANG_SH_DIR": "/usr/local/share/dev_containers/features/ghcr.io/georglauterbach/lang_sh"
+    "DCF_LANG_SH_DIR": "/usr/local/share/dev_containers/features/ghcr_io/georglauterbach/lang_sh"
   },
   "customizations": {
     "vscode": {
