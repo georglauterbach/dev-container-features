@@ -1,7 +1,7 @@
 
-# hermes (hermes)
+# CLI Tool | Hermes (hermes)
 
-This Feature installs [_hermes_](https://github.com/georglauterbach/hermes).
+This Feature installs the [_hermes_](https://github.com/georglauterbach/hermes) command-line tool.
 
 ## Example Usage
 

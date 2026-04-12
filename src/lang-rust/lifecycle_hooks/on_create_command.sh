@@ -8,7 +8,19 @@ readonly FEATURE_SHARE_DIR
 # update directory permissions
 update_directory() {
   ENV_NAME=${1:?"(bug) environment variable name required"}
-  ENV_VALUE=$(eval "echo \"\$${ENV_NAME}\"")
+
+  case "${ENV_NAME}" in
+    RUSTUP_HOME)
+      ENV_VALUE=${RUSTUP_HOME:-}
+      ;;
+    CARGO_HOME)
+      ENV_VALUE=${CARGO_HOME:-}
+      ;;
+    *)
+      echo "  -> unsupported environment variable '${ENV_NAME}'" >&2
+      return 1
+      ;;
+  esac
 
   echo "Adjusting directory '${ENV_NAME}=${ENV_VALUE}'"
 
@@ -72,13 +84,23 @@ rustup_adjustments() {
 }
 
 main() {
+  SHOULD_RUN_RUSTUP_ADJUSTMENTS=true
+
   for ENV_NAME in 'RUSTUP_HOME' 'CARGO_HOME'; do
-    if ! update_directory "${ENV_NAME}"; then
+    set +e
+    update_directory "${ENV_NAME}"
+    UPDATE_DIRECTORY_STATUS=$?
+    set -e
+
+    if [ "${UPDATE_DIRECTORY_STATUS}" -ne 0 ]; then
       echo "  -> not running other commands"
+      SHOULD_RUN_RUSTUP_ADJUSTMENTS=false
     fi
   done
 
-  rustup_adjustments
+  if [ "${SHOULD_RUN_RUSTUP_ADJUSTMENTS}" = 'true' ]; then
+    rustup_adjustments
+  fi
 }
 
 main "${@}"
