@@ -1,7 +1,7 @@
 
 # Programming Language | Shell (lang-sh)
 
-This Feature supports you with Shell (scripts).
+This Feature provides language support for Shell.
 
 ## Example Usage
 

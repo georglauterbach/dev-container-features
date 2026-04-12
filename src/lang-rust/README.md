@@ -1,7 +1,7 @@
 
 # Programming Language | Rust (lang-rust)
 
-This Feature allows you to work efficiently and effortlessly with Rust.
+This Feature provides language support for Rust.
 
 ## Example Usage
 
