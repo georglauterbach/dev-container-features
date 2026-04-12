@@ -8,19 +8,26 @@ on: # yamllint disable-line rule:truthy
     branches: [ main ]
     paths: [ src/** ]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 defaults:
   run:
     shell: bash
 
 permissions:
-  contents: write
-  pull-requests: write
-  packages: write
+  contents: read
 
 jobs:
   deployment:
     name: Deploy Features
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: read # Required to checkout the repository
+      pull-requests: write # Required for opening documentation update PRs
+      packages: write # Required for publishing the artifacts
 
     steps:
       - name: Checkout
