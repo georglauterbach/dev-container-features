@@ -1,5 +1,6 @@
 ---
-name: Releasing
+name: Release
+run-name: Release
 
 on: # yamllint disable-line rule:truthy
   workflow_dispatch:

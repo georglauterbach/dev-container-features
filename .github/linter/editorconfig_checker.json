@@ -7,8 +7,6 @@
   "Exclude": [
     "src/lang-rust/data/lldb_prettifier\\.py\\.txt$"
   ],
-  "AllowedContentTypes": [],
-  "PassedFiles": [],
   "Disable": {
     "EndOfLine": false,
     "Indentation": false,
