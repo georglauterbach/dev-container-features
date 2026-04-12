@@ -33,7 +33,7 @@ rustup_adjustments() {
 
 copy_lldb_prettifiers() {
   cp "scripts/lldb_prettifier.py.txt" "${DCF_LANG_RUST_DIR}/lldb_prettifier.py"
-  chmod 777 "${DCF_LANG_RUST_DIR}/lldb_prettifier.py"
+  chmod 644 "${DCF_LANG_RUST_DIR}/lldb_prettifier.py"
 }
 
 main() {

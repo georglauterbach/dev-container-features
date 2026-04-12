@@ -8,7 +8,7 @@
   "containerEnv": {
     // can be used to easily source 'libbash' by running
     // 'source "${DCF_LANG_SH_DIR}/libbash" [<LIBBASH ARGUMENTS>...]'
-    "DCF_LANG_SH_DIR": "/usr/local/share/dev_containers/features/ghcr.io/georglauterbach/lang_sh"
+    "DCF_LANG_SH_DIR": "/usr/local/share/dev_containers/features/ghcr_io/georglauterbach/lang_sh"
   },
   "customizations": {
     "vscode": {

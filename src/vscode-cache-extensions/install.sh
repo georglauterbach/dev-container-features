@@ -13,7 +13,7 @@ fi
 
 # We create the mount point and temporary directories here with the
 # correct permissions. This is imperative for the mount point as
-# the volume mount will cary over the _permissions_ of an existing
+# the volume mount will carry over the _permissions_ of an existing
 # directory. We _cannot_ use `chown` here because of
 # `updateRemoteUserUID: true` in some cases, which would result in
 # a UID mismatch; hence, we need `777` as the permissions.
