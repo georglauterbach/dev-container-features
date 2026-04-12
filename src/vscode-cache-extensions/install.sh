@@ -5,7 +5,7 @@
 set -e -u
 
 # This is where the volume will be mounted to
-readonly CACHE_MOUNT_POINT='/usr/local/share/dev_containers/features/ghcr_io/georglauterbach/vscode_cache_extensions/data'
+readonly CACHE_MOUNT_POINT=/usr/local/share/dev_containers/features/ghcr_io/georglauterbach/vscode_cache_extensions/data
 
 if [ -z "${_REMOTE_USER_HOME:-}" ]; then
   exit 0
