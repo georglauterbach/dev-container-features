@@ -8,7 +8,26 @@ readonly FEATURE_SHARE_DIR
 # update directory permissions
 update_directory() {
   ENV_NAME=${1:?"(bug) environment variable name required"}
-  ENV_VALUE=$(eval "echo \"\$${ENV_NAME}\"")
+
+  case "${ENV_NAME}" in
+    ( RUSTUP_HOME )
+      ENV_VALUE=${RUSTUP_HOME:?RUSTUP_HOME is not set}
+      ;;
+
+    ( CARGO_HOME )
+      ENV_VALUE=${CARGO_HOME:-}
+      ;;
+
+    ( * )
+      echo "  -> unsupported environment variable '${ENV_NAME}'" >&2
+      return 1
+      ;;
+  esac
+
+  if [ -z "${ENV_VALUE:-}" ]; then
+    echo "  -> environment variable '${ENV_NAME}' is not set" >&2
+    return 1
+  fi
 
   echo "Adjusting directory '${ENV_NAME}=${ENV_VALUE}'"
 

@@ -1,52 +1,24 @@
 #! /bin/sh
 
-FAILED=false
+. ./_harness.sh
 
-# shellcheck disable=SC2329
-assert_failure() {
-  printf '   ├ %-60s ' "${1:?Name of the test required}"
-  shift 1
-  "${@}" >/dev/null && { printf '❌ \e[31mFAILED\e[0m\n' ; FAILED=true ; return 0 ; }
-  printf '✅ \e[32mPASSED\e[0m\n'
-}
+readonly CACHE_DIR="${DCF_VSCODE_CACHE_EXTENSIONS_DIR:?}/data"
 
-# shellcheck disable=SC2329
-assert_success() {
-  printf '   ├ %-60s ' "${1:?Name of the test required}"
-  shift 1
-  "${@}" >/dev/null && { printf '✅ \e[32mPASSED\e[0m\n' ; return 0 ; }
-  printf '❌ \e[31mFAILED\e[0m\n'
-  FAILED=true
-}
+assert_success 'mount point exists' test -d "${CACHE_DIR}"
 
-report() {
-  printf "   └ "
-  if ${FAILED:-true}; then
-    printf '❌ \e[31mFAILED\e[0m\n'
-    exit 1
-  else
-    printf "✅ \e[32mPASSED\e[0m\n"
-    exit 0
-  fi
-}
-
-trap report EXIT
-
-readonly CACHE_MOUNT_POINT=/usr/local/share/dev_containers/features/ghcr_io/georglauterbach/vscode_cache_extensions/data
-
-assert_success 'mount point exists' test -d "${CACHE_MOUNT_POINT}"
-
-assert_success 'stable: symlink target directory exists' test -d "${CACHE_MOUNT_POINT}/stable"
+assert_success 'stable: symlink target directory exists' test -d "${CACHE_DIR}/stable"
 assert_success 'stable: symlink source directory parent exists' test -d "${HOME}/.vscode-server"
 assert_success 'stable: symlink source directory is a symbolic link' \
   test -L "${HOME}/.vscode-server/extensions"
 assert_success 'stable: symbolic link resolves to correct location' \
-  test "$(readlink "${HOME}/.vscode-server/extensions")" = "${CACHE_MOUNT_POINT}/stable"
+  test "$(readlink "${HOME}/.vscode-server/extensions")" = "${CACHE_DIR}/stable"
 
 
-assert_success 'insiders: symlink target directory exists' test -d "${CACHE_MOUNT_POINT}/insiders"
+assert_success 'insiders: symlink target directory exists' test -d "${CACHE_DIR}/insiders"
 assert_success 'insiders: symlink source directory parent exists' test -d "${HOME}/.vscode-server-insiders"
 assert_success 'insiders: symlink source directory is a symbolic link' \
   test -L "${HOME}/.vscode-server-insiders/extensions"
 assert_success 'insiders: symbolic link resolves to correct location' \
-  test "$(readlink "${HOME}/.vscode-server-insiders/extensions")" = "${CACHE_MOUNT_POINT}/insiders"
+  test "$(readlink "${HOME}/.vscode-server-insiders/extensions")" = "${CACHE_DIR}/insiders"
+
+finish

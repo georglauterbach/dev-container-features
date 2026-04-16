@@ -1,36 +1,6 @@
 #! /bin/sh
 
-FAILED=false
-
-# shellcheck disable=SC2329
-assert_failure() {
-  printf '   ├ %-45s ' "${1:?Name of the test required}"
-  shift 1
-  "${@}" >/dev/null && { printf '❌ \e[31mFAILED\e[0m\n' ; FAILED=true ; return 0 ; }
-  printf '✅ \e[32mPASSED\e[0m\n'
-}
-
-# shellcheck disable=SC2329
-assert_success() {
-  printf '   ├ %-45s ' "${1:?Name of the test required}"
-  shift 1
-  "${@}" >/dev/null && { printf '✅ \e[32mPASSED\e[0m\n' ; return 0 ; }
-  printf '❌ \e[31mFAILED\e[0m\n'
-  FAILED=true
-}
-
-report() {
-  printf "   └ "
-  if ${FAILED:-true}; then
-    printf '❌ \e[31mFAILED\e[0m\n'
-    exit 1
-  else
-    printf "✅ \e[32mPASSED\e[0m\n"
-    exit 0
-  fi
-}
-
-trap report EXIT
+. ./_harness.sh
 
 # -----------------------------------------------
 # ----  Basic Tests  ----------------------------
@@ -121,3 +91,5 @@ assert_failure 'SC2115: risky rm -rf pattern' shellcheck "${SC2115_SCRIPT}"
 
 assert_success 'shellcheck rcfile is usable' \
   shellcheck --rcfile="${DCF_LANG_SH_DIR}/shellcheck.conf" "${CLEAN_SCRIPT}"
+
+finish

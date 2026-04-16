@@ -1,36 +1,6 @@
 #! /bin/sh
 
-FAILED=false
-
-# shellcheck disable=SC2329
-assert_failure() {
-  printf '   ├ %-60s ' "${1:?Name of the test required}"
-  shift 1
-  "${@}" >/dev/null && { printf '❌ \e[31mFAILED\e[0m\n' ; FAILED=true ; return 0 ; }
-  printf '✅ \e[32mPASSED\e[0m\n'
-}
-
-# shellcheck disable=SC2329
-assert_success() {
-  printf '   ├ %-60s ' "${1:?Name of the test required}"
-  shift 1
-  "${@}" >/dev/null && { printf '✅ \e[32mPASSED\e[0m\n' ; return 0 ; }
-  printf '❌ \e[31mFAILED\e[0m\n'
-  FAILED=true
-}
-
-report() {
-  printf "   └ "
-  if ${FAILED:-true}; then
-    printf '❌ \e[31mFAILED\e[0m\n'
-    exit 1
-  else
-    printf "✅ \e[32mPASSED\e[0m\n"
-    exit 0
-  fi
-}
-
-trap report EXIT
+. ./_harness.sh
 
 readonly GENERATE_SHELL_COMPLETIONS="${GENERATE_SHELL_COMPLETIONS:?}"
 readonly RUSTUP_DISABLE_AUTO_SELF_UPDATE="${RUSTUP_DISABLE_AUTO_SELF_UPDATE:?}"
@@ -80,3 +50,5 @@ else
   assert_failure 'shell completions for cargo should not exist' \
     test -e /usr/share/bash-completion/completions/cargo
 fi
+
+finish

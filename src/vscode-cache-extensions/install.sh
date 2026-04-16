@@ -4,22 +4,13 @@
 
 set -e -u
 
-# This is where the volume will be mounted to
-readonly CACHE_MOUNT_POINT=/usr/local/share/dev_containers/features/ghcr_io/georglauterbach/vscode_cache_extensions/data
+readonly CACHE_DIR="${DCF_VSCODE_CACHE_EXTENSIONS_DIR:?}/data"
 
-if [ -z "${_REMOTE_USER_HOME:-}" ]; then
-  exit 0
-fi
-
-# We create the mount point and temporary directories here with the
-# correct permissions. This is imperative for the mount point as
-# the volume mount will carry over the _permissions_ of an existing
-# directory. We _cannot_ use `chown` here because of
-# `updateRemoteUserUID: true` in some cases, which would result in
-# a UID mismatch; hence, we need `777` as the permissions.
-for LOOP_VAR in "stable," "insiders,-insiders"; do
-  PERSISTENCE_DIR="${CACHE_MOUNT_POINT}/$(printf '%s' "${LOOP_VAR}" | cut -d , -f 1)"
-  TMP_STORAGE_DIR="${_REMOTE_USER_HOME}/.vscode-server$(printf '%s' "${LOOP_VAR}" | cut -d , -f 2)"
+prepare_cache_directory() {
+  CHANNEL_NAME="${1:?channel name required}"
+  CHANNEL_SUFFIX="${2:-}"
+  PERSISTENCE_DIR="${CACHE_DIR}/${CHANNEL_NAME}"
+  TMP_STORAGE_DIR="${_REMOTE_USER_HOME}/.vscode-server${CHANNEL_SUFFIX}"
 
   # shellcheck disable=SC2174
   mkdir -m 777 -p "${PERSISTENCE_DIR}" "${TMP_STORAGE_DIR}"
@@ -28,4 +19,22 @@ for LOOP_VAR in "stable," "insiders,-insiders"; do
 
   rm -r -f "${TMP_STORAGE_DIR}"
   ln -s "${PERSISTENCE_DIR}" "${TMP_STORAGE_DIR}"
-done
+}
+
+main() {
+  if [ -z "${_REMOTE_USER_HOME:-}" ]; then
+    echo "Environment variable '_REMOTE_USER_HOME' not set but required" >&2
+    exit 1
+  fi
+
+  # We create the mount point and temporary directories here with the
+  # correct permissions. This is imperative for the mount point as
+  # the volume mount will carry over the _permissions_ of an existing
+  # directory. We _cannot_ use `chown` here because of
+  # `updateRemoteUserUID: true` in some cases, which would result in
+  # a UID mismatch; hence, we need `777` as the permissions.
+  prepare_cache_directory stable
+  prepare_cache_directory insiders -insiders
+}
+
+main "${@}"

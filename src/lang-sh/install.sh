@@ -2,11 +2,12 @@
 
 set -e -u
 
-readonly DCF_LANG_SH_DIR=/usr/local/share/dev_containers/features/ghcr_io/georglauterbach/lang_sh
+readonly DCF_LANG_SH_DIR="${DCF_LANG_SH_DIR:?}"
 
-mkdir -p                         "${DCF_LANG_SH_DIR}"
-cp configuration/shellcheck.conf "${DCF_LANG_SH_DIR}"
-cp libraries/libbash             "${DCF_LANG_SH_DIR}"
+main() {
+  install -D -m 0644 configuration/shellcheck.conf "${DCF_LANG_SH_DIR}/shellcheck.conf"
+  install -D -m 0644 libraries/libbash             "${DCF_LANG_SH_DIR}/libbash"
+  install -D -m 0755 tools/shellcheck              /usr/local/bin/shellcheck
+}
 
-mkdir -p               /usr/local/bin/
-cp -n tools/shellcheck /usr/local/bin/
+main "${@}"

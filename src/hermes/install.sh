@@ -2,6 +2,8 @@
 
 set -e -u
 
-mkdir -p        /usr/local/bin/
-mv tools/hermes /usr/local/bin/hermes
-chmod +x        /usr/local/bin/hermes
+main() {
+  install -D -m 0755 tools/hermes /usr/local/bin/hermes
+}
+
+main "${@}"
