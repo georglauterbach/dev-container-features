@@ -1,5 +1,5 @@
 
-# hermes (hermes)
+# CLI Tools | hermes (hermes)
 
 This Feature installs [_hermes_](https://github.com/georglauterbach/hermes).
 
