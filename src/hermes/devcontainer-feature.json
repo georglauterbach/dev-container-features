@@ -1,7 +1,7 @@
 {
-  "id": "CLI Tools | hermes",
+  "id": "hermes",
   "version": "12.3.2",
-  "name": "hermes",
+  "name": "CLI Tools | hermes",
   "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/hermes",
   "description": "This Feature installs [_hermes_](https://github.com/georglauterbach/hermes)."
 }
