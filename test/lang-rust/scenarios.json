@@ -1,23 +1,23 @@
 {
-  "alpine_3-23": {
+  "scenarios/alpine_3-23": {
     "image": "docker.io/alpine:3.23",
     "features": {
       "lang-rust": {}
     }
   },
-  "ubuntu_24-04": {
+  "scenarios/ubuntu_24-04": {
     "image": "docker.io/ubuntu:24.04",
     "features": {
       "lang-rust": {}
     }
   },
-  "ubuntu_26-04": {
+  "scenarios/ubuntu_26-04": {
     "image": "docker.io/ubuntu:26.04",
     "features": {
       "lang-rust": {}
     }
   },
-  "rust_1-94-1_base": {
+  "scenarios/rust_1-94-1_base": {
     "image": "docker.io/rust:1.94.1-slim",
     "features": {
       "lang-rust": {
@@ -26,7 +26,7 @@
       }
     }
   },
-  "rust_1-94-1_part-01": {
+  "scenarios/rust_1-94-1_part-01": {
     "image": "docker.io/rust:1.94.1-slim",
     "features": {
       "lang-rust": {
@@ -35,7 +35,7 @@
       }
     }
   },
-  "rust_1-94-1_part-02": {
+  "scenarios/rust_1-94-1_part-02": {
     "image": "docker.io/rust:1.94.1-slim",
     "features": {
       "lang-rust": {
@@ -44,7 +44,7 @@
       }
     }
   },
-  "rust_1-94-1_full": {
+  "scenarios/rust_1-94-1_full": {
     "image": "docker.io/rust:1.94.1-slim",
     "features": {
       "lang-rust": {

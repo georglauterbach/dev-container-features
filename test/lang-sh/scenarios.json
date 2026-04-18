@@ -1,17 +1,17 @@
 {
-  "alpine_3-23": {
+  "scenarios/alpine_3-23": {
     "image": "docker.io/alpine:3.23",
     "features": {
       "lang-sh": {}
     }
   },
-  "ubuntu_24-04": {
+  "scenarios/ubuntu_24-04": {
     "image": "docker.io/ubuntu:24.04",
     "features": {
       "lang-sh": {}
     }
   },
-  "ubuntu_26-04": {
+  "scenarios/ubuntu_26-04": {
     "image": "docker.io/ubuntu:26.04",
     "features": {
       "lang-sh": {}
