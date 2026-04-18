@@ -17,11 +17,14 @@
     }
   },
   "containerEnv": {
+    // The directory in which configuration files, scripts, toolchain and artifacts are installed.
+    // The volume `dev_containers.features.ghcr_io.georglauterbach.lang_rust` mounts to the child
+    // directory `toolchains/`.
+    "DCF_LANG_RUST_DIR": "/usr/local/share/dev_containers/features/ghcr_io/georglauterbach/lang_rust",
     // https://rust-lang.github.io/rustup/environment-variables.html
     "RUSTUP_HOME": "/usr/local/share/dev_containers/features/ghcr_io/georglauterbach/lang_rust/toolchains/rustup/home",
     // https://doc.rust-lang.org/cargo/reference/environment-variables.html#environment-variables-cargo-reads
-    "CARGO_HOME": "/usr/local/share/dev_containers/features/ghcr_io/georglauterbach/lang_rust/toolchains/cargo/home",
-    "DCF_LANG_RUST_DIR": "/usr/local/share/dev_containers/features/ghcr_io/georglauterbach/lang_rust"
+    "CARGO_HOME": "/usr/local/share/dev_containers/features/ghcr_io/georglauterbach/lang_rust/toolchains/cargo/home"
   },
   "mounts": [
     {
@@ -69,7 +72,14 @@
           "target": true,
           "code/target": true
         },
-        // tell LLDB that we debug Rust
+        // rust-lang.rust-analyzer
+        //   - path to a rust-analyzer-specific target directory to prevent
+        //     rust-analyzer [...] from locking the `Cargo.lock` at the
+        //     expense of duplicating build artifacts; `true` == use a
+        //     subdirectory of the existing target directory
+        "rust-analyzer.cargo.targetDir": true,
+        // vadimcn.vscode-lldb
+        //   - tell LLDB that we debug Rust
         "lldb.launch.sourceLanguages": [
           "rust"
         ]

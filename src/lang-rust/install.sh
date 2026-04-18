@@ -2,7 +2,7 @@
 
 set -e -u
 
-readonly DCF_LANG_RUST_DIR=/usr/local/share/dev_containers/features/ghcr_io/georglauterbach/lang_rust
+readonly DCF_LANG_RUST_DIR="${DCF_LANG_RUST_DIR:?}"
 
 parse_dev_container_options() {
   readonly GENERATE_SHELL_COMPLETIONS="${GENERATE_SHELL_COMPLETIONS:?GENERATE_SHELL_COMPLETIONS not set or null}"
