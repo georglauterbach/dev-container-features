@@ -3,4 +3,5 @@
 export GENERATE_SHELL_COMPLETIONS=false
 export RUSTUP_DISABLE_AUTO_SELF_UPDATE=false
 
+# shellcheck source=../_generic.sh
 . ./_generic.sh
