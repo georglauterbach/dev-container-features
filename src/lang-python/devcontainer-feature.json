@@ -1,0 +1,35 @@
+{
+  "id": "lang-python",
+  "version": "0.1.0",
+  "name": "Programming Language | Python",
+  "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/lang-python",
+  "description": "This Feature provides language support for Python.",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        // Python linter and code formatter
+        //
+        // REF https://docs.astral.sh/ruff/
+        //     https://github.com/astral-sh/ruff
+        //     https://en.wikipedia.org/wiki/Language_Server_Protocol
+        "charliermarsh.ruff",
+        // Python type checker and language server
+        //
+        // REF https://docs.astral.sh/ty/
+        //     https://github.com/astral-sh/ty
+        //     https://en.wikipedia.org/wiki/Language_Server_Protocol
+        "astral-sh.ty"
+      ],
+      "settings": {
+        // Use `ty` and `ruff` as language servers, and not
+        // the ones provided by the Microsoft extensions.
+        "python.languageServer": "None",
+        // Python-specific settings
+        "[python]": {
+          // Use `ruff` as the formatter
+          "editor.defaultFormatter": "charliermarsh.ruff"
+        }
+      }
+    }
+  }
+}

@@ -30,4 +30,5 @@ ignoreWords:
   - libbash
 
   # IDE extensions
+  - charliermarsh
   - tombi
