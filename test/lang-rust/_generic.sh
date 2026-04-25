@@ -5,8 +5,6 @@
 readonly GENERATE_SHELL_COMPLETIONS="${GENERATE_SHELL_COMPLETIONS:?}"
 readonly RUSTUP_DISABLE_AUTO_SELF_UPDATE="${RUSTUP_DISABLE_AUTO_SELF_UPDATE:?}"
 
-readonly RUSTUP_HOME="${RUSTUP_HOME:?}"
-readonly CARGO_HOME="${CARGO_HOME:?}"
 readonly DCF_LANG_RUST_DIR="${DCF_LANG_RUST_DIR:?}"
 
 assert_success 'LLDB prettifier exists'          test -s "${DCF_LANG_RUST_DIR}/lldb_prettifier.py"
