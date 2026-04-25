@@ -24,7 +24,7 @@ This Feature provides language support for Rust.
 
 - `rust-lang.rust-analyzer`
 - `tombi-toml.tombi`
-- `vadimcn.vscode-lldb@1.12.1`
+- `vadimcn.vscode-lldb@1.12.2`
 
 ## Extended Description
 
