@@ -19,7 +19,9 @@ ignoreWords:
   - Lauterbach
 
   # proper nouns
+  - clippy
   - LLDB
+  - rustc
   - rustup
   - shellcheck
   - trixie

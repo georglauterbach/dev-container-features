@@ -9,11 +9,6 @@ parse_dev_container_options() {
   readonly RUSTUP_DISABLE_AUTO_SELF_UPDATE="${RUSTUP_DISABLE_AUTO_SELF_UPDATE:?RUSTUP_DISABLE_AUTO_SELF_UPDATE not set or null}"
 }
 
-copy_lifecycle_hook_scripts() {
-  mkdir --parents "${DCF_LANG_RUST_DIR}/lifecycle_hooks"
-  cp lifecycle_hooks/on_create_command.sh "${DCF_LANG_RUST_DIR}/lifecycle_hooks/on_create_command.sh"
-}
-
 rustup_adjustments() {
   if ! command -v rustup >/dev/null 2>/dev/null; then
     echo "WARN  'rustup' is not installed - not performing actions associated with 'rustup' (shell completions, disabling automatic self-update)" >&2
@@ -32,7 +27,7 @@ rustup_adjustments() {
 }
 
 copy_lldb_prettifiers() {
-  cp "scripts/lldb_prettifier.py.txt" "${DCF_LANG_RUST_DIR}/lldb_prettifier.py"
+  cp scripts/lldb_prettifier.py.txt "${DCF_LANG_RUST_DIR}/lldb_prettifier.py"
   chmod 644 "${DCF_LANG_RUST_DIR}/lldb_prettifier.py"
 }
 
@@ -41,7 +36,6 @@ main() {
 
   mkdir -p "${DCF_LANG_RUST_DIR}"
 
-  copy_lifecycle_hook_scripts
   rustup_adjustments
   copy_lldb_prettifiers
 }

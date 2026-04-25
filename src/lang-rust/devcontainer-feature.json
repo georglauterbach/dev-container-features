@@ -1,6 +1,6 @@
 {
   "id": "lang-rust",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "name": "Programming Language | Rust",
   "documentationURL": "https://github.com/georglauterbach/dev-container-features/tree/main/src/lang-rust",
   "description": "This Feature provides language support for Rust.",
@@ -17,25 +17,10 @@
     }
   },
   "containerEnv": {
-    // The directory in which configuration files, scripts, toolchain and artifacts are installed.
-    // The volume `dev_containers.features.ghcr_io.georglauterbach.lang_rust` mounts to the child
-    // directory `toolchains/`.
-    "DCF_LANG_RUST_DIR": "/usr/local/share/dev_containers/features/ghcr_io/georglauterbach/lang_rust",
-    // https://rust-lang.github.io/rustup/environment-variables.html
-    "RUSTUP_HOME": "/usr/local/share/dev_containers/features/ghcr_io/georglauterbach/lang_rust/toolchains/rustup/home",
-    // https://doc.rust-lang.org/cargo/reference/environment-variables.html#environment-variables-cargo-reads
-    "CARGO_HOME": "/usr/local/share/dev_containers/features/ghcr_io/georglauterbach/lang_rust/toolchains/cargo/home"
+    // Directory that contains common configuration files and more for this Feature
+    "DCF_LANG_RUST_DIR": "/usr/local/share/dev_containers/features/ghcr_io/georglauterbach/lang_rust"
   },
-  "mounts": [
-    {
-      // persist the default locations for toolchain information
-      "type": "volume",
-      "source": "dev_containers.features.ghcr_io.georglauterbach.lang_rust",
-      "target": "/usr/local/share/dev_containers/features/ghcr_io/georglauterbach/lang_rust/toolchains"
-    }
-  ],
-  // ensure Rustup's and Cargo's home directories have the correct permissions
-  "onCreateCommand": "/usr/local/share/dev_containers/features/ghcr_io/georglauterbach/lang_rust/lifecycle_hooks/on_create_command.sh",
+  "onCreateCommand": "{ command -v rustup >/dev/null 2>/dev/null && test -f \"${DCF_LANG_RUST_DIR}/.rustup_disable_auto_self_update\" && rustup set auto-self-update disable ; } || :",
   "customizations": {
     "vscode": {
       "extensions": [
@@ -56,7 +41,7 @@
         //
         // REF https://github.com/vadimcn/codelldb
         //     https://lldb.llvm.org/
-        "vadimcn.vscode-lldb@1.12.1"
+        "vadimcn.vscode-lldb@1.12.2"
       ],
       "settings": {
         // mark the directory for build-artifacts as read-only
@@ -73,11 +58,28 @@
           "code/target": true
         },
         // rust-lang.rust-analyzer
-        //   - path to a rust-analyzer-specific target directory to prevent
-        //     rust-analyzer [...] from locking the `Cargo.lock` at the
-        //     expense of duplicating build artifacts; `true` == use a
-        //     subdirectory of the existing target directory
+        //   - prefer Self in `match` completions
+        "rust-analyzer.assist.preferSelf": true,
+        //   - instruct rust-analyzer to use a different
+        //     path for its target directory to not lock
+        //     Cargo.lock, i.e. to make building and
+        //     analyzing the code work in parallel
         "rust-analyzer.cargo.targetDir": true,
+        //   - use clippy when running diagnostics
+        "rust-analyzer.check.command": "clippy",
+        //   - run diagnostics on save
+        "rust-analyzer.checkOnSave": true,
+        //   - disable diagnostics while typing
+        "rust-analyzer.diagnostics.enable": false,
+        //   - enable stylistic lists
+        "rust-analyzer.diagnostics.styleLints.enable": true,
+        //   - use rustc error codes
+        "rust-analyzer.diagnostics.useRustcErrorCode": true,
+        //   - restart the language server
+        //     when its configuration was changed
+        "rust-analyzer.restartServerOnConfigChange": true,
+        //   - enable the test explorer integration
+        "rust-analyzer.testExplorer": true,
         // vadimcn.vscode-lldb
         //   - tell LLDB that we debug Rust
         "lldb.launch.sourceLanguages": [
@@ -86,7 +88,8 @@
       }
     }
   },
-  // enable proper debugging by allowing the debuggee to be `ptrace`d
+  // enable proper debugging by allowing
+  // the debuggee to be `ptrace`d
   "capAdd": [
     "SYS_PTRACE"
   ]
