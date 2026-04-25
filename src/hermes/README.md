@@ -7,7 +7,7 @@ This Feature installs [_hermes_](https://github.com/georglauterbach/hermes).
 
 ```json
 "features": {
-    "ghcr.io/georglauterbach/dev-container-features/hermes:12": {}
+    "ghcr.io/georglauterbach/dev-container-features/hermes:13": {}
 }
 ```
 
