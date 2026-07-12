@@ -10,7 +10,7 @@ fi
 ARCHITECTURE="$(uname -m)"
 readonly ARCHITECTURE
 
-readonly HERMES_VERSION="${HERMES_VERSION:-14.1.0}"
+readonly HERMES_VERSION="${HERMES_VERSION:-14.1.1}"
 readonly HERMES_FILE=src/hermes/tools/hermes
 
 readonly SHELLCHECK_VERSION="${SHELLCHECK_VERSION:-0.11.0}"
