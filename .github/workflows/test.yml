@@ -39,6 +39,7 @@ jobs:
           persist-credentials: false
 
       - name: Install latest devcontainer CLI
+        # zizmor: ignore[adhoc-packages] the CLI is required for testing
         run: npm install -g @devcontainers/cli
 
       - name: Acquire Dependencies
