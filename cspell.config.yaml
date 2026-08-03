@@ -1,36 +1,96 @@
 ---
 version: '0.2'
 
-ignorePaths: []
-dictionaryDefinitions: []
-import: []
+import: [ cspell.user.config.yaml ]
 
+ignorePaths: []
+
+dictionaryDefinitions: []
 dictionaries:
   - en_US
+  - softwareTerms
   - bash
 
 words:
-  - debuggee # the program being debugged
+  - allowlist
+  - backpressure
+  - cooldown
+  - debuggee
+  - foldable
+  - foldables
+  - keepalive
+  - lockscreen
+  - recognised
+  - unrecognised
+  - unrequested
+  - unsanitized
+  - worktree
+  - worktrees
 
 ignoreWords:
-  # names
+  - georg
+  - lauterbach
   - georglauterbach
-  - Georg
-  - Lauterbach
 
-  # proper nouns
   - clippy
-  - LLDB
+  - lldb
   - rustc
+  - rustdoc
   - rustup
-  - shellcheck
-  - trixie
 
-  # multiple words written as one
-  - cooldown
-  - devcontainers
+  - pyproject
+  - pytest
+  - ruff
+
+  - PKCS11
+
+  - acpi
+  - agentic
+  - awww
+  - bindsym
+  - btop
+  - buildx
+  - bwrap
+  - containerfile
+  - coolors
+  - gamemode
+  - everforest
+  - evergruv
+  - flyline
+  - gitui
+  - gsettings
+  - herdr
+  - justfile
   - libbash
-
-  # IDE extensions
-  - charliermarsh
-  - tombi
+  - libflyline
+  - lightctl
+  - patchelf
+  - pipewire
+  - powerprofilesctl
+  - ptyxis
+  - reflog
+  - rofi
+  - rtkit
+  - satty
+  - scdoc
+  - shellcheck
+  - shfmt
+  - shikane
+  - shikanectl
+  - swayfx
+  - swayidle
+  - swayimg
+  - swaylock
+  - swaymsg
+  - swaync
+  - swaynotificationcenter
+  - waybar
+  - wdisplays
+  - wireplumber
+  - wleave
+  - wlsunset
+  - wpctl
+  - xwayland
+  - yaru
+  - yazi
+  - zizmor
