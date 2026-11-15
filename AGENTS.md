@@ -6,3 +6,6 @@ My personal collection of [Development Container Features](https://containers.de
 
 |Path|Purpose|
 |:-|:-|
+|`.github/`|GitHub-related content like CI/CD, issues, etc.|
+|`cspell.config.yaml`|Spell-check configuration|
+|`README.md`|Project description|
